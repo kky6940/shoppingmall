@@ -39,25 +39,21 @@
           <li><a href="#">Page1</a></li>
           <li><a href="#"></a></li>
         </ul>
- 
- 
-      <c:if test="${loginstate == true }">
-          <li><a href="memberout">회원 출력</a></li>
-      </c:if>
     </ul>
     
     <ul class="nav navbar-nav navbar-right">
     <c:choose>
-    		<c:when test="${loginstate == true }">
-    			<li><a href="mypage"><span class="glyphicon glyphicon-user"></span>마이페이지</a></li>
-      			<li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> 로그아웃</a></li>	
-    		</c:when>
-    		<c:otherwise>
-		    	  <li><a href="memberinputform"><span class="glyphicon glyphicon-user"></span> 회원가입</a></li>
-     			  <li><a href="memberloginform"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
-    		</c:otherwise>
-      </c:choose>
-
+    <c:when test="${loginstate == true}">
+        <li><a href="#"><span style="color: #5B67A2;"></span>${membership.id }님 반갑습니다.</a></li>
+        <li><a href="cart"><span class="glyphicon glyphicon-user"></span>장바구니</a></li>
+        <li><a href="mypage"><span class="glyphicon glyphicon-user"></span>마이페이지</a></li>
+        <li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> 로그아웃</a></li>
+    </c:when>
+    <c:otherwise>
+        <li><a href="membershipjoin2"><span class="glyphicon glyphicon-user"></span>회원가입</a></li>
+        <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
+    </c:otherwise>
+</c:choose>
     </ul>
   </div>
 </nav>

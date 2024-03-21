@@ -18,17 +18,5 @@ public class HomeController {
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
 	
-	@RequestMapping(value = "/")
-	public String home() {
-		
-		return "main";
-	}
-	
-	@RequestMapping(value = "/main")
-	public String main() {
-		
-		return "main";
-	}
-	
 	
 }

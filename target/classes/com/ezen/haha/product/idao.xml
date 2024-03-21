@@ -10,6 +10,16 @@
 		select snum,image,sname,price from product
 	</select>
 	<select id="detailview" resultType="com.ezen.haha.product.ProductDTO">
-		select snum,image,sname,stype,su,price,ssize,intro from product where snum=#{param1}
+		select snum,image,sname,stype,price,ssize,intro from product where snum=#{param1}
 	</select>
+	
+	<insert id="basketinsert">
+	<!-- id 추가 param 기입 필요 -->
+		insert into basket(id,snum,sname,stype,guestbuysu,totprice,ssize,image) values(0,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7})
+	</insert>
+	<select id="basketout" resultType="com.ezen.haha.product.BasketDTO">
+	<!-- 상품 번호 조건을 id 조건으로 변경 필요 -->
+		select snum,sname,stype,guestbuysu,totprice,ssize,image from basket where snum=#{param1}
+	</select>
+	
 </mapper>

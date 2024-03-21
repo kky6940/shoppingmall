@@ -46,7 +46,7 @@ public class ProductController {
 		int su = Integer.parseInt(mul.getParameter("su"));
 		int price = Integer.parseInt(mul.getParameter("price"));
 		String ssize = mul.getParameter("ssize");
-		
+		System.out.println();
 		MultipartFile mf = mul.getFile("image");
 		String fname = mf.getOriginalFilename();
 		mf.transferTo(new File(imagepath+"\\"+fname));

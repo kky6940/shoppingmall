@@ -36,7 +36,7 @@ public class ProductController {
 		
 		return "productinput";
 	}
-	a
+	
 	// 상품 입력 후 DB에 저장
 	@RequestMapping(value = "/productsave", method = RequestMethod.POST)
 	public String productsave(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {

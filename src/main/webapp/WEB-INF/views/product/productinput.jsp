@@ -4,7 +4,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>상품 입력</title>
+<title>관리자 상품 정보 입력</title>
 </head>
 <body>
 <form action="productsave" method="post" enctype="multipart/form-data">

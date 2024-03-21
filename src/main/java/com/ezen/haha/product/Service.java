@@ -11,4 +11,8 @@ public interface Service {
 
 	ArrayList<ProductDTO> detailview(int snum);
 
+	void basketinsert(int snum, String sname, String stype, int guestbuysu, int totprice, String ssize, String image);
+
+	ArrayList<BasketDTO> basketout(int snum);
+
 }

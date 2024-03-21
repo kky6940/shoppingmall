@@ -68,7 +68,7 @@ public class ProductController {
 		return "productout";
 	}
 	
-	// 상품 클릭 시 상품 내용 화면으로 가기
+	// 상품 클릭 시 상품 내용(구매) 화면으로 가기
 	@RequestMapping(value = "/detailview")
 	public String detailview(HttpServletRequest request, Model mo) {
 		int snum = Integer.parseInt(request.getParameter("snum"));
@@ -76,6 +76,31 @@ public class ProductController {
 		ArrayList<ProductDTO> list = ss.detailview(snum);
 		mo.addAttribute("list", list);
 		return "detailview";
+	}
+	
+	// 상품 내용(구매) 창에서 장바구니로 가기
+	@RequestMapping(value = "/basket")
+	public String basket(HttpServletRequest request, Model mo) {
+		int snum = Integer.parseInt(request.getParameter("snum"));
+		String sname = request.getParameter("sname");
+		String stype = request.getParameter("stype");
+		int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+		int totprice = Integer.parseInt(request.getParameter("totprice"));
+		String ssize = request.getParameter("ssize");
+		// 아이디 가져오기 필요
+		
+		String image = request.getParameter("image");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		
+		// 아이디 insert 추가 필요
+		ss.basketinsert(snum,sname,stype,guestbuysu,totprice,ssize,image);
+		
+		// snum 을 id 로 변경 필요
+		ArrayList<BasketDTO> list = ss.basketout(snum);
+		mo.addAttribute("list", list);
+		
+		return "basketout";
 	}
 	
 }

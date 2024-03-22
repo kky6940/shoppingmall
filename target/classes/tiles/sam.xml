@@ -10,6 +10,19 @@
       <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
    </definition>
    
+   <definition name="woman2" extends="baseLayout">
+      <put-attribute name="title" value="woman"/>
+      <put-attribute name="body" value="/WEB-INF/views/mainlayer/woman.jsp"/>
+   </definition>
+   <definition name="man2" extends="baseLayout">
+      <put-attribute name="title" value="man"/>
+      <put-attribute name="body" value="/WEB-INF/views/mainlayer/man.jsp"/>
+   </definition>
+   <definition name="kids2" extends="baseLayout">
+      <put-attribute name="title" value="kids"/>
+      <put-attribute name="body" value="/WEB-INF/views/mainlayer/kids.jsp"/>
+   </definition>
+   
    <definition name="main" extends="baseLayout">
       <put-attribute name="title" value="메인화면"/>
       <put-attribute name="body" value="/WEB-INF/views/main.jsp"/>

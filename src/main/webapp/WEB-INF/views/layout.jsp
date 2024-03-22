@@ -1,38 +1,15 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="t" %>
 <!DOCTYPE html>
 <html>
 <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <title><t:insertAttribute name="title"/></title>
-<style type="text/css">
-#container 
-{
-	border: 1px solid #aabbcc;
-}
-header
-{
-	text-align: center;
-	width: 100%;
-}
-#body
-{
-	text-align: center;
-	width: 100%;
-}
-#footer
-{
-	position: fixed;
-	bottom: 0px;
-	width: 100%;
-	text-align: center;
-	font-size: 15px;
-	line-height: 30px;
-	background-color: #000000;
-	color: #ffffff; 
-}
-</style>
 </head>
 <body>
    <div id="container">

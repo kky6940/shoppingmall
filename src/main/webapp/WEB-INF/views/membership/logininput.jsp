@@ -54,8 +54,7 @@
 
 </style>
 </head>
-<body>
-
+<div class="img_parentsdiv">
 <div class="form-container">
     <h2 class="form-title">로그인</h2>
     <form action="logingoing" method="post" >
@@ -65,6 +64,6 @@
         <button type="submit" class="form-button" >로그인</button>
     </form>
 </div>
-
+</div>
 </body>
 </html>

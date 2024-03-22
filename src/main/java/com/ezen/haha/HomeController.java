@@ -17,18 +17,25 @@ public class HomeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 	
-	
 	@RequestMapping(value = "/")
 	public String home() {
 		
-		return "main";
+		return "woman2";
 	}
-	
 	@RequestMapping(value = "/main")
-	public String main() {
+	public String home2() {
 		
-		return "main";
+		return "woman2";
 	}
-	
+	@RequestMapping(value = "/woman")
+	public String home3() {
+		
+		return "woman2";
+	}
+	@RequestMapping(value = "/kids")
+	public String home4() {
+		
+		return "kids2";
+	}
 	
 }

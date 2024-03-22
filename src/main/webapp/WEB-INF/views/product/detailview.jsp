@@ -26,6 +26,7 @@ window.addEventListener("load", function() {
 });
 	
 
+// 즉시구매, 장바구니 form 구분
 function submitfrom(action) {
 	var form = document.getElementById('formchoice');
 	
@@ -38,7 +39,7 @@ function submitfrom(action) {
 <title>상품 내용</title>
 </head>
 <body>
-<form id="formchoice" method="post" enctype="multipart/form-data">
+<form id="formchoice" method="post" enctype="multipart/form-data"> <!-- 자바스크립트로 form 2가지 구분 -->
 	<c:forEach items="${list }" var="aa">
 		<div>
 			<table border="1" width="300px" align="center">

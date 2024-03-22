@@ -3,23 +3,51 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ezen.haha.product.Service">
+	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
 		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
+	
+	<!-- 상품 정보(목록) 출력 -->
 	<select id="productout" resultType="com.ezen.haha.product.ProductDTO">
 		select snum,image,sname,price from product
 	</select>
+	
+	<!-- 상품 내용 출력 -->
 	<select id="detailview" resultType="com.ezen.haha.product.ProductDTO">
 		select snum,image,sname,stype,price,ssize,intro from product where snum=#{param1}
 	</select>
 	
+	<!-- 장바구니 데이터 DB에 저장 -->
 	<insert id="basketinsert">
-	<!-- id 추가 param 기입 필요 -->
-		insert into basket(id,snum,sname,stype,guestbuysu,totprice,ssize,image) values(0,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7})
+		insert into basket(basketnum,id,snum,sname,stype,guestbuysu,totprice,ssize,image) values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
 	</insert>
+	
+	<!-- 장바구니 출력 -->
 	<select id="basketout" resultType="com.ezen.haha.product.BasketDTO">
-	<!-- 상품 번호 조건을 id 조건으로 변경 필요 -->
-		select snum,sname,stype,guestbuysu,totprice,ssize,image from basket where snum=#{param1}
+		select basketnum,snum,sname,stype,guestbuysu,totprice,ssize,image from basket where id=#{param1}
 	</select>
+	
+	<!-- 구매 시 정보 입력을 위해 회원 정보를 가져옴 -->
+	<select id="IDinformation" resultType="com.ezen.haha.membership.MembershipDTO">
+		select id,name,tel,email,address from member where id=#{param1}
+	</select>
+	
+	<!-- 구매 버튼 누를 시 주문 정보 초기화 -->
+	<delete id="deleteproductsell">
+		delete from productsell
+	</delete>
+	
+	<!-- 구매 버튼 누를 시 주문 정보 DB에 저장 -->
+	<insert id="Productsellinsert">
+		insert into productsell values(sell_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12})
+	</insert>
+	
+	<!-- 구매 버튼 누를 시 주문 정보 출력 -->
+	<select id="productsellout" resultType="com.ezen.haha.product.ProductSellDTO">
+		select * from productsell
+	</select>
+	
+	
 	
 </mapper>

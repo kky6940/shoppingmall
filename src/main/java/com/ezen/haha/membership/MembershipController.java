@@ -33,14 +33,14 @@ public class MembershipController {
 	
 	
 	
-	//È¸¿ø°¡ÀÔ
+	//íšŒì›ê°€ì…
 	@RequestMapping(value = "/membershipjoin2")
 	public String membership3() {
 		
 		return "membershipjoin2";
 	}
 	
-	//¾ÆÀÌµğ Áßº¹È®ÀÎ
+	//ì•„ì´ë”” ì¤‘ë³µí™•ì¸
 	@ResponseBody
 	@RequestMapping(value = "/idcheckgogo")
 	public String membership4(HttpServletRequest request) {
@@ -51,7 +51,7 @@ public class MembershipController {
 	      return ss.id_check(id);
 	   }
 	
-	//È¸¿ø°¡ÀÔ ÀúÀå
+	//íšŒì›ê°€ì… ì €ì¥
 	@RequestMapping(value = "/membershipsave")
 	public String membership5(HttpServletRequest request) throws UnsupportedEncodingException {
 		request.setCharacterEncoding("utf-8");
@@ -68,14 +68,14 @@ public class MembershipController {
 		return "redirect:/main";
 	}
 	
-	//·Î±×ÀÎÃâ·ÂÃ¢ ¤¡¤¡
+	//ë¡œê·¸ì¸ì¶œë ¥ì°½ ã„±ã„±
 	@RequestMapping(value = "/login")
 	public String membership6() {
 		
 		return "logininput";
 	}
 	
-	//·Î±×ÀÎ
+	//ë¡œê·¸ì¸
 		@RequestMapping(value = "/logingoing")
 		public String membership7(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			String id = request.getParameter("id");
@@ -86,6 +86,7 @@ public class MembershipController {
 			{
 				HttpSession hs = request.getSession();
 				hs.setAttribute("membership", dto);
+				hs.setAttribute("id", id);
 				hs.setAttribute("loginstate", true);
 				hs.setMaxInactiveInterval(3000);
 				return "redirect:/main";
@@ -93,20 +94,21 @@ public class MembershipController {
 			else {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('¾ÆÀÌµğ¶û ºñ¹Ğ¹øÈ£°¡ Æ²¸®¼Ì½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä!'); window.location.href='logininput'; </script>");
+				printw.print("<script> alert('ì•„ì´ë””ë‘ ë¹„ë°€ë²ˆí˜¸ê°€ í‹€ë¦¬ì…¨ìŠµë‹ˆë‹¤. ë‹¤ì‹œ í™•ì¸í•´ì£¼ì„¸ìš”!'); window.location.href='logininput'; </script>");
 			}
 			return null;
 		}
 		
-		//·Î±×¾Æ¿ô
+		//ë¡œê·¸ì•„ì›ƒ
 		@RequestMapping(value = "/logout")
 		public String membership8(HttpServletRequest request, HttpServletResponse response) throws IOException {
 			HttpSession hs = request.getSession();
 			hs.removeAttribute("membership");
+			hs.removeAttribute("id");
 			hs.setAttribute("loginstate", false);
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('·Î±×¾Æ¿ô µÇ¾ú½À´Ï´Ù.'); window.location.href='main'; </script>");
+			printw.print("<script> alert('ë¡œê·¸ì•„ì›ƒ ë˜ì—ˆìŠµë‹ˆë‹¤.'); window.location.href='main'; </script>");
 			return null;
 		}
 }

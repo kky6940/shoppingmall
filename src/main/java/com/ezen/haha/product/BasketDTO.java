@@ -2,7 +2,7 @@ package com.ezen.haha.product;
 
 public class BasketDTO {
 	String id,sname,stype,ssize,image;
-	int snum,guestbuysu,totprice;
+	int basketnum,snum,guestbuysu,totprice;
 	
 	public BasketDTO() {}
 
@@ -68,6 +68,14 @@ public class BasketDTO {
 
 	public void setGuestbuysu(int guestbuysu) {
 		this.guestbuysu = guestbuysu;
+	}
+
+	public int getBasketnum() {
+		return basketnum;
+	}
+
+	public void setBasketnum(int basketnum) {
+		this.basketnum = basketnum;
 	}
 	
 }

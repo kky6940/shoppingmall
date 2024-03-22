@@ -4,58 +4,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
-<title>top.jsp</title>
+<title>Insert title here</title>
+<link rel="stylesheet"  href="resources/css/test.css">
+
+<script type="text/javascript">
+	function toggle() {
+		var menu = document.querySelector(".header_menu");
+		var login = document.querySelector(".header_login");
+	    menu.classList.toggle('active');
+	    login.classList.toggle('active');
+	}
+</script>
+
 </head>
 <body>
-<header>
-<img alt="" src="./image/KakaoTalk_20240320_145815898.jpg">
-</header>
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <a class="navbar-brand" href="#"></a>
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="active"><a href="main">Home</a></li>
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Top<span class="caret"></span></a>
-        <ul class="dropdown-menu">
-         <li><a href="productinput">입력</a></li>
-          <li><a href="productout">니트</a></li>
-          <li><a href="#">맨투맨/후드</a></li>
-          <li><a href="#">반팔티</a></li>
-          <li><a href="#">긴팔티</a></li>
-        </ul>
-      </li>
-    </ul>
-    <ul class="nav navbar-nav">
-      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">??? <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-          <li><a href="#">Page1</a></li>
-          <li><a href="#">Page2</a></li>
-          <li><a href="#"></a></li>
-        </ul>
-    </ul>
-    
-    <ul class="nav navbar-nav navbar-right">
-    <c:choose>
-    <c:when test="${loginstate == true}">
-        <li><a href="#"><span style="color: #5B67A2;"></span>${membership.id }님 반갑습니다.</a></li>
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>장바구니</a></li>
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span>마이페이지</a></li>
-        <li><a href="logout"><span class="glyphicon glyphicon-log-in"></span> 로그아웃</a></li>
-    </c:when>
-    <c:otherwise>
-        <li><a href="membershipjoin2"><span class="glyphicon glyphicon-user"></span>회원가입</a></li>
-        <li><a href="login"><span class="glyphicon glyphicon-log-in"></span> 로그인</a></li>
-    </c:otherwise>
-</c:choose>
-    </ul>
-  </div>
+<nav class="header">
+ 	<div class="header_logo">
+ 		<h1><a href="#"><img alt="" src="resources/img/img_logo.png">Snack Closet</a></h1>
+ 	</div>	
+	<ul class="header_menu">
+		<li><a href="productinput">입력</a></li>
+		<li><a href="productout">출력</a></li>
+		<li><a href="#">KIDS</a></li>
+		<li><a href="#">BOARD</a></li>
+	</ul>
+	<ul class="header_login">
+		<!-- 로그인 상태에 따라 로그아웃  -->
+		<c:choose>
+	    	<c:when test="${loginstate == true}">
+				<li><a href="#">MyPage</a></li>
+				<li><a href="logout">LogOut</a></li>
+			</c:when>
+			<c:otherwise>
+				<a href="membershipjoin2" class="btn_mypage">SignUp</a> 
+				<a href="login" class="btn_mypage">LogIn</a> 
+			</c:otherwise>
+		</c:choose>
+		<!-- 장바구니 추가예정 -->
+	</ul>
+	<a class="header_togglebtn" onclick="toggle()">
+		<img alt="" src="resources/img/img_togglebtn.jpg">
+	</a>
 </nav>
+ 	
 </body>
 </html>

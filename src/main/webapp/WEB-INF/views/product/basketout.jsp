@@ -9,7 +9,7 @@
 <title>장바구니</title>
 </head>
 <body>
-<form action="productsell" method="post" id="formchoice"> <!-- 판매 페이지로 이동 -->
+<form action="basketsell" method="post"> <!-- 판매 페이지로 이동 -->
     <table border="1" width="700px" align="center">
         <tr>
             <th>선택</th>
@@ -61,28 +61,39 @@
                     </tr>
                 </c:forEach>
             </div>
-        
+            <div>
+		    <!-- 페이징처리 -->
+			
+				<tr style="border-left: none;border-right: none;border-bottom: none">
+				   <td colspan="8" style="text-align: center;">
+				   
+				   <c:if test="${paging.startPage!=1 }"> 
+				      <a href="basketout?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> 
+				      
+				   </c:if>   
+				   
+				      <c:forEach begin="${paging.startPage }" end="${paging.endPage}" var="p"> 
+				         <c:choose>
+				            <c:when test="${p == paging.nowPage }"> 
+				               <b><span style="color: red;">${p}</span></b>
+				            </c:when>   
+				            <c:when test="${p != paging.nowPage }"> 
+				               <a href="basketout?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
+				            </c:when>   
+				         </c:choose>
+				      </c:forEach>
+				     
+				      <c:if test="${paging.endPage != paging.lastPage}">
+				      <a href="basketout?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
+				   </c:if>
+				   
+				   </td>
+				</tr>
+			
+			<!-- 페이징처리 -->
+			</div>
     </table>
+    
 </form>
-
-<script type="text/javascript">
-document.getElementById("formchoice").onsubmit = function() {
-    var form = document.getElementById("formchoice");
-    var formData = new FormData(form);
-    
-    // 선택된 checkbox를 가져와서 선택된 항목을 찾습니다.
-    var checkboxes = document.getElementsByName('item');
-    checkboxes.forEach(function(checkbox) {
-        if (checkbox.checked) { // checkbox가 선택된 경우
-            formData.append('selectedItems', checkbox.value); // 각 체크박스의 값을 서로 다른 이름으로 추가합니다.
-        }
-    });
-
-    // 선택된 데이터를 가지고 submit
-    form.submit();
-    
-    return false; // 기본 제출 동작 방지
-};
-</script>
 </body>
 </html>

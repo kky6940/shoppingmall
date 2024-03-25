@@ -31,7 +31,7 @@ public class ProductController {
 	@Autowired
 	SqlSession sqlSession;
 	
-	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\WEB-INF\\image";
+	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\image";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
@@ -66,14 +66,33 @@ public class ProductController {
 	
 	// DB 데이터 가져온 후 출력 화면으로 가기
 	@RequestMapping(value = "/productout")
-	public String productout(Model mo) {
-		Service ss = sqlSession.getMapper(Service.class);
-		ArrayList<ProductDTO> list = ss.productout();
-		mo.addAttribute("list", list);
+	public String productout(HttpServletRequest request, PageDTO dto, Model mo) {
+		String nowPage=request.getParameter("nowPage");
+        String cntPerPage=request.getParameter("cntPerPage");
+        Service ss = sqlSession.getMapper(Service.class);
+        
+        int total=ss.total();
+    
+        if(nowPage==null && cntPerPage == null) {
+           nowPage="1";
+           cntPerPage="5";
+        }
+        else if(nowPage==null) {
+           nowPage="1";
+        }
+        else if(cntPerPage==null) {
+           cntPerPage="5";
+        }      
+       
+	    dto = new PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		
+		mo.addAttribute("paging",dto);
+		mo.addAttribute("list", ss.productout(dto));
+		
 		return "productout";
 	}
 	
-	// 상품 클릭 시 상품 내용(구매) 화면으로 가기
+	// 상품 클릭 시 상품 내용 화면으로 가기
 	@RequestMapping(value = "/detailview")
 	public String detailview(HttpServletRequest request, Model mo) {
 		int snum = Integer.parseInt(request.getParameter("snum"));
@@ -83,28 +102,29 @@ public class ProductController {
 		return "detailview";
 	}
 	
-	// 상품 내용(구매) 창에서 장바구니로 가기
+	// 상품 내용 창에서 장바구니 DB 저장
 	@RequestMapping(value = "/basket")
-	public String basket(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
-		int snum = Integer.parseInt(request.getParameter("snum"));
-		String sname = request.getParameter("sname");
-		String stype = request.getParameter("stype");
-		int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
-		int totprice = Integer.parseInt(request.getParameter("totprice"));
-		String ssize = request.getParameter("ssize");
-		String image = request.getParameter("image");
+	public String basket(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
 		// 로그인 시 id 가져오기
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
+		
 		if(id != null)
 		{
+			int snum = Integer.parseInt(request.getParameter("snum"));
+			String sname = request.getParameter("sname");
+			String stype = request.getParameter("stype");
+			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+			int totprice = Integer.parseInt(request.getParameter("totprice"));
+			String ssize = request.getParameter("ssize");
+			String image = request.getParameter("image");
+			
 			Service ss = sqlSession.getMapper(Service.class);
 			ss.basketinsert(id,snum,sname,stype,guestbuysu,totprice,ssize,image);
 			
-			ArrayList<BasketDTO> list = ss.basketout(id);
-			mo.addAttribute("list", list);
 			
-			return "basketout";
+			return "redirect:/basketout";
 		}
 		else
 		{
@@ -117,7 +137,91 @@ public class ProductController {
 		
 	}
 	
-	// 상품 내용 화면에서 즉시 구매 클릭, 장바구니 화면에서 구매 클릭 시 구매 화면으로 이동
+	// DB 저장한 장바구니 출력
+	@RequestMapping(value = "/basketout")
+	public String basketout(HttpServletRequest request, PageDTO dto, Model mo, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		if(id != null) {
+			String nowPage=request.getParameter("nowPage");
+	        String cntPerPage=request.getParameter("cntPerPage");
+	        System.out.println(nowPage+"\t"+cntPerPage);
+	        Service ss = sqlSession.getMapper(Service.class);
+
+	        int total=ss.totalbasket();
+	    
+	        if(nowPage==null && cntPerPage == null) {
+	           nowPage="1";
+	           cntPerPage="5";
+	        }
+	        else if(nowPage==null) {
+	           nowPage="1";
+	        }
+	        else if(cntPerPage==null) {
+	           cntPerPage="5";
+	        }      
+	       
+	        dto = new PageDTO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
+	        
+	        mo.addAttribute("paging",dto);
+			mo.addAttribute("list", ss.basketout(id,dto.getStart(),dto.getEnd()));
+			return "basketout";
+		}
+		else
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+		}
+		
+		return null;
+	}
+	
+	// 장바구니에서 체크박스 선택 후 구매확인 화면으로 이동
+	@RequestMapping(value = "/basketsell", method = RequestMethod.POST)
+	public String basketsell(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.deleteproductsell(); // 구매 창을 누를 때마다 DB에 담긴 주문 정보 초기화(delete), 안하면 이전 주문정보를 전부 불러옴, 나중에 지금까지 구매했던 구매목록을 보고 싶다면 초기화 전에 다른 DB테이블을 따로 만들어서 저장하거나 다른 방법을 찾아야 할 것 같음
+		
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		if(id != null) // 로그인 중이라면
+		{
+			String [] items = request.getParameterValues("item"); // 체크박스로 선택한 목록 번호를 가져옴
+			int [] basketnum = null;
+			
+			if(items != null)
+			{
+				basketnum = new int[items.length];
+				for(int i=0; i<items.length; i++)
+				{
+					basketnum[i] = Integer.parseInt(items[i]);
+				}
+			}
+
+			ArrayList<BasketDTO> list = new ArrayList<>(); 
+			for (int i = 0; i < basketnum.length; i++) {
+			    list.add(ss.basketsell(basketnum[i]));
+			}
+			
+			mo.addAttribute("list", list);
+			
+			return "basketsellout";
+		}
+		else
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+		}
+		
+		return null;
+	
+	}
+	
+	// 상품 내용 화면에서 즉시 구매 클릭, 장바구니 화면에서 구매 클릭 시 구매확인 화면으로 이동
 	@RequestMapping(value = "/productsell", method = RequestMethod.POST)
 	public String productsell(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		Service ss = sqlSession.getMapper(Service.class);

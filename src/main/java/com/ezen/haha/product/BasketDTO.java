@@ -1,8 +1,11 @@
 package com.ezen.haha.product;
 
+import com.ezen.haha.membership.MembershipDTO;
+
 public class BasketDTO {
 	String id,sname,stype,ssize,image;
 	int basketnum,snum,guestbuysu,totprice;
+	MembershipDTO membershipdto;
 	
 	public BasketDTO() {}
 
@@ -76,6 +79,14 @@ public class BasketDTO {
 
 	public void setBasketnum(int basketnum) {
 		this.basketnum = basketnum;
+	}
+
+	public MembershipDTO getMembershipdto() {
+		return membershipdto;
+	}
+
+	public void setMembershipdto(MembershipDTO membershipdto) {
+		this.membershipdto = membershipdto;
 	}
 	
 }

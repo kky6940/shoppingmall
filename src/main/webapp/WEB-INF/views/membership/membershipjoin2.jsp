@@ -88,6 +88,7 @@ function sample6_execDaumPostcode() {
 </head>
 <body>
 <form action="membershipsave" method="post">
+<div class="img_parentsdiv">
 <table border="1" width="400px" align="center">
 	<caption>회원가입</caption>
 	<tr><th>ID</th><td>
@@ -107,6 +108,7 @@ function sample6_execDaumPostcode() {
 	</td></tr>
 	<tr><td colspan="2" align="center"><input type="submit" value="전송"><input type="button" value="취소" onclick="location.href='main'"></td></tr>
 </table>
+</div>
 </form>
 </body>
 </html>

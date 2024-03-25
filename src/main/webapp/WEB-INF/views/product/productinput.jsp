@@ -7,6 +7,7 @@
 <title>관리자 상품 정보 입력</title>
 </head>
 <body>
+<div class="img_parentsdiv">
 <form action="productsave" method="post" enctype="multipart/form-data">
 	<table border="1" width="400px" align="center">
 		<caption>상품 입력</caption>
@@ -66,5 +67,6 @@
 		</tr>
 	</table>
 </form>
+</div>
 </body>
 </html>

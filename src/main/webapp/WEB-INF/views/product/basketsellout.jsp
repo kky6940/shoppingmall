@@ -9,15 +9,16 @@
 <title>구매 페이지</title>
 </head>
 <body>
+
 <form action=""> <!-- 결재창으로 이동 -->
 	<div>
 		<table border="1" width="500px" align="center">
-		<c:forEach items="${list }" var="aa">
+		<c:if test="${not empty list}"> <!-- list를 한번만 출력하려고 사용 -->
 			<tr>
 				<th>배송지</th> 
 				<td colspan="3">
-					<span>${aa.address }</span>
-					<input type="hidden" name="address" value="${aa.address }"> 
+					<span>${list[0].membershipdto.address }</span>
+					<input type="hidden" name="address" value="${list[0].membershipdto.address }"> 
 				</td>
 				<td>
 					<input type="button" value="수정">
@@ -26,8 +27,8 @@
 			<tr>
 				<th>이름</th> 
 				<td colspan="3">
-					<span>${aa.name }</span>
-					<input type="hidden" name="name" value="${aa.name }"> 
+					<span>${list[0].membershipdto.name }</span>
+					<input type="hidden" name="name" value="${list[0].membershipdto.name }"> 
 				</td>
 				<td>
 					<input type="button" value="수정">
@@ -36,8 +37,8 @@
 			<tr>
 				<th>연락처</th> 
 				<td colspan="3">
-					<span>${aa.tel }</span>
-					<input type="hidden" name="tel" value="${aa.tel }"> 
+					<span>${list[0].membershipdto.tel }</span>
+					<input type="hidden" name="tel" value="${list[0].membershipdto.tel }"> 
 				</td>
 				<td>
 					<input type="button" value="수정">
@@ -46,8 +47,8 @@
 			<tr>
 				<th>Email</th> 
 				<td colspan="3">
-					<span>${aa.email }</span>
-					<input type="hidden" name="email" value="${aa.email }"> 
+					<span>${list[0].membershipdto.email }</span>
+					<input type="hidden" name="email" value="${list[0].membershipdto.email }"> 
 				</td>
 				<td>
 					<input type="button" value="수정">
@@ -63,9 +64,13 @@
 					</select>
 				</td>
 			</tr>
+		</c:if>
 	</div>
 	
 	<div>
+		<c:set var="totalPrice" value="0" />
+		<c:forEach items="${list }" var="aa">
+		<c:set var="totalPrice" value="${totalPrice + aa.totprice}" /> <!-- 장바구니 목록 총 가격 계산 -->
 			<tr>
 				<th>상품이미지</th>
 				<th>상품명</th>
@@ -97,13 +102,15 @@
 					<input type="hidden" name="stype" value="${aa.stype }">
 				</td>
 			</tr>
+		</c:forEach>
 			<tr>
-				<td colspan="5" align="center">
-					<input type="submit" value="<f:formatNumber value="${aa.totprice }" pattern="#,###원"/> 구입하기">
-				</td>
+			    <td colspan="5" align="center">
+			        <!-- 총 가격 출력 -->
+			        <input type="hidden" name="totalPrice" value="${totalPrice}">
+			        <input type="submit" value="<f:formatNumber value='${totalPrice}' pattern='총 #,###원'/> 구입하기">
+			    </td>
 			</tr>
 		</table>	
-		</c:forEach>
 	</div>
 </form>
 </body>

@@ -9,13 +9,13 @@ public interface Service {
 	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String fname,
 			String intro);
 
-	ArrayList<ProductDTO> productout();
+	ArrayList<ProductDTO> productout(PageDTO dto);
 
 	ArrayList<ProductDTO> detailview(int snum);
 
 	void basketinsert(String id, int snum, String sname, String stype, int guestbuysu, int totprice, String ssize, String image);
 
-	ArrayList<BasketDTO> basketout(String id);
+	ArrayList<BasketDTO> basketout(String id, int start, int end);
 
 	ArrayList<MembershipDTO> IDinformation(String id);
 
@@ -25,5 +25,13 @@ public interface Service {
 	void deleteproductsell();
 	
 	ArrayList<ProductSellDTO> productsellout();
+
+	BasketDTO basketsell(int i);
+
+	int total();
+
+	int totalbasket();
+
+	
 
 }

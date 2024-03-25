@@ -7,8 +7,7 @@
 <head>
 <style type="text/css">
 	a{
-		text-decoration-line: none;
-		
+		text-decoration: none; <!-- 다른 css에 a가 적용되었는지 살필 것 -->
 	}
 	td{
 		border: 0;
@@ -40,5 +39,36 @@
 	</a>
 </c:forEach>
 
+<div>
+<!-- 페이징처리 -->
+<table align="center">
+	<tr style="border-left: none;border-right: none;border-bottom: none">
+	   <td colspan="5" style="text-align: center;">
+	   
+	   <c:if test="${paging.startPage!=1 }"> 
+	      <a href="productout?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> 
+	      
+	   </c:if>   
+	   
+	      <c:forEach begin="${paging.startPage }" end="${paging.endPage}" var="p"> 
+	         <c:choose>
+	            <c:when test="${p == paging.nowPage }"> 
+	               <b><span style="color: red;">${p}</span></b>
+	            </c:when>   
+	            <c:when test="${p != paging.nowPage }"> 
+	               <a href="productout?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
+	            </c:when>   
+	         </c:choose>
+	      </c:forEach>
+	     
+	      <c:if test="${paging.endPage != paging.lastPage}">
+	      <a href="productout?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
+	   </c:if>
+	   
+	   </td>
+	</tr>
+</table>
+<!-- 페이징처리 -->
+</div>
 </body>
 </html>

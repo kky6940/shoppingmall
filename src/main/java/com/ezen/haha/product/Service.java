@@ -7,7 +7,7 @@ import com.ezen.haha.membership.MembershipDTO;
 public interface Service {
 
 	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String fname,
-			String intro);
+			String intro, int best, String fname1, String fname2, String fname3);
 
 	ArrayList<ProductDTO> productout(PageDTO dto);
 
@@ -30,7 +30,11 @@ public interface Service {
 
 	int total();
 
-	int totalbasket();
+	int totalbasket(String id);
+
+	void deletebasket(int i);
+
+	int snumcheck(int snum, String ssize);
 
 	
 

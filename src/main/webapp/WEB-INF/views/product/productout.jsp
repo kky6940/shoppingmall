@@ -24,6 +24,13 @@
 			<table border="1" width="200px" align="center">
 				<tr>
 					<td>
+						<c:if test="${aa.best eq 1}"> <!-- best가 1이라면 베스트 상품 출력 -->
+							베스트 상품
+						</c:if>
+					</td>
+				</tr>
+				<tr>
+					<td>
 						<input type="hidden" name="snum" value="${aa.snum }">
 						<img alt="" src="./image/${aa.image }" width="100px" height="100px">
 					</td>

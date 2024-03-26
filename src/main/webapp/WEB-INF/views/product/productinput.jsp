@@ -52,11 +52,25 @@
 		</tr>
 		<tr>
 			<th>상품이미지</th>
-			<td><input type="file" name="image"> </td>
+			<td>
+				<input type="file" name="image"> 
+				<input type="file" name="sideimage1">
+				<input type="file" name="sideimage2">
+				<input type="file" name="sideimage3">
+			</td>
 		</tr>
 		<tr>
 			<th>상품설명</th>
 			<td><textarea rows="5" cols="30" name="intro"></textarea> </td>
+		</tr>
+		<tr>
+			<th>베스트상품지정</th>
+			<td>
+				<select name="best">
+					<option value="0">일반상품</option>
+					<option value="1">베스트상품</option>
+				</select>
+			</td>
 		</tr>
 		<tr>
 			<td colspan="2" align="center">

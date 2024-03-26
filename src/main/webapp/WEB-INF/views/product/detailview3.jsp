@@ -41,54 +41,7 @@ function submitfrom(action) {
 <body>
 <form id="formchoice" method="post" enctype="multipart/form-data"> <!-- 자바스크립트로 form 2가지 구분 -->
 	<c:forEach items="${list }" var="aa">
-<!-- 사이드 이미지 3장 -->	
-<div class="product_view">
-	<div class="product_img">
-		<input type="radio" name="sideimage1" id="slide01" checked>
-		<input type="radio" name="sideimage2" id="slide02">
-		<input type="radio" name="sideimage3" id="slide03">
-		<div class="slidewrap">
-			<ul class="slidelist">
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage1}">
-				</li>
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage2}">
-				</li>
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage3}">
-				</li>
-	
-				<!-- 좌,우 슬라이드 버튼 -->
-				<div class="slide-control">
-					<div>
-						<label for="slide03" class="left"></label>
-						<label for="slide02" class="right"></label>
-					</div>
-					<div>
-						<label for="slide01" class="left"></label>
-						<label for="slide03" class="right"></label>
-					</div>
-					<div>
-						<label for="slide02" class="left"></label>
-						<label for="slide01" class="right"></label>
-					</div>
-				</div>
-	
-			</ul>
-			<!-- 페이징 -->
-			<ul class="slide-pagelist">
-				<li><label for="slide01"><img alt="" src="resources/img/${aa.sideimage1}"></label></li>
-				<li><label for="slide02"><img alt="" src="resources/img/${aa.sideimage2}"></label></li>
-				<li><label for="slide03"><img alt="" src="resources/img/${aa.sideimage3}"></label></li>
-			</ul>
-		</div>
-	</div>
-
-<!-- 사이드 이미지 3장 -->	
-
-		<div class="product_menu">
-		
+		<div>
 			<table border="1" width="300px" align="center">
 				<tr>
 					<td>
@@ -98,11 +51,9 @@ function submitfrom(action) {
 				</tr>
 				<tr>
 			</table>
-		
-		
-
-			<h2>${aa.sname }</h2>
-				<table>
+		</div>
+		<div>
+			<table border="1" width="300px" align="center">	
 				<tr>
 					<th>상품명</th>
 					<td>
@@ -119,8 +70,6 @@ function submitfrom(action) {
 						<input type="hidden" name="price" value="${aa.price }" id="price"> 
 					</td>
 				</tr>
-				<tr>
-			
 				<tr>
 					<th>사이즈</th>
 					<td>
@@ -141,42 +90,21 @@ function submitfrom(action) {
 					</td>
 				</tr>
 				<tr>
-					<th>배송비</th>
-					<td>무료배송</td>
-				</tr>
-				<tr>
 					<th>총 상품 금액</th>
 					<td>
-						<span id="totpriceview" class="price">0원</span> 
+						<span id="totpriceview">0원</span> 
 						<input type="hidden" name="totprice" id="totpriceid" value="0원" readonly>
 					</td>
 				</tr>
 				<tr>
-					<div class="btns">
-<!-- 					<td colspan="2" align="center">  -->
-						<a href="#a" class="product_btn1" onclick="submitfrom('./productsell')">장바구니</a>
-						<a href="#a" class="product_btn2" onclick="submitfrom('./basket')">구매하기</a>
-<!-- 						<input type="button" value="구매하기" onclick="submitfrom('./productsell')"> -->
-<!-- 						<input type="button" value="장바구니" onclick="submitfrom('./basket')"> -->
-<!-- 					</td> -->
-					</div>
+					<td colspan="2" align="center"> 
+						<input type="button" value="구매하기" onclick="submitfrom('./productsell')">
+						<input type="button" value="장바구니" onclick="submitfrom('./basket')">
+					</td>
 				</tr>
-				</table>
-			</div>
-		</div>	
-			
-			<div class="product_view2" >
-				<h2 class="product_intro">상세정보</h2><br>
-				<img alt="" src="resources/img/${aa.image }">
-			</div>
-	
+			</table>
+		</div>
 	</c:forEach>
 </form>
-</body>
-</html>
-
-
-
-	
 </body>
 </html>

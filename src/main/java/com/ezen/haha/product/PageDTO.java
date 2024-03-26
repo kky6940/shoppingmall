@@ -6,12 +6,12 @@ public class PageDTO {
 		private int cntPage=3;  //한 화면에 표시하고자 하는 페이지 숫자의 수(1 2 3 ▶)
 		public PageDTO() {}
 		public PageDTO(int total, int nowPage, int cntPerPage) {
-		setNowPage(nowPage);
-		setCntPerPage(cntPerPage);
-		setTotal(total);
-		calcLastPage(getTotal(), getCntPerPage()); 
-		calcStartEndPage(getNowPage(), cntPage);
-		calcStartEnd(getNowPage(), getCntPerPage());                  
+			setNowPage(nowPage);
+			setCntPerPage(cntPerPage);
+			setTotal(total);
+			calcLastPage(getTotal(), getCntPerPage()); 
+			calcStartEndPage(getNowPage(), cntPage);
+			calcStartEnd(getNowPage(), getCntPerPage());                  
 		}   
 		//전체 페이지 수
 		public void calcLastPage(int total, int cntPerPage) { 

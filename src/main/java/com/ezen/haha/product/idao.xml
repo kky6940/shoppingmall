@@ -5,14 +5,14 @@
 <mapper namespace="com.ezen.haha.product.Service">
 	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
-		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
+		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12})
 	</insert>
-	
+
 	<!-- 상품 정보(목록) 출력 -->
 	<select id="productout" resultType="com.ezen.haha.product.ProductDTO">		
 	   select * from ( 
 	   select rownum rn,A.* from(  
-	   select snum,image,sname,price from product)A) 
+	   select snum,image,sname,price,best,sideimage1,sideimage2,sideimage3 from product)A) 
 	   where rn between #{start} AND #{end}
 	</select>
 	
@@ -21,6 +21,10 @@
 		select snum,image,sname,stype,price,ssize,intro from product where snum=#{param1}
 	</select>
 	
+	<!-- 장바구니 동일 제품이 있는지 중복 체크  -->
+	<select id="snumcheck" resultType="int">
+		select count(*) from basket where snum=#{param1} and ssize = #{param2}
+	</select>
 	<!-- 장바구니 데이터 DB에 저장 -->
 	<insert id="basketinsert">
 		insert into basket(basketnum,id,snum,sname,stype,guestbuysu,totprice,ssize,image) values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
@@ -90,8 +94,12 @@
 	   select count(*) from product
 	</select>
 	<select id="totalbasket" resultType="int">
-	   select count(*) from basket
+	   select count(*) from basket where id=#{param1}
 	</select>
 	
+	<!-- 장바구니 목록 삭제 -->
+	<delete id="deletebasket">
+		delete from basket where basketnum=#{param1}
+	</delete>
 	
 </mapper>

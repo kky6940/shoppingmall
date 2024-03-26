@@ -51,15 +51,27 @@ public class ProductController {
 		int su = Integer.parseInt(mul.getParameter("su"));
 		int price = Integer.parseInt(mul.getParameter("price"));
 		String ssize = mul.getParameter("ssize");
+		int best = Integer.parseInt(mul.getParameter("best"));
 		
 		MultipartFile mf = mul.getFile("image");
+		MultipartFile mf1 = mul.getFile("sideimage1");
+		MultipartFile mf2 = mul.getFile("sideimage2");
+		MultipartFile mf3 = mul.getFile("sideimage3");
+		
 		String fname = mf.getOriginalFilename();
+		String fname1 = mf1.getOriginalFilename();
+		String fname2 = mf2.getOriginalFilename();
+		String fname3 = mf3.getOriginalFilename();
+		
 		mf.transferTo(new File(imagepath+"\\"+fname));
+		mf.transferTo(new File(imagepath+"\\"+fname1));
+		mf.transferTo(new File(imagepath+"\\"+fname2));
+		mf.transferTo(new File(imagepath+"\\"+fname3));
 		
 		String intro = mul.getParameter("intro");
 		
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,su,price,ssize,fname,intro);
+		ss.productinsert(snum,sname,stype,su,price,ssize,fname,intro,best,fname1,fname2,fname3);
 		
 		return "redirect:/main";
 	}
@@ -121,10 +133,19 @@ public class ProductController {
 			String image = request.getParameter("image");
 			
 			Service ss = sqlSession.getMapper(Service.class);
-			ss.basketinsert(id,snum,sname,stype,guestbuysu,totprice,ssize,image);
+			int snumcheck = ss.snumcheck(snum,ssize);
 			
-			
-			return "redirect:/basketout";
+			if(snumcheck==0)
+			{
+				ss.basketinsert(id,snum,sname,stype,guestbuysu,totprice,ssize,image);
+				return "redirect:/basketout";
+			}
+			else
+			{
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); window.location.href='./basketout'; </script>");
+			}
 		}
 		else
 		{
@@ -146,10 +167,10 @@ public class ProductController {
 		if(id != null) {
 			String nowPage=request.getParameter("nowPage");
 	        String cntPerPage=request.getParameter("cntPerPage");
-	        System.out.println(nowPage+"\t"+cntPerPage);
+	        
 	        Service ss = sqlSession.getMapper(Service.class);
 
-	        int total=ss.totalbasket();
+	        int total=ss.totalbasket(id);
 	    
 	        if(nowPage==null && cntPerPage == null) {
 	           nowPage="1";
@@ -166,6 +187,7 @@ public class ProductController {
 	        
 	        mo.addAttribute("paging",dto);
 			mo.addAttribute("list", ss.basketout(id,dto.getStart(),dto.getEnd()));
+			
 			return "basketout";
 		}
 		else
@@ -221,7 +243,7 @@ public class ProductController {
 	
 	}
 	
-	// 상품 내용 화면에서 즉시 구매 클릭, 장바구니 화면에서 구매 클릭 시 구매확인 화면으로 이동
+	// 상품 내용 화면에서 즉시 구매 클릭 시 구매확인 화면으로 이동
 	@RequestMapping(value = "/productsell", method = RequestMethod.POST)
 	public String productsell(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		Service ss = sqlSession.getMapper(Service.class);
@@ -261,6 +283,28 @@ public class ProductController {
 		}
 
 		return null;
+	}
+	
+	// 장바구니 목록 선택 후 삭제
+	@RequestMapping(value = "/basketdelete")
+	public String basketdelete(HttpServletRequest request) {
+		String [] items = request.getParameterValues("item"); // 체크박스로 선택한 목록 번호를 가져옴
+		int [] basketnum = null;
+		
+		if(items != null && items.length > 0)
+		{
+			basketnum = new int[items.length];
+			for(int i=0; i<items.length; i++)
+			{
+				basketnum[i] = Integer.parseInt(items[i]);
+			}
+		}
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		for (int i = 0; i < basketnum.length; i++) {
+			ss.deletebasket(basketnum[i]);
+		}
+		return "redirect:/basketout";
 	}
 	
 }

@@ -6,21 +6,21 @@ import com.ezen.haha.membership.MembershipDTO;
 
 public interface Service {
 
-	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String fname,
+	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String color, String fname,
 			String intro, int best, String fname1, String fname2, String fname3);
 
 	ArrayList<ProductDTO> productout(PageDTO dto);
 
 	ArrayList<ProductDTO> detailview(int snum);
 
-	void basketinsert(String id, int snum, String sname, String stype, int guestbuysu, int totprice, String ssize, String image);
+	void basketinsert(String id, int snum, String sname, String stype, int guestbuysu, int price, int totprice, String ssize, String image, String color);
 
 	ArrayList<BasketDTO> basketout(String id, int start, int end);
 
 	ArrayList<MembershipDTO> IDinformation(String id);
 
 	void Productsellinsert(String id, String name, String tel, String email, String address, String image, int snum,
-			String sname, String ssize, int guestbuysu, int totprice, String stype);
+			String sname, String ssize, int guestbuysu, int totprice, String stype, String color);
 
 	void deleteproductsell();
 	
@@ -35,6 +35,10 @@ public interface Service {
 	void deletebasket(int i);
 
 	int snumcheck(int snum, String ssize);
+
+	int colorsnumsearch(String sname, String color);
+
+	void updatebasket(int i, int j, int k);
 
 	
 

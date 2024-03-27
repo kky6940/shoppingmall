@@ -2,7 +2,7 @@ package com.ezen.haha.product;
 
 public class ProductDTO {
 	int snum, su, price, totprice, best;
-	String sname, stype, ssize, image, intro, sideimage1, sideimage2, sideimage3;
+	String sname, stype, color, ssize, image, intro, sideimage1, sideimage2, sideimage3;
 	
 	public ProductDTO() {}
 
@@ -108,6 +108,14 @@ public class ProductDTO {
 
 	public void setSideimage3(String sideimage3) {
 		this.sideimage3 = sideimage3;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 }

@@ -3,8 +3,8 @@ package com.ezen.haha.product;
 import com.ezen.haha.membership.MembershipDTO;
 
 public class BasketDTO {
-	String id,sname,stype,ssize,image;
-	int basketnum,snum,guestbuysu,totprice;
+	String id,sname,stype,ssize,image,color;
+	int basketnum,snum,guestbuysu,price,totprice;
 	MembershipDTO membershipdto;
 	
 	public BasketDTO() {}
@@ -87,6 +87,22 @@ public class BasketDTO {
 
 	public void setMembershipdto(MembershipDTO membershipdto) {
 		this.membershipdto = membershipdto;
+	}
+
+	public int getPrice() {
+		return price;
+	}
+
+	public void setPrice(int price) {
+		this.price = price;
+	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
 	}
 	
 }

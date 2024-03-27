@@ -5,15 +5,17 @@
 <mapper namespace="com.ezen.haha.product.Service">
 	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
-		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12})
+		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12},#{param13})
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
 	<select id="productout" resultType="com.ezen.haha.product.ProductDTO">		
-	   select * from ( 
-	   select rownum rn,A.* from(  
-	   select snum,image,sname,price,best,sideimage1,sideimage2,sideimage3 from product)A) 
-	   where rn between #{start} AND #{end}
+	   SELECT * FROM (
+    SELECT ROW_NUMBER() OVER (PARTITION BY sname ORDER BY snum) AS rn, A.* FROM (
+        SELECT DISTINCT sname, snum, image, price, best, sideimage1, sideimage2, sideimage3 FROM product
+    ) A
+	) 
+	WHERE rn = 1 AND rn BETWEEN #{start} AND #{end}
 	</select>
 	
 	<!-- 상품 내용 출력 -->
@@ -21,22 +23,31 @@
 		select snum,image,sname,stype,price,ssize,intro from product where snum=#{param1}
 	</select>
 	
+	<!-- 컬러에 맞는 제품의 상품 코드 가져오기 -->
+	<select id="colorsnumsearch" resultType="int">
+		select snum from product where sname=#{param1} and color=#{param2}
+	</select>
 	<!-- 장바구니 동일 제품이 있는지 중복 체크  -->
 	<select id="snumcheck" resultType="int">
 		select count(*) from basket where snum=#{param1} and ssize = #{param2}
 	</select>
 	<!-- 장바구니 데이터 DB에 저장 -->
 	<insert id="basketinsert">
-		insert into basket(basketnum,id,snum,sname,stype,guestbuysu,totprice,ssize,image) values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8})
+		insert into basket(basketnum,id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color) values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
 	</insert>
 	
 	<!-- 장바구니 출력 -->
 	<select id="basketout" resultType="com.ezen.haha.product.BasketDTO">
 		select * from ( 
 		select rownum rn,A.* from(  
-		select basketnum,snum,sname,stype,guestbuysu,totprice,ssize,image from basket where id=#{param1} order by basketnum desc)A) 
+		select basketnum,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color from basket where id=#{param1} order by basketnum desc)A) 
 		where rn between #{param2} AND #{param3}
 	</select>
+	
+	<!-- 장바구니에서 수정한 수량, 총 가격 업데이트 -->
+	<update id="updatebasket">
+		update basket set guestbuysu=#{param1},totprice=#{param2} where basketnum=#{param3}
+	</update>
 	
 	<resultMap type="com.ezen.haha.membership.MembershipDTO" id="membership">
 		<result property="id" column="id"/>
@@ -57,12 +68,13 @@
 		<result property="snum" column="snum"/>
 		<result property="guestbuysu" column="guestbuysu"/>
 		<result property="totprice" column="totprice"/>
+		<result property="color" column="color"/>
 		<collection property="membershipdto" ofType="com.ezen.haha.membership.MembershipDTO" resultMap="membership"/>
 	</resultMap>
 		
 	<!-- 장바구니에서 체크박스 선택(장바구니 번호로 구분) 후 구매 화면으로 이동 -->
-	<select id="basketsell" resultMap="basket">
-		SELECT b.id, b.snum, b.sname, b.stype, b.guestbuysu, b.totprice, b.ssize, b.image,
+	<select id="basketsell" resultMap="basket"> 
+		SELECT b.id, b.snum, b.sname, b.stype, b.guestbuysu, b.totprice, b.ssize, b.image, b.color,
        		   m.name, m.tel, m.email, m.address
 		from basket b
 		inner join member m on b.id = m.id
@@ -81,7 +93,7 @@
 	
 	<!-- 구매 버튼 누를 시 주문 정보 DB에 저장 -->
 	<insert id="Productsellinsert">
-		insert into productsell values(sell_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12})
+		insert into productsell values(sell_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12},#{param13})
 	</insert>
 	
 	<!-- 구매 버튼 누를 시 주문 정보 출력 -->

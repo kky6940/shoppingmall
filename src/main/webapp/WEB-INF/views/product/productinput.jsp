@@ -13,11 +13,16 @@
 		<caption>상품 입력</caption>
 		<tr>
 			<th>상품코드</th>
-			<td><input type="text" name="snum"> </td>
+			<td>
+				<input type="text" name="snum"> 
+					
+			</td>
 		</tr>
 		<tr>
 			<th>상품명</th>
-			<td><input type="text" name="sname"> </td>
+			<td>
+				<input type="text" name="sname">
+			</td>
 		</tr>
 		<tr>
 			<th>상품타입</th>
@@ -49,6 +54,17 @@
 					<option value="2xl">2XL</option>
 				</select>
 			</td>
+		</tr>
+		
+		<tr>
+			<th>색상</th>
+			<td>
+				<select name="color">
+					<option value="red">red</option>
+					<option value="blue">blue</option>
+					<option value="green">green</option>
+				</select>
+			</td> 
 		</tr>
 		<tr>
 			<th>상품이미지</th>

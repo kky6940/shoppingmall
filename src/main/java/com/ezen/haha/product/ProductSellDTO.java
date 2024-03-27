@@ -2,7 +2,7 @@ package com.ezen.haha.product;
 
 public class ProductSellDTO {
 	int ordernum,snum,guestbuysu,totprice;
-	String id,name,tel,email,address,image,sname,ssize,stype;
+	String id,name,tel,email,address,image,sname,ssize,stype,color;
 	
 	public ProductSellDTO() {}
 
@@ -109,4 +109,13 @@ public class ProductSellDTO {
 	public void setStype(String stype) {
 		this.stype = stype;
 	}
+
+	public String getColor() {
+		return color;
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+	}
+	
 }

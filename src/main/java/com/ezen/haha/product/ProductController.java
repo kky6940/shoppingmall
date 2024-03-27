@@ -48,9 +48,11 @@ public class ProductController {
 		int snum = Integer.parseInt(mul.getParameter("snum"));
 		String sname = mul.getParameter("sname");
 		String stype = mul.getParameter("stype");
+		String color = mul.getParameter("color");
 		int su = Integer.parseInt(mul.getParameter("su"));
 		int price = Integer.parseInt(mul.getParameter("price"));
 		String ssize = mul.getParameter("ssize");
+		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
 		
 		MultipartFile mf = mul.getFile("image");
@@ -67,11 +69,9 @@ public class ProductController {
 		mf.transferTo(new File(imagepath+"\\"+fname1));
 		mf.transferTo(new File(imagepath+"\\"+fname2));
 		mf.transferTo(new File(imagepath+"\\"+fname3));
-		
-		String intro = mul.getParameter("intro");
-		
+
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,su,price,ssize,fname,intro,best,fname1,fname2,fname3);
+		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,fname1,fname2,fname3);
 		
 		return "redirect:/main";
 	}
@@ -124,20 +124,25 @@ public class ProductController {
 		
 		if(id != null)
 		{
-			int snum = Integer.parseInt(request.getParameter("snum"));
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			
 			String sname = request.getParameter("sname");
+			String color = request.getParameter("color");
+			int snum = ss.colorsnumsearch(sname,color);
 			String stype = request.getParameter("stype");
 			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+			int price = Integer.parseInt(request.getParameter("price"));
 			int totprice = Integer.parseInt(request.getParameter("totprice"));
 			String ssize = request.getParameter("ssize");
 			String image = request.getParameter("image");
 			
-			Service ss = sqlSession.getMapper(Service.class);
+			
 			int snumcheck = ss.snumcheck(snum,ssize);
 			
 			if(snumcheck==0)
 			{
-				ss.basketinsert(id,snum,sname,stype,guestbuysu,totprice,ssize,image);
+				ss.basketinsert(id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color);
 				return "redirect:/basketout";
 			}
 			else
@@ -212,19 +217,29 @@ public class ProductController {
 		if(id != null) // 로그인 중이라면
 		{
 			String [] items = request.getParameterValues("item"); // 체크박스로 선택한 목록 번호를 가져옴
+			String [] reguestbuysu = request.getParameterValues("guestbuysu"); // 장바구니에서 수정한 수량을 가져옴
+			String [] retotprice = request.getParameterValues("totprice"); // 장바구니에서 수정한 총 가격을 가져옴
 			int [] basketnum = null;
+			int [] guestbuysu = null;
+			int [] totprice = null;
 			
 			if(items != null)
 			{
-				basketnum = new int[items.length];
+				basketnum = new int[items.length]; // basketnum 배열 초기화, 안하면 널포인트 에러가 뜬다.
+				guestbuysu = new int[reguestbuysu.length];
+		        totprice = new int[retotprice.length];
+		        
 				for(int i=0; i<items.length; i++)
 				{
-					basketnum[i] = Integer.parseInt(items[i]);
+					basketnum[i] = Integer.parseInt(items[i]); // int 타입으로 전환
+					guestbuysu[i] = Integer.parseInt(reguestbuysu[i]);
+					totprice[i] = Integer.parseInt(retotprice[i]);
 				}
 			}
-
+			
 			ArrayList<BasketDTO> list = new ArrayList<>(); 
 			for (int i = 0; i < basketnum.length; i++) {
+				ss.updatebasket(guestbuysu[i],totprice[i],basketnum[i]);// 장바구니에서 수정한 수량, 총 가격 업데이트
 			    list.add(ss.basketsell(basketnum[i]));
 			}
 			
@@ -253,6 +268,7 @@ public class ProductController {
 		int snum = Integer.parseInt(request.getParameter("snum"));
 		String sname = request.getParameter("sname");
 		String ssize = request.getParameter("ssize");
+		String color = request.getParameter("color");
 		int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
 		int totprice = Integer.parseInt(request.getParameter("totprice"));
 		String stype = request.getParameter("stype");
@@ -269,7 +285,7 @@ public class ProductController {
 			String address = dto.getAddress();
 			
 			// 개인 정보와 구매 정보를 DB 테이블(Productsell)에 입력
-			ss.Productsellinsert(id,name,tel,email,address,image,snum,sname,ssize,guestbuysu,totprice,stype);
+			ss.Productsellinsert(id,name,tel,email,address,image,snum,sname,ssize,guestbuysu,totprice,stype,color);
 			ArrayList<ProductSellDTO> pslist = ss.productsellout();
 			mo.addAttribute("list", pslist);
 			

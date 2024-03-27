@@ -70,6 +70,7 @@
 				<th>상품이미지</th>
 				<th>상품명</th>
 				<th>상품사이즈</th>
+				<th>상품색상</th>
 				<th>상품수량</th>
 				<th>상품가격</th>
 			</tr>
@@ -85,6 +86,10 @@
 				<td>
 					<span>${aa.ssize }</span>
 					<input type="hidden" name="ssize" value="${aa.ssize }">
+				</td>
+				<td>
+					<span>${aa.color }</span>
+					<input type="hidden" name="ssize" value="${aa.color }">
 				</td>
 				<td>
 					<span>${aa.guestbuysu }</span>

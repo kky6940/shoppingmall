@@ -135,6 +135,16 @@ function submitfrom(action) {
 					</td>
 				</tr>
 				<tr>
+					<th>색상</th>
+					<td>
+						<select name="color">
+							<option value="red">red</option>
+							<option value="blue">blue</option>
+							<option value="green">green</option>
+						</select>
+					</td>
+				</tr>
+				<tr>
 					<th>수량</th>
 					<td>
 						<input type="number" name="guestbuysu" min="1" max="3" id="su" value="1">
@@ -154,8 +164,8 @@ function submitfrom(action) {
 				<tr>
 					<div class="btns">
 <!-- 					<td colspan="2" align="center">  -->
-						<a href="#a" class="product_btn1" onclick="submitfrom('./productsell')">장바구니</a>
-						<a href="#a" class="product_btn2" onclick="submitfrom('./basket')">구매하기</a>
+						<a href="#a" class="product_btn1" onclick="submitfrom('./productsell')">구매하기</a>
+						<a href="#a" class="product_btn2" onclick="submitfrom('./basket')">장바구니</a>
 <!-- 						<input type="button" value="구매하기" onclick="submitfrom('./productsell')"> -->
 <!-- 						<input type="button" value="장바구니" onclick="submitfrom('./basket')"> -->
 <!-- 					</td> -->

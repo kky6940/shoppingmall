@@ -16,7 +16,7 @@
 		<c:if test="${not empty list}"> <!-- list를 한번만 출력하려고 사용 -->
 			<tr>
 				<th>배송지</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${list[0].membershipdto.address }</span>
 					<input type="hidden" name="address" value="${list[0].membershipdto.address }"> 
 				</td>
@@ -26,7 +26,7 @@
 			</tr>
 			<tr>
 				<th>이름</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${list[0].membershipdto.name }</span>
 					<input type="hidden" name="name" value="${list[0].membershipdto.name }"> 
 				</td>
@@ -36,7 +36,7 @@
 			</tr>
 			<tr>
 				<th>연락처</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${list[0].membershipdto.tel }</span>
 					<input type="hidden" name="tel" value="${list[0].membershipdto.tel }"> 
 				</td>
@@ -46,7 +46,7 @@
 			</tr>
 			<tr>
 				<th>Email</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${list[0].membershipdto.email }</span>
 					<input type="hidden" name="email" value="${list[0].membershipdto.email }"> 
 				</td>
@@ -56,7 +56,7 @@
 			</tr>
 			<tr>
 				<th>배송 요청사항</th>
-				<td colspan="4">
+				<td colspan="5">
 					<select name="request">
 						<option value="부재">부재시 연락주세요</option>
 						<option value="경비실">경비실에 보관해주세요</option>
@@ -109,7 +109,7 @@
 			</tr>
 		</c:forEach>
 			<tr>
-			    <td colspan="5" align="center">
+			    <td colspan="6" align="center">
 			        <!-- 총 가격 출력 -->
 			        <input type="hidden" name="totalPrice" value="${totalPrice}">
 			        <input type="submit" value="<f:formatNumber value='${totalPrice}' pattern='총 #,###원'/> 구입하기">

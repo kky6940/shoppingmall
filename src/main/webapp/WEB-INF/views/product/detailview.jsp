@@ -148,6 +148,7 @@ function submitfrom(action) {
 					<th>수량</th>
 					<td>
 						<input type="number" name="guestbuysu" min="1" max="3" id="su" value="1">
+						<input type="hidden" name="su" value="${aa.su }">
 					</td>
 				</tr>
 				<tr>
@@ -170,6 +171,12 @@ function submitfrom(action) {
 <!-- 						<input type="button" value="장바구니" onclick="submitfrom('./basket')"> -->
 <!-- 					</td> -->
 					</div>
+				</tr>
+				<tr>
+					<td colspan="6">
+						<a href="deleteproduct?snum=${aa.snum }"><input type="button" value="삭제하기" onclick="return confirm('정말로 삭제하시겠습니까?')"></a>
+						<a href="updateproductview?snum=${aa.snum }"><input type="button" value="수정하기"></a>
+					</td>
 				</tr>
 				</table>
 			</div>

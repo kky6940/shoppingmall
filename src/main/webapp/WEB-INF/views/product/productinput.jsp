@@ -69,15 +69,19 @@
 		<tr>
 			<th>상품이미지</th>
 			<td>
-				<input type="file" name="image"> 
+				<span>메인 이미지</span>
+				<input type="file" name="image">
+				<span>사이드 이미지1</span> 
 				<input type="file" name="sideimage1">
+				<span>사이드 이미지2</span>
 				<input type="file" name="sideimage2">
+				<span>사이드 이미지3</span>
 				<input type="file" name="sideimage3">
 			</td>
 		</tr>
 		<tr>
 			<th>상품설명</th>
-			<td><textarea rows="5" cols="30" name="intro"></textarea> </td>
+			<td><textarea rows="5" cols="30" name="intro" style="resize: none;"></textarea> </td>
 		</tr>
 		<tr>
 			<th>베스트상품지정</th>

@@ -10,26 +10,29 @@
 
 	<!-- 상품 정보(목록) 출력 -->
 	<select id="productout" resultType="com.ezen.haha.product.ProductDTO">		
-	   SELECT * FROM (
-    SELECT ROW_NUMBER() OVER (PARTITION BY sname ORDER BY snum) AS rn, A.* FROM (
-        SELECT DISTINCT sname, snum, image, price, best, sideimage1, sideimage2, sideimage3 FROM product
-    ) A
-	) 
-	WHERE rn = 1 AND rn BETWEEN #{start} AND #{end}
+		select * from (
+		select row_number() over (partition by sname order by snum) as rn, A.* from (
+        select distinct sname, snum, image, price, best, sideimage1, sideimage2, sideimage3 from product) A) 
+		where rn = 1 and rn between #{start} and #{end}
 	</select>
 	
 	<!-- 상품 내용 출력 -->
 	<select id="detailview" resultType="com.ezen.haha.product.ProductDTO">
-		select snum,image,sname,stype,price,ssize,intro from product where snum=#{param1}
+		select snum,image,sname,stype,price,ssize,intro,su from product where snum=#{param1}
 	</select>
 	
 	<!-- 컬러에 맞는 제품의 상품 코드 가져오기 -->
-	<select id="colorsnumsearch" resultType="int">
+	<select id="colorsnumsearch" resultType="java.lang.Integer">
 		select snum from product where sname=#{param1} and color=#{param2}
 	</select>
+	<!-- 상품이 존재하는지 체크 -->
+	<select id="jaegocheck" resultType="int">
+		select count(*) from product where snum=#{param1} and ssize=#{param2} and color=#{param3} and su>=#{param4}
+	</select>
+	
 	<!-- 장바구니 동일 제품이 있는지 중복 체크  -->
 	<select id="snumcheck" resultType="int">
-		select count(*) from basket where snum=#{param1} and ssize = #{param2}
+		select count(*) from basket where snum=#{param1} and ssize=#{param2} and color=#{param3}
 	</select>
 	<!-- 장바구니 데이터 DB에 저장 -->
 	<insert id="basketinsert">
@@ -103,7 +106,7 @@
 	
 	<!-- 페이징 처리 -->
 	<select id="total" resultType="int">
-	   select count(*) from product
+	   select count(distinct sname) from product <!-- 이름이 같을 경우 중복방지 --> 
 	</select>
 	<select id="totalbasket" resultType="int">
 	   select count(*) from basket where id=#{param1}
@@ -113,5 +116,32 @@
 	<delete id="deletebasket">
 		delete from basket where basketnum=#{param1}
 	</delete>
+	
+	<!-- 상품 내용 화면에서 상품 삭제 -->
+	<delete id="deleteproduct">
+		delete from product where snum=#{param1}
+	</delete>
+	
+	<!-- 상품 내용 화면에서 상품 수정 화면으로 가기 -->
+	<select id="updateproductview" resultType="com.ezen.haha.product.ProductDTO">
+		select * from product where snum=#{param1}
+	</select>
+	
+	<!-- 상품 수정 화면에서 받은 데이터로 상품 정보 수정하기(이미지 개수 만큼 증가) -->
+	<update id="updateproductmainimage">
+		update product set snum=#{param1},sname=#{param2},stype=#{param3},su=#{param4},price=#{param5},
+			ssize=#{param6},color=#{param7},image=#{param8},intro=#{param9},best=#{param10} 
+			where snum=#{param11}
+	</update>
+	<update id="updateproductsideimage1">
+		update product set sideimage1=#{param1} where snum=#{param2}
+	</update>
+	<update id="updateproductsideimage2">
+		update product set sideimage2=#{param1} where snum=#{param2}
+	</update>
+	<update id="updateproductsideimage3">
+		update product set sideimage3=#{param1} where snum=#{param2}
+	</update>
+	
 	
 </mapper>

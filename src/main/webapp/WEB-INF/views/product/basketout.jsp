@@ -5,8 +5,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
 <script>
 	// 1. 총 금액 계산 갱신 관련 스크립트
     function totalprice(rowId) {
@@ -123,12 +121,63 @@
 	}
  	// 5. 체크박스를 체크한 목록의 총 가격을 업데이트 하는 함수 end
 </script>
+<style type="text/css">
+table {
+    width: 900px;
+    text-align: center;
+    border: 1px solid #fff;
+    border-spacing: 1px;
+    font-family: 'Cairo', sans-serif;
+  margin: auto;
+}
+
+caption {
+    font-weight: bold;
+}
+
+table td {
+    padding: 10px;
+    background-color: #eee;
+}
+
+table th {
+    background-color: #333;
+    color: #fff;
+    padding: 10px;
+}
+
+img {
+    width: 90px;
+    height: 90px;
+}
+
+.view,
+.delete {
+    border: none;
+    padding: 5px 10px;
+    color: #fff;
+    font-weight: bold;
+}
+
+.view {
+    background-color: #03A9F4;
+}
+
+.delete {
+    background-color: #E91E63;
+}
+
+.tablefoot {
+    padding: 0;
+    border-bottom: 3px solid #009688;
+}
+</style>
 <meta charset="UTF-8">
 <title>장바구니</title>
 </head>
 <body>
 <form id="formselect" method="post"> <!-- 하단 버튼과 자바스크립트로 form 장소 선택 -->
-    <table border="1" width="700px" align="center">
+    <table border="1" align="center">
         <tr>
             <th>선택</th>
             <th>상품이미지</th>
@@ -179,17 +228,17 @@
                             <input type="hidden" name="stype" value="${aa.stype }">
                         </td>
                        <td align="center">
-	                		<input type="button" value="목록삭제" onclick="submitbasketdeleteAndcheckboxclick()">
-	                		<input type="button" value="구매하기" onclick="submitbasketsellAndcheckboxclick()">
+	                		<input type="button" value="목록삭제" onclick="submitbasketdeleteAndcheckboxclick()" class="delete">
+	                		<input type="button" value="구매하기" onclick="submitbasketsellAndcheckboxclick()" class="view">
 	                	</td>
                     </tr>
                     </c:forEach>
                     <tr>
                     	<td colspan="5" align="left">
-                    		<input type="button" value="전체 선택" onclick="toggleCheckboxtrue()">
-							<input type="button" value="전체 해제" onclick="toggleCheckboxfalse()">
+                    		<input type="button" value="전체 선택" onclick="toggleCheckboxtrue()" class="view">
+							<input type="button" value="전체 해제" onclick="toggleCheckboxfalse()" class="delete">
                     	</td>
-                    	<td colspan="2" align="right">
+                    	<td colspan="3" align="right">
                     		총 가격 : <span id="totalPriceDisplay">0원</span>
                     		체크박스 총 가격 : <span id="totalPriceCheckboxDisplay">0원</span>
                     	</td>

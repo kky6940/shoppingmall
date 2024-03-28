@@ -34,11 +34,28 @@ public interface Service {
 
 	void deletebasket(int i);
 
-	int snumcheck(int snum, String ssize);
+	int snumcheck(int snum, String ssize, String color);
 
-	int colorsnumsearch(String sname, String color);
+	Integer colorsnumsearch(String sname, String color);
 
 	void updatebasket(int i, int j, int k);
+
+	void deleteproduct(int snum);
+
+	ArrayList<ProductDTO> updateproductview(int snum);
+
+	int jaegocheck(int snum, String ssize, String color, int guestbuysu);
+
+	void updateproductmainimage(int newsnum, String sname, String stype, int su, int price, String ssize, String color,
+			String image, String intro, int best, int snum);
+
+	void updateproductsideimage1(String sideimage1, int snum);
+
+	void updateproductsideimage2(String sideimage2, int snum);
+
+	void updateproductsideimage3(String sideimage3, int snum);
+
+	String countfind();
 
 	
 

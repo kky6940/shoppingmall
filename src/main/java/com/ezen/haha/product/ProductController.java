@@ -7,6 +7,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,9 +48,9 @@ public class ProductController {
 	@RequestMapping(value = "/productsave", method = RequestMethod.POST)
 	public String productsave(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
 		int snum = Integer.parseInt(mul.getParameter("snum"));
-		String sname = mul.getParameter("sname");
 		String stype = mul.getParameter("stype");
 		String color = mul.getParameter("color");
+		String sname = mul.getParameter("sname");
 		int su = Integer.parseInt(mul.getParameter("su"));
 		int price = Integer.parseInt(mul.getParameter("price"));
 		String ssize = mul.getParameter("ssize");
@@ -66,16 +68,16 @@ public class ProductController {
 		String fname3 = mf3.getOriginalFilename();
 		
 		mf.transferTo(new File(imagepath+"\\"+fname));
-		mf.transferTo(new File(imagepath+"\\"+fname1));
-		mf.transferTo(new File(imagepath+"\\"+fname2));
-		mf.transferTo(new File(imagepath+"\\"+fname3));
+		mf1.transferTo(new File(imagepath+"\\"+fname1));
+		mf2.transferTo(new File(imagepath+"\\"+fname2));
+		mf3.transferTo(new File(imagepath+"\\"+fname3));
 
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,fname1,fname2,fname3);
 		
 		return "redirect:/main";
 	}
-	
+
 	// DB 데이터 가져온 후 출력 화면으로 가기
 	@RequestMapping(value = "/productout")
 	public String productout(HttpServletRequest request, PageDTO dto, Model mo) {
@@ -122,35 +124,55 @@ public class ProductController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 		
-		if(id != null)
+		if(id != null) // 로그인 체크
 		{
 			Service ss = sqlSession.getMapper(Service.class);
-			
-			
 			String sname = request.getParameter("sname");
 			String color = request.getParameter("color");
-			int snum = ss.colorsnumsearch(sname,color);
-			String stype = request.getParameter("stype");
-			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
-			int price = Integer.parseInt(request.getParameter("price"));
-			int totprice = Integer.parseInt(request.getParameter("totprice"));
-			String ssize = request.getParameter("ssize");
-			String image = request.getParameter("image");
+			Integer snum = ss.colorsnumsearch(sname,color); // 색상에 맞는 상품의 상품코드 가져오기
 			
-			
-			int snumcheck = ss.snumcheck(snum,ssize);
-			
-			if(snumcheck==0)
+			if(snum!=null) // 색상에 맞는 상품이 있는지 체크(사용자는 어드민 출력 화면이 아니라 상품 내용 화면에서 색상을 선택하고 넘어가기 때문에 따로 체크해야함)
 			{
-				ss.basketinsert(id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color);
-				return "redirect:/basketout";
+				String stype = request.getParameter("stype");
+				int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+				int su = Integer.parseInt(request.getParameter("su"));
+				int price = Integer.parseInt(request.getParameter("price"));
+				int totprice = Integer.parseInt(request.getParameter("totprice"));
+				
+				String ssize = request.getParameter("ssize");
+				String image = request.getParameter("image");
+				
+				int jaegocheck = ss.jaegocheck(snum,ssize,color,guestbuysu); // 상품 존재 유무 및 재고 체크
+				int snumcheck = ss.snumcheck(snum,ssize,color); // 장바구니 중복 체크
+				
+				if(jaegocheck!=0) // 상품 재고 체크
+				{
+					if(snumcheck==0) // 장바구니 중복 체크
+					{
+						ss.basketinsert(id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color);
+						return "redirect:/basketout";
+					}
+					else
+					{
+						response.setContentType("text/html;charset=utf-8");
+						PrintWriter printw = response.getWriter();
+						printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); window.location.href='./basketout'; </script>");
+					}
+				}
+				else
+				{
+					response.setContentType("text/html;charset=utf-8");
+					PrintWriter printw = response.getWriter();
+					printw.print("<script> alert('해당 상품의 재고가 없습니다.'); window.history.back(); </script>");
+				}
 			}
 			else
 			{
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); window.location.href='./basketout'; </script>");
+				printw.print("<script> alert('해당 색상의 상품이 존재하지 않습니다.'); window.history.back(); </script>");
 			}
+			
 		}
 		else
 		{
@@ -323,4 +345,102 @@ public class ProductController {
 		return "redirect:/basketout";
 	}
 	
+	// 상품 내용 화면에서 상품 삭제하기
+	@RequestMapping(value = "/deleteproduct")
+	public String deleteproduct(HttpServletRequest request) {
+		int snum = Integer.parseInt(request.getParameter("snum"));
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.deleteproduct(snum);
+		
+		return "redirect:/productout";
+	}
+	
+	// 상품 내용 화면에서 상품 수정 화면으로 가기
+	@RequestMapping(value = "/updateproductview")
+	public String updateproductview(HttpServletRequest request, Model mo) {
+		int snum = Integer.parseInt(request.getParameter("snum"));
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<ProductDTO> list = ss.updateproductview(snum);
+		mo.addAttribute("list", list);
+		
+		return "updateproductview";
+	}	
+		
+	// 상품 수정 화면에서 받은 데이터로 상품 정보 수정하기
+		@RequestMapping(value = "/updateproduct", method = RequestMethod.POST)
+		public String updateproduct(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
+			int snum = Integer.parseInt(mul.getParameter("snum"));
+			int newsnum = Integer.parseInt(mul.getParameter("newsnum"));
+			String sname = mul.getParameter("sname");
+			String stype = mul.getParameter("stype");
+			String color = mul.getParameter("color");
+			int su = Integer.parseInt(mul.getParameter("su"));
+			int price = Integer.parseInt(mul.getParameter("price"));
+			String ssize = mul.getParameter("ssize");
+			String intro = mul.getParameter("intro");
+			int best = Integer.parseInt(mul.getParameter("best"));
+			
+			String image = mul.getParameter("image");
+			String sideimage1 = mul.getParameter("sideimage1");
+			String sideimage2 = mul.getParameter("sideimage2");
+			String sideimage3 = mul.getParameter("sideimage3");
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			// 이미지 업데이트, 어떤 이미지는 수정 입력하고 어떤 이미지는 입력 안하는 경우가 있기에 if문으로 하나하나 나눠야했음
+			MultipartFile mf = mul.getFile("newimage");
+			String fname = mf.getOriginalFilename();
+			if(mf.getOriginalFilename().equals("")) // 메인이미지 수정 입력을 하지 않았다면
+			{
+				ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,image,intro,best,snum); // 기존 이미지 업데이트
+			}
+			else
+			{
+				mf.transferTo(new File(imagepath+"\\"+fname));
+				fname = mf.getOriginalFilename();
+				ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,fname,intro,best,snum); // 새 이미지 업데이트
+			}
+			
+			MultipartFile mf1 = mul.getFile("newsideimage1");
+			String fname1 = mf1.getOriginalFilename();
+			if(mf1.getOriginalFilename().equals(""))
+			{
+				ss.updateproductsideimage1(sideimage1,snum);
+			}
+			else
+			{
+				mf1.transferTo(new File(imagepath+"\\"+fname1));
+				fname1 = mf1.getOriginalFilename();
+				ss.updateproductsideimage1(fname1,snum);
+			}
+					
+			MultipartFile mf2 = mul.getFile("newsideimage2");
+			String fname2 = mf2.getOriginalFilename();
+			if(mf2.getOriginalFilename().equals(""))
+			{
+				ss.updateproductsideimage2(sideimage2,snum);
+			}
+			else
+			{
+				mf2.transferTo(new File(imagepath+"\\"+fname2));
+				fname2 = mf2.getOriginalFilename();
+				ss.updateproductsideimage1(fname2,snum);
+			}
+			
+			MultipartFile mf3 = mul.getFile("newsideimage3");
+			String fname3 = mf3.getOriginalFilename();
+			if(mf3.getOriginalFilename().equals(""))
+			{
+				ss.updateproductsideimage3(sideimage3,snum);
+			}
+			else
+			{
+				mf3.transferTo(new File(imagepath+"\\"+fname3));
+				fname3 = mf3.getOriginalFilename();
+				ss.updateproductsideimage3(fname3,snum);
+			}
+
+			return "redirect:/productout";
+		}
+
 }

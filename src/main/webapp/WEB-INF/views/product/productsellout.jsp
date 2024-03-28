@@ -15,7 +15,7 @@
 		<c:forEach items="${list }" var="aa">
 			<tr>
 				<th>배송지</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${aa.address }</span>
 					<input type="hidden" name="address" value="${aa.address }"> 
 				</td>
@@ -25,7 +25,7 @@
 			</tr>
 			<tr>
 				<th>이름</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${aa.name }</span>
 					<input type="hidden" name="name" value="${aa.name }"> 
 				</td>
@@ -35,7 +35,7 @@
 			</tr>
 			<tr>
 				<th>연락처</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${aa.tel }</span>
 					<input type="hidden" name="tel" value="${aa.tel }"> 
 				</td>
@@ -45,7 +45,7 @@
 			</tr>
 			<tr>
 				<th>Email</th> 
-				<td colspan="3">
+				<td colspan="4">
 					<span>${aa.email }</span>
 					<input type="hidden" name="email" value="${aa.email }"> 
 				</td>
@@ -55,7 +55,7 @@
 			</tr>
 			<tr>
 				<th>배송 요청사항</th>
-				<td colspan="4">
+				<td colspan="5">
 					<select name="request">
 						<option value="부재">부재시 연락주세요</option>
 						<option value="경비실">경비실에 보관해주세요</option>

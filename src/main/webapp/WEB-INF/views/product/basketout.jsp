@@ -121,7 +121,7 @@
 	}
  	// 5. 체크박스를 체크한 목록의 총 가격을 업데이트 하는 함수 end
 </script>
-<style type="text/css">
+<style type="text/css">s
 table {
     width: 900px;
     text-align: center;

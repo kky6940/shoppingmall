@@ -8,6 +8,9 @@
 </head>
 <body>
  	<div class="img_parentsdiv">
+ 		<form action="payready" method="post">
+ 			<button type="submit">카카오</button>
+ 		</form>
     	<div class="img_childdiv"><a href="#"><img src="resources/img/cat2.jpg"></a></div>
     	<div class="img_childdiv"><a href="#"><img src="resources/img/cat2.jpg"></a></div>
     	<div class="img_childdiv"><a href="#"><img src="resources/img/cat2.jpg"></a></div>
@@ -52,6 +55,6 @@
 		return false;
 	});
 </script>
-    
+   
 </body>
 </html>

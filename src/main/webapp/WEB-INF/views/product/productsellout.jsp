@@ -5,11 +5,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+
+<script>
+	
+</script>
 <meta charset="UTF-8">
 <title>구매 페이지</title>
 </head>
 <body>
-<form action=""> <!-- 결재창으로 이동 -->
+<form action="payready" method="post"> <!-- 카카오페이 결재창으로 이동 -->
 	<div>
 		<table border="1" width="500px" align="center">
 		<c:forEach items="${list }" var="aa">

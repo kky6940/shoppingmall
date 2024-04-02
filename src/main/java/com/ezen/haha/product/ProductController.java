@@ -367,80 +367,80 @@ public class ProductController {
 	}	
 		
 	// 상품 수정 화면에서 받은 데이터로 상품 정보 수정하기
-		@RequestMapping(value = "/updateproduct", method = RequestMethod.POST)
-		public String updateproduct(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
-			int snum = Integer.parseInt(mul.getParameter("snum"));
-			int newsnum = Integer.parseInt(mul.getParameter("newsnum"));
-			String sname = mul.getParameter("sname");
-			String stype = mul.getParameter("stype");
-			String color = mul.getParameter("color");
-			int su = Integer.parseInt(mul.getParameter("su"));
-			int price = Integer.parseInt(mul.getParameter("price"));
-			String ssize = mul.getParameter("ssize");
-			String intro = mul.getParameter("intro");
-			int best = Integer.parseInt(mul.getParameter("best"));
-			
-			String image = mul.getParameter("image");
-			String sideimage1 = mul.getParameter("sideimage1");
-			String sideimage2 = mul.getParameter("sideimage2");
-			String sideimage3 = mul.getParameter("sideimage3");
-			
-			Service ss = sqlSession.getMapper(Service.class);
-			
-			// 이미지 업데이트, 어떤 이미지는 수정 입력하고 어떤 이미지는 입력 안하는 경우가 있기에 if문으로 하나하나 나눠야했음
-			MultipartFile mf = mul.getFile("newimage");
-			String fname = mf.getOriginalFilename();
-			if(mf.getOriginalFilename().equals("")) // 메인이미지 수정 입력을 하지 않았다면
-			{
-				ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,image,intro,best,snum); // 기존 이미지 업데이트
-			}
-			else
-			{
-				mf.transferTo(new File(imagepath+"\\"+fname));
-				fname = mf.getOriginalFilename();
-				ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,fname,intro,best,snum); // 새 이미지 업데이트
-			}
-			
-			MultipartFile mf1 = mul.getFile("newsideimage1");
-			String fname1 = mf1.getOriginalFilename();
-			if(mf1.getOriginalFilename().equals(""))
-			{
-				ss.updateproductsideimage1(sideimage1,snum);
-			}
-			else
-			{
-				mf1.transferTo(new File(imagepath+"\\"+fname1));
-				fname1 = mf1.getOriginalFilename();
-				ss.updateproductsideimage1(fname1,snum);
-			}
-					
-			MultipartFile mf2 = mul.getFile("newsideimage2");
-			String fname2 = mf2.getOriginalFilename();
-			if(mf2.getOriginalFilename().equals(""))
-			{
-				ss.updateproductsideimage2(sideimage2,snum);
-			}
-			else
-			{
-				mf2.transferTo(new File(imagepath+"\\"+fname2));
-				fname2 = mf2.getOriginalFilename();
-				ss.updateproductsideimage1(fname2,snum);
-			}
-			
-			MultipartFile mf3 = mul.getFile("newsideimage3");
-			String fname3 = mf3.getOriginalFilename();
-			if(mf3.getOriginalFilename().equals(""))
-			{
-				ss.updateproductsideimage3(sideimage3,snum);
-			}
-			else
-			{
-				mf3.transferTo(new File(imagepath+"\\"+fname3));
-				fname3 = mf3.getOriginalFilename();
-				ss.updateproductsideimage3(fname3,snum);
-			}
-
-			return "redirect:/productout";
+	@RequestMapping(value = "/updateproduct", method = RequestMethod.POST)
+	public String updateproduct(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
+		int snum = Integer.parseInt(mul.getParameter("snum"));
+		int newsnum = Integer.parseInt(mul.getParameter("newsnum"));
+		String sname = mul.getParameter("sname");
+		String stype = mul.getParameter("stype");
+		String color = mul.getParameter("color");
+		int su = Integer.parseInt(mul.getParameter("su"));
+		int price = Integer.parseInt(mul.getParameter("price"));
+		String ssize = mul.getParameter("ssize");
+		String intro = mul.getParameter("intro");
+		int best = Integer.parseInt(mul.getParameter("best"));
+		
+		String image = mul.getParameter("image");
+		String sideimage1 = mul.getParameter("sideimage1");
+		String sideimage2 = mul.getParameter("sideimage2");
+		String sideimage3 = mul.getParameter("sideimage3");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		
+		// 이미지 업데이트, 어떤 이미지는 수정 입력하고 어떤 이미지는 입력 안하는 경우가 있기에 if문으로 하나하나 나눠야했음
+		MultipartFile mf = mul.getFile("newimage");
+		String fname = mf.getOriginalFilename();
+		if(mf.getOriginalFilename().equals("")) // 메인이미지 수정 입력을 하지 않았다면
+		{
+			ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,image,intro,best,snum); // 기존 이미지 업데이트
 		}
+		else
+		{
+			mf.transferTo(new File(imagepath+"\\"+fname));
+			fname = mf.getOriginalFilename();
+			ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,fname,intro,best,snum); // 새 이미지 업데이트
+		}
+		
+		MultipartFile mf1 = mul.getFile("newsideimage1");
+		String fname1 = mf1.getOriginalFilename();
+		if(mf1.getOriginalFilename().equals(""))
+		{
+			ss.updateproductsideimage1(sideimage1,snum);
+		}
+		else
+		{
+			mf1.transferTo(new File(imagepath+"\\"+fname1));
+			fname1 = mf1.getOriginalFilename();
+			ss.updateproductsideimage1(fname1,snum);
+		}
+				
+		MultipartFile mf2 = mul.getFile("newsideimage2");
+		String fname2 = mf2.getOriginalFilename();
+		if(mf2.getOriginalFilename().equals(""))
+		{
+			ss.updateproductsideimage2(sideimage2,snum);
+		}
+		else
+		{
+			mf2.transferTo(new File(imagepath+"\\"+fname2));
+			fname2 = mf2.getOriginalFilename();
+			ss.updateproductsideimage1(fname2,snum);
+		}
+		
+		MultipartFile mf3 = mul.getFile("newsideimage3");
+		String fname3 = mf3.getOriginalFilename();
+		if(mf3.getOriginalFilename().equals(""))
+		{
+			ss.updateproductsideimage3(sideimage3,snum);
+		}
+		else
+		{
+			mf3.transferTo(new File(imagepath+"\\"+fname3));
+			fname3 = mf3.getOriginalFilename();
+			ss.updateproductsideimage3(fname3,snum);
+		}
+
+		return "redirect:/productout";
+	}
 
 }

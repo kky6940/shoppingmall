@@ -6,10 +6,15 @@ public class PayDTO {
 	String next_redirect_pc_url; // pc 접속 시
 	String partner_order_id; // 주문번호
 	String partner_user_id; // 회원아이디
+	String payment_method_type; // 결재 수단, CARD 혹은 MONEY
 	String item_name; // 상품명
 	int quantity; // 상품개수
 	int total_amount; // 상품 총금액
 	int tax_free_amount; // 비과세금액
+	String pgtoken; // 클라이언트 결재 후 결제 최종 승인에 필요한 토큰
+	String created_at; // 결제 준비 요청 시각
+	String approved_at; // 결제 승인 시각
+	
 	public PayDTO() {
 		super();
 		// TODO Auto-generated constructor stub
@@ -67,6 +72,30 @@ public class PayDTO {
 	}
 	public void setTax_free_amount(int tax_free_amount) {
 		this.tax_free_amount = tax_free_amount;
+	}
+	public String getPgtoken() {
+		return pgtoken;
+	}
+	public void setPgtoken(String pgtoken) {
+		this.pgtoken = pgtoken;
+	}
+	public String getPayment_method_type() {
+		return payment_method_type;
+	}
+	public void setPayment_method_type(String payment_method_type) {
+		this.payment_method_type = payment_method_type;
+	}
+	public String getCreated_at() {
+		return created_at;
+	}
+	public void setCreated_at(String created_at) {
+		this.created_at = created_at;
+	}
+	public String getApproved_at() {
+		return approved_at;
+	}
+	public void setApproved_at(String approved_at) {
+		this.approved_at = approved_at;
 	}
 	
 }

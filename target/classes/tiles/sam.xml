@@ -59,7 +59,6 @@
       <put-attribute name="body" value="/WEB-INF/views/product/updateproductview.jsp"/>
    </definition>
    
-   
    <definition name="membershipjoin2" extends="baseLayout">
       <put-attribute name="title" value="회원가입"/>
       <put-attribute name="body" value="/WEB-INF/views/membership/membershipjoin2.jsp"/>

@@ -5,16 +5,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
+function kakaopay() {
+	var formData = {
+			snum: $('#snum').val(),
+            sname: $('#sname').val(),
+            guestbuysu: $('#guestbuysu').val(),
+            totprice: $('#totprice').val()
+        };
 	
+    $.ajax({
+        type: 'POST',
+        url: 'payready',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+            // Ajax 요청이 성공하면 다음 페이지로 리디렉션
+        	window.location.href = response;
+            
+        },
+        error: function (xhr, status, error) {
+            // 에러 처리
+            console.error(error);
+        }
+    });
+}
 </script>
 <meta charset="UTF-8">
 <title>구매 페이지</title>
 </head>
 <body>
-<form action="payready" method="post"> <!-- 카카오페이 결재창으로 이동 -->
 	<div>
 		<table border="1" width="500px" align="center">
 		<c:forEach items="${list }" var="aa">
@@ -86,7 +108,7 @@
 				</td>
 				<td>
 					<span>${aa.sname }</span>
-					<input type="hidden" name="sname" value="${aa.sname }">
+					<input type="hidden" name="sname" value="${aa.sname }" id="sname">
 				</td>
 				<td>
 					<span>${aa.ssize }</span>
@@ -98,23 +120,23 @@
 				</td>
 				<td>
 					<span>${aa.guestbuysu }</span>
-					<input type="hidden" name="guestbuysu" value="${aa.guestbuysu }">
+					<input type="hidden" name="guestbuysu" value="${aa.guestbuysu }" id="guestbuysu">
 				</td>
 				<td>
 					<span><f:formatNumber value="${aa.totprice }" pattern="#,###원"/></span>
-					<input type="hidden" name="totprice" value="${aa.totprice }">
-					<input type="hidden" name="snum" value="${aa.snum }">
+					<input type="hidden" name="totprice" value="${aa.totprice }" id="totprice">
+					<input type="hidden" name="snum" value="${aa.snum }" id="snum">
 					<input type="hidden" name="stype" value="${aa.stype }">
 				</td>
 			</tr>
 			<tr>
 				<td colspan="5" align="center">
-					<input type="submit" value="<f:formatNumber value="${aa.totprice }" pattern="#,###원"/> 구입하기">
+					<button onclick="kakaopay()"><f:formatNumber value="${aa.totprice }" pattern="#,###원" /> 구입하기</button>
 				</td>
 			</tr>
 		</table>	
 		</c:forEach>
 	</div>
-</form>
+
 </body>
 </html>

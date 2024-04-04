@@ -60,6 +60,8 @@
 		<result property="email" column="email"/>
 		<result property="pid" column="pid"/>
 		<result property="address" column="address"/>
+		<result property="stringrank" column="stringrank"/>
+		<result property="rank" column="rank"/>
 	</resultMap>
 	<resultMap type="com.ezen.haha.product.BasketDTO" id="basket">
 		<result property="id" column="id"/>

@@ -157,6 +157,8 @@ public class ProductController {
 						response.setContentType("text/html;charset=utf-8");
 						PrintWriter printw = response.getWriter();
 						printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); window.location.href='./basketout'; </script>");
+						printw.close();
+						return null;
 					}
 				}
 				else
@@ -164,6 +166,8 @@ public class ProductController {
 					response.setContentType("text/html;charset=utf-8");
 					PrintWriter printw = response.getWriter();
 					printw.print("<script> alert('해당 상품의 재고가 없습니다.'); window.history.back(); </script>");
+					printw.close();
+					return null;
 				}
 			}
 			else
@@ -171,6 +175,8 @@ public class ProductController {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
 				printw.print("<script> alert('해당 색상의 상품이 존재하지 않습니다.'); window.history.back(); </script>");
+				printw.close();
+				return null;
 			}
 			
 		}
@@ -179,9 +185,9 @@ public class ProductController {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
 			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.close();
+			return "redirect:./login";
 		}
-		
-		return null;
 		
 	}
 	
@@ -222,9 +228,10 @@ public class ProductController {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
 			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.close();
+			return "redirect:./login";
 		}
 		
-		return null;
 	}
 	
 	// 장바구니에서 체크박스 선택 후 구매확인 화면으로 이동
@@ -274,9 +281,9 @@ public class ProductController {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
 			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.close();
+			return "redirect:./login";
 		}
-		
-		return null;
 	
 	}
 	
@@ -297,30 +304,44 @@ public class ProductController {
 		
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id"); // 로그인 중일 시 id 값을 가져옴
-		if(id != null)
+		
+		int jaegocheck = ss.jaegocheck(snum,ssize,color,guestbuysu); // 상품 존재 유무 및 재고 체크
+		if(jaegocheck!=0) // 상품 재고 체크
 		{
-			ArrayList<MembershipDTO> IDlist = ss.IDinformation(id); // 구매 시 정보 입력을 위해 회원 정보를 가져옴
-			MembershipDTO dto = IDlist.get(0); // IDlist에 기록된 첫번째 값을 불러옴
-			String name = dto.getName();
-			String tel = dto.getTel();
-			String email = dto.getEmail();
-			String address = dto.getAddress();
-			
-			// 개인 정보와 구매 정보를 DB 테이블(Productsell)에 입력
-			ss.Productsellinsert(id,name,tel,email,address,image,snum,sname,ssize,guestbuysu,totprice,stype,color);
-			ArrayList<ProductSellDTO> pslist = ss.productsellout();
-			mo.addAttribute("list", pslist);
-			
-			return "productsellout";
+			if(id != null) // 로그인 유무 체크
+			{
+				ArrayList<MembershipDTO> IDlist = ss.IDinformation(id); // 구매 시 정보 입력을 위해 회원 정보를 가져옴
+				MembershipDTO dto = IDlist.get(0); // IDlist에 기록된 첫번째 값을 불러옴
+				String name = dto.getName();
+				String tel = dto.getTel();
+				String email = dto.getEmail();
+				String address = dto.getAddress();
+				
+				// 개인 정보와 구매 정보를 DB 테이블(Productsell)에 입력
+				ss.Productsellinsert(id,name,tel,email,address,image,snum,sname,ssize,guestbuysu,totprice,stype,color);
+				ArrayList<ProductSellDTO> pslist = ss.productsellout();
+				mo.addAttribute("list", pslist);
+				
+				return "productsellout";
+			}
+			else
+			{
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+				printw.close();
+				return "redirect:./login";
+			}
 		}
 		else
 		{
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.print("<script> alert('해당 상품의 재고가 없습니다.'); window.history.back(); </script>");
+			printw.close();
+			return null;
 		}
-
-		return null;
+			
 	}
 	
 	// 장바구니 목록 선택 후 삭제

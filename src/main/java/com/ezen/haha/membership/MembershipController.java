@@ -95,6 +95,7 @@ public class MembershipController {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
 				printw.print("<script> alert('아이디랑 비밀번호가 틀리셨습니다. 다시 확인해주세요!'); window.location.href='logininput'; </script>");
+				printw.close();
 			}
 			return null;
 		}
@@ -109,6 +110,7 @@ public class MembershipController {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
 			printw.print("<script> alert('로그아웃 되었습니다.'); window.location.href='main'; </script>");
+			printw.close();
 			return null;
 		}
 }

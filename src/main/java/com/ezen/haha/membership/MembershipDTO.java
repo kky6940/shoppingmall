@@ -1,8 +1,9 @@
 package com.ezen.haha.membership;
 
 public class MembershipDTO {
-	String id, pw, name, tel, email, pid, address;
-
+	String id, pw, name, tel, email, pid, address, stringrank;
+	int rank;
+	
 	public MembershipDTO() {}
 
 	public String getId() {
@@ -60,6 +61,21 @@ public class MembershipDTO {
 	public void setAddress(String address) {
 		this.address = address;
 	}
-	
-	
+
+	public int getRank() {
+		return rank;
+	}
+
+	public void setRank(int rank) {
+		this.rank = rank;
+	}
+
+	public String getStringrank() {
+		return stringrank;
+	}
+
+	public void setStringrank(String stringrank) {
+		this.stringrank = stringrank;
+	}
+
 }

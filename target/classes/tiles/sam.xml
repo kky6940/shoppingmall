@@ -69,6 +69,13 @@
       <put-attribute name="body" value="/WEB-INF/views/membership/logininput.jsp"/>
    </definition>
    
-   
+   <definition name="mypagemain" extends="baseLayout">
+      <put-attribute name="title" value="마이페이지메인"/>
+      <put-attribute name="body" value="/WEB-INF/views/mypage/mypagemain.jsp"/>
+   </definition>
+   <definition name="couponview" extends="baseLayout">
+      <put-attribute name="title" value="쿠폰보기"/>
+      <put-attribute name="body" value="/WEB-INF/views/mypage/couponview.jsp"/>
+   </definition>
    
 </tiles-definitions>

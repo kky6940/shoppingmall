@@ -6,6 +6,7 @@
 <html>
 <head>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
 function kakaopay() {
@@ -32,6 +33,71 @@ function kakaopay() {
         }
     });
 }
+
+function sample6_execDaumPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            var addr = '';
+            var extraAddr = '';
+
+            if (data.userSelectedType === 'R') { 
+                addr = data.roadAddress;
+            } else {
+                addr = data.jibunAddress;
+            }
+
+            if (data.userSelectedType === 'R') {
+                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+                    extraAddr += data.bname;
+                }
+                if (data.buildingName !== '' && data.apartment === 'Y') {
+                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                }
+                if (extraAddr !== '') {
+                    extraAddr = ' (' + extraAddr + ')';
+                }
+            } 
+			
+            // 우편번호와 주소 정보를 해당 필드에 넣는다.
+            document.getElementById('sample6_postcode').value = data.zonecode;
+            document.getElementById("sample6_address").value = addr;
+            // 커서를 상세주소 필드로 이동한다.
+            document.getElementById("sample6_detailAddress").focus();
+            
+            document.getElementById('newAddress').value = addr;
+        }
+    }).open();
+}
+
+function openEditForm() {
+    // 새 창 열기
+    var editWindow = window.open("", "_blank", "width=400,height=300");
+    
+    // 새 창에 폼 생성
+    var formHTML = `
+        <form id="editForm">
+    		<input type="text" name="postcode" class="form-input3" id="sample6_postcode" placeholder="우편번호">
+    		<input type="button" class="form-button2" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+    		
+    		<input type="text" name="address1" class="form-input" id="sample6_address" placeholder="주소"><br>
+    		<input type="text" name="address2" class="form-input" id="sample6_detailAddress" placeholder="상세주소">
+            <input type="button" value="저장" onclick="saveChanges()">
+        </form>
+    `;
+    
+    editWindow.document.body.innerHTML = formHTML;
+}
+
+function saveChanges() {
+    // 새로운 배송지 값 가져오기
+    var newAddress = document.getElementById("newAddress").value;
+
+    // 부모 창의 배송지 업데이트
+    document.getElementById("address").innerText = newAddress;
+    
+    // 새 창 닫기
+    window.close();
+}
 </script>
 <meta charset="UTF-8">
 <title>구매 페이지</title>
@@ -47,7 +113,7 @@ function kakaopay() {
 					<input type="hidden" name="address" value="${aa.address }"> 
 				</td>
 				<td>
-					<input type="button" value="수정">
+					<input type="button" value="수정" onclick="openEditForm()">
 				</td>
 			</tr>
 			<tr>

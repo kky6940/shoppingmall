@@ -33,7 +33,7 @@
 		<!-- 로그인 상태에 따라 로그아웃  -->
 		<c:choose>
 	    	<c:when test="${loginstate == true}">
-				<li><a href="#">MyPage</a></li>
+				<li><a href="mypage">MyPage</a></li>
 				<li><a href="logout">LogOut</a></li>
 			</c:when>
 			<c:otherwise>

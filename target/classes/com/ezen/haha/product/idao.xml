@@ -145,5 +145,21 @@
 		update product set sideimage3=#{param1} where snum=#{param2}
 	</update>
 	
+	<!-- 리뷰 쓰기 전 해당 상품을 구입했는지 체크 -->
+	<!-- 상품 구입 후 상품 구입 목록을 저장하는 DB를 후에 따로 만들어 체크해야함 -->
+	<!-- 지금은 상품 리뷰 DB(productreview)에서 자체 체크 -->
+	<select id="productbuysearch" resultType="java.lang.Integer">
+		select productbuy from productreview where id=#{param1} and snum=#{param2}
+	</select>
+	
+	<!-- 상품 리뷰 입력 후 DB에 저장 -->
+	<insert id="productreviewsave">
+		insert into productreview values(review_seq.nextval,#{param1},#{param2},1,#{param3},#{param4},#{param5},sysdate,#{param6})
+	</insert>
+	
+	<!-- 상품 리뷰 출력(detailview.jsp) -->
+	<select id="productreviewout" resultType="com.ezen.haha.product.ProductreviewDTO">
+		select id,btitle,bcontent,bpicture,to_char(bdate,'yyyy-MM-dd')bdate,productrank from productreview where snum=#{param1}
+	</select>
 	
 </mapper>

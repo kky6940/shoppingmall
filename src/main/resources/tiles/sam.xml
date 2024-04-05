@@ -58,6 +58,11 @@
       <put-attribute name="title" value="상품수정화면출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/updateproductview.jsp"/>
    </definition>
+   <definition name="productreviewinput" extends="baseLayout">
+      <put-attribute name="title" value="상품리뷰입력화면"/>
+      <put-attribute name="body" value="/WEB-INF/views/product/productreviewinput.jsp"/>
+   </definition>
+   
    
    <definition name="membershipjoin2" extends="baseLayout">
       <put-attribute name="title" value="회원가입"/>
@@ -77,5 +82,7 @@
       <put-attribute name="title" value="쿠폰보기"/>
       <put-attribute name="body" value="/WEB-INF/views/mypage/couponview.jsp"/>
    </definition>
+   
+   
    
 </tiles-definitions>

@@ -57,6 +57,12 @@ public interface Service {
 
 	String countfind();
 
+	void productreviewsave(int snum, String id, String btitle, String bcontent, String fname, int productrank);
+
+	ArrayList<ProductreviewDTO> productreviewout(int snum);
+
+	Integer productbuysearch(String id, int snum);
+
 	
 
 }

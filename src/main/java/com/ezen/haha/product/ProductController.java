@@ -113,6 +113,10 @@ public class ProductController {
 		Service ss = sqlSession.getMapper(Service.class);
 		ArrayList<ProductDTO> list = ss.detailview(snum);
 		mo.addAttribute("list", list);
+		
+		// 상품 리뷰 출력 추가
+		ArrayList<ProductreviewDTO> list1 = ss.productreviewout(snum);
+		mo.addAttribute("list1", list1);
 		return "detailview";
 	}
 	
@@ -464,4 +468,94 @@ public class ProductController {
 		return "redirect:/productout";
 	}
 
+	// 구매창 주소 수정 화면으로
+	@RequestMapping(value = "/updateaddress")
+	public String updateaddress() {
+		
+		return "updateaddress";
+	}
+	
+	// 구매창 이름 수정 화면으로
+	@RequestMapping(value = "/updatename")
+	public String updatename() {
+		
+		return "updatename";
+	}
+	
+	// 구매창 연락처 수정 화면으로
+	@RequestMapping(value = "/updatetel")
+	public String updatetel() {
+		
+		return "updatetel";
+	}
+	// 구매창 이메일 수정 화면으로
+	@RequestMapping(value = "/updateemail")
+	public String updateemail() {
+		
+		return "updateemail";
+	}
+	
+	// 상품 리뷰 입력 화면으로
+	@RequestMapping(value = "/productreviewinput")
+	public String productreviewinput(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		if(id != null) // 로그인 유무 체크
+		{
+			int snum = Integer.parseInt(request.getParameter("snum"));
+			
+			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크
+			// 상품 구입 후 상품 구입 목록을 저장하는 DB를 후에 따로 만들어 체크해야함
+			// 지금은 상품 리뷰 DB(productreview)에서 자체 체크 
+			Service ss = sqlSession.getMapper(Service.class);
+			Integer productbuy = ss.productbuysearch(id,snum);
+			if(productbuy == null || productbuy != 1)
+			{
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('상품 구입 기록이 없습니다.'); window.history.back(); </script>");
+				printw.close();
+				return null;
+				
+			}
+			else
+			{
+				mo.addAttribute("snum", snum);
+				return "productreviewinput";
+			}
+			
+		}
+		else
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.close();
+			return "redirect:./login";
+		}
+		
+	}
+	
+	// 상품 리뷰 입력 후 DB에 저장
+	@RequestMapping(value = "/productreviewsave", method = RequestMethod.POST)
+	public String productreviewsave(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
+		HttpSession hs = mul.getSession();
+		String id = (String) hs.getAttribute("id"); 
+		String btitle = mul.getParameter("btitle");
+		int snum = Integer.parseInt(mul.getParameter("snum"));
+		String bcontent = mul.getParameter("bcontent");
+		int productrank = Integer.parseInt(mul.getParameter("productrank"));
+		
+		MultipartFile mf = mul.getFile("bpicture");
+		String fname = mf.getOriginalFilename();
+		mf.transferTo(new File(imagepath+"\\"+fname));
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.productreviewsave(snum,id,btitle,bcontent,fname,productrank);
+		
+		return "redirect:/productout";
+	}
+	
+	
 }

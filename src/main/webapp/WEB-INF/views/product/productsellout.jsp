@@ -9,6 +9,7 @@
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
 <script>
+// 카카오 페이 결재
 function kakaopay() {
 	var formData = {
 			snum: $('#snum').val(),
@@ -34,69 +35,117 @@ function kakaopay() {
     });
 }
 
-function sample6_execDaumPostcode() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            var addr = '';
-            var extraAddr = '';
-
-            if (data.userSelectedType === 'R') { 
-                addr = data.roadAddress;
-            } else {
-                addr = data.jibunAddress;
-            }
-
-            if (data.userSelectedType === 'R') {
-                if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-                    extraAddr += data.bname;
-                }
-                if (data.buildingName !== '' && data.apartment === 'Y') {
-                    extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                }
-                if (extraAddr !== '') {
-                    extraAddr = ' (' + extraAddr + ')';
-                }
-            } 
-			
-            // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('sample6_postcode').value = data.zonecode;
-            document.getElementById("sample6_address").value = addr;
-            // 커서를 상세주소 필드로 이동한다.
-            document.getElementById("sample6_detailAddress").focus();
-            
-            document.getElementById('newAddress').value = addr;
+// 주소 수정
+function openAddressUpdateWindow() {
+	// 주소 수정창 크기 조절
+	var width = 300;
+    var height = 200;
+    var leftPosition = (window.screen.width - width) / 2; // 윈도우 화면 중앙에 화면이 보이게 가로 조절
+    var topPosition = (window.innerHeight - height) / 2; // 브라우저 창 중앙에 화면이 보이게 세로 조절
+    var options = 'width=' + width + ', height=' + height + ', left=' + leftPosition + ', top=' + topPosition;
+    
+    // 주소 수정창 열기
+    var updateWindow = window.open('updateaddress', '_blank', options);
+    
+    // 부모 창(updateaddress.jsp) 으로부터 데이터를 받아와서 처리
+    function receiveUpdatedAddress(event) {
+        // event.data를 이용하여 수정된 주소 정보를 받아옴
+        if (event.data.type === 'addressUpdate') {
+	        var updatedAddress = event.data.data;
+	        
+	        document.getElementById('display_address').value = updatedAddress.fullAddress;
+	        
+	        updateWindow.close();
         }
-    }).open();
+    }
+
+    // 수정된 주소 정보를 수신하면 위의 receiveUpdatedAddress 함수 호출
+    
+    	window.addEventListener('message', receiveUpdatedAddress);	
+    
 }
 
-function openEditForm() {
-    // 새 창 열기
-    var editWindow = window.open("", "_blank", "width=400,height=300");
+// 이름 수정
+function openNameUpdateWindow() {
+	
+	var width = 300;
+    var height = 200;
+    var leftPosition = (window.screen.width - width) / 2; 
+    var topPosition = (window.innerHeight - height) / 2; 
+    var options = 'width=' + width + ', height=' + height + ', left=' + leftPosition + ', top=' + topPosition;
     
-    // 새 창에 폼 생성
-    var formHTML = `
-        <form id="editForm">
-    		<input type="text" name="postcode" class="form-input3" id="sample6_postcode" placeholder="우편번호">
-    		<input type="button" class="form-button2" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-    		
-    		<input type="text" name="address1" class="form-input" id="sample6_address" placeholder="주소"><br>
-    		<input type="text" name="address2" class="form-input" id="sample6_detailAddress" placeholder="상세주소">
-            <input type="button" value="저장" onclick="saveChanges()">
-        </form>
-    `;
+    // 이름 수정창 열기
+    var updateWindow = window.open('updatename', '_blank', options);
     
-    editWindow.document.body.innerHTML = formHTML;
+    // 부모 창(updatename.jsp) 으로부터 데이터를 받아와서 처리
+    function receiveUpdatedName(event) {
+        // event.data를 이용하여 수정된 이름 정보를 받아옴
+        if (event.data.type === 'nameUpdate') {
+	        var newName = event.data.data;
+	        
+	        document.getElementById('display_name').value = newName.updatedName;
+	        
+	        updateWindow.close();
+        }
+    }
+
+    // 수정된 이름 정보를 수신하면 위의 receiveUpdatedName 함수 호출
+    window.addEventListener('message', receiveUpdatedName);
 }
 
-function saveChanges() {
-    // 새로운 배송지 값 가져오기
-    var newAddress = document.getElementById("newAddress").value;
-
-    // 부모 창의 배송지 업데이트
-    document.getElementById("address").innerText = newAddress;
+// 연락처 수정
+function openTelUpdateWindow() {
+	
+	var width = 300;
+    var height = 200;
+    var leftPosition = (window.screen.width - width) / 2; 
+    var topPosition = (window.innerHeight - height) / 2; 
+    var options = 'width=' + width + ', height=' + height + ', left=' + leftPosition + ', top=' + topPosition;
     
-    // 새 창 닫기
-    window.close();
+    
+    var updateWindow = window.open('updatetel', '_blank', options);
+    
+    
+    function receiveUpdatedTel(event) {
+    
+        if (event.data.type === 'telUpdate') {
+	        var newTel = event.data.data;
+	        
+	        document.getElementById('display_tel').value = newTel.updatedTel;
+	        
+	        updateWindow.close();
+        }
+    }
+
+    
+    window.addEventListener('message', receiveUpdatedTel);
+}
+
+// 이메일 수정
+function openEmailUpdateWindow() {
+	
+	var width = 300;
+    var height = 200;
+    var leftPosition = (window.screen.width - width) / 2; 
+    var topPosition = (window.innerHeight - height) / 2; 
+    var options = 'width=' + width + ', height=' + height + ', left=' + leftPosition + ', top=' + topPosition;
+    
+    
+    var updateWindow = window.open('updateemail', '_blank', options);
+    
+    
+    function receiveUpdatedEmail(event) {
+        
+        if (event.data.type === 'emailUpdate') {
+	        var newEmail = event.data.data;
+	        
+	        document.getElementById('display_email').value = newEmail.updatedEmail;
+	        
+	        updateWindow.close();
+        }
+    }
+
+    window.addEventListener('message', receiveUpdatedEmail);
 }
 </script>
 <meta charset="UTF-8">
@@ -109,41 +158,41 @@ function saveChanges() {
 			<tr>
 				<th>배송지</th> 
 				<td colspan="4">
-					<span>${aa.address }</span>
+					<input type="text" name="newaddress" value="${aa.address }" id="display_address" style="width: 300px;"> 
 					<input type="hidden" name="address" value="${aa.address }"> 
 				</td>
 				<td>
-					<input type="button" value="수정" onclick="openEditForm()">
+					<input type="button" value="수정" onclick="openAddressUpdateWindow()">
 				</td>
 			</tr>
 			<tr>
 				<th>이름</th> 
 				<td colspan="4">
-					<span>${aa.name }</span>
+					<input type="text" name="newname" value="${aa.name }" id="display_name" style="width: 300px;">
 					<input type="hidden" name="name" value="${aa.name }"> 
 				</td>
 				<td>
-					<input type="button" value="수정">
+					<input type="button" value="수정" onclick="openNameUpdateWindow()">
 				</td>
 			</tr>
 			<tr>
 				<th>연락처</th> 
 				<td colspan="4">
-					<span>${aa.tel }</span>
+					<input type="text" name="newtel" value="${aa.tel }" id="display_tel" style="width: 300px;">
 					<input type="hidden" name="tel" value="${aa.tel }"> 
 				</td>
 				<td>
-					<input type="button" value="수정">
+					<input type="button" value="수정" onclick="openTelUpdateWindow()">
 				</td>
 			</tr>
 			<tr>
 				<th>Email</th> 
 				<td colspan="4">
-					<span>${aa.email }</span>
+					<input type="text" name="newemail" value="${aa.email }" id="display_email" style="width: 300px;">
 					<input type="hidden" name="email" value="${aa.email }"> 
 				</td>
 				<td>
-					<input type="button" value="수정">
+					<input type="button" value="수정" onclick="openEmailUpdateWindow()">
 				</td>
 			</tr>
 			<tr>

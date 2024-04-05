@@ -59,7 +59,7 @@ td{
 					<th>혜택정보</th>
 				</tr>
 				<tr>
-					<td>쿠폰</td>
+					<td><a href="couponview">쿠폰</a></td>
 				</tr>
 				<tr>
 					<td>마일리지</td>

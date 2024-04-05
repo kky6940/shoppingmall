@@ -176,11 +176,14 @@ function submitfrom(action) {
 					<td colspan="6">
 						<a href="deleteproduct?snum=${aa.snum }"><input type="button" value="삭제하기" onclick="return confirm('정말로 삭제하시겠습니까?')"></a>
 						<a href="updateproductview?snum=${aa.snum }"><input type="button" value="수정하기"></a>
+						<a href="productreviewinput?snum=${aa.snum }"><input type="button" value="리뷰쓰기"></a>
 					</td>
 				</tr>
 				</table>
 			</div>
 		</div>	
+			
+			
 			
 			<div class="product_view2" >
 				<h2 class="product_intro">상세정보</h2><br>
@@ -188,6 +191,29 @@ function submitfrom(action) {
 			</div>
 	
 	</c:forEach>
+	
+	<div class="product_view2" >
+		<h2 class="product_intro">리뷰</h2><br>
+			
+		<c:forEach items="${list1 }" var="bb">
+			<table border="1" width="400px" align="center">
+				<tr>
+					<td>${bb.productrank } / 5</td>
+					<td>${bb.bdate }</td>
+				</tr>
+				<tr>
+					<th colspan="2" style="text-align: center;">${bb.btitle }</th>
+				</tr>
+				<tr>
+					<td colspan="2">${bb.bcontent }</td>
+				</tr>
+				<tr>
+					<td colspan="2"><img alt="" src="./image/${bb.bpicture }" width="200px" height="200px"> </td>
+				</tr> 
+				
+			</table>
+		</c:forEach>
+	</div>
 </form>
 </body>
 </html>

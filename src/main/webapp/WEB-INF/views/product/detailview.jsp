@@ -41,52 +41,6 @@ function submitfrom(action) {
 <body>
 <form id="formchoice" method="post" enctype="multipart/form-data"> <!-- 자바스크립트로 form 2가지 구분 -->
 	<c:forEach items="${list }" var="aa">
-<!-- 사이드 이미지 3장 -->	
-<div class="product_view">
-	<div class="product_img">
-		<input type="radio" name="sideimage1" id="slide01" checked>
-		<input type="radio" name="sideimage2" id="slide02">
-		<input type="radio" name="sideimage3" id="slide03">
-		<div class="slidewrap">
-			<ul class="slidelist">
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage1}">
-				</li>
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage2}">
-				</li>
-				<li>
-					<img alt="" src="resources/img/${aa.sideimage3}">
-				</li>
-	
-				<!-- 좌,우 슬라이드 버튼 -->
-				<div class="slide-control">
-					<div>
-						<label for="slide03" class="left"></label>
-						<label for="slide02" class="right"></label>
-					</div>
-					<div>
-						<label for="slide01" class="left"></label>
-						<label for="slide03" class="right"></label>
-					</div>
-					<div>
-						<label for="slide02" class="left"></label>
-						<label for="slide01" class="right"></label>
-					</div>
-				</div>
-	
-			</ul>
-			<!-- 페이징 -->
-			<ul class="slide-pagelist">
-				<li><label for="slide01"><img alt="" src="resources/img/${aa.sideimage1}"></label></li>
-				<li><label for="slide02"><img alt="" src="resources/img/${aa.sideimage2}"></label></li>
-				<li><label for="slide03"><img alt="" src="resources/img/${aa.sideimage3}"></label></li>
-			</ul>
-		</div>
-	</div>
-
-<!-- 사이드 이미지 3장 -->	
-
 		<div class="product_menu">
 		
 			<table border="1" width="300px" align="center">

@@ -12,7 +12,7 @@
    
    <definition name="main" extends="baseLayout">
       <put-attribute name="title" value="woman"/>
-      <put-attribute name="body" value="/WEB-INF/views/product_detail.jsp"/>
+      <put-attribute name="body" value="/WEB-INF/views/main.jsp"/>
    </definition>
    
    
@@ -67,6 +67,11 @@
    <definition name="productreviewinput" extends="baseLayout">
       <put-attribute name="title" value="상품리뷰입력화면"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productreviewinput.jsp"/>
+   </definition>
+   
+   <definition name="payout" extends="baseLayout">
+      <put-attribute name="title" value="상품구입후출력"/>
+      <put-attribute name="body" value="/WEB-INF/views/pay/payout.jsp"/>
    </definition>
    
    

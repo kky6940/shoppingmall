@@ -1,6 +1,7 @@
 package com.ezen.haha.pay;
 
 public class PayDTO {
+	// 카카오페이용 변수
 	String tid; // 결재고유번호
 	String next_redirect_mobile_url; // 모바일 접속 시
 	String next_redirect_pc_url; // pc 접속 시
@@ -14,6 +15,10 @@ public class PayDTO {
 	String pgtoken; // 클라이언트 결재 후 결제 최종 승인에 필요한 토큰
 	String created_at; // 결제 준비 요청 시각
 	String approved_at; // 결제 승인 시각
+	
+	// 결재 출력용 변수
+	String orderid,id,paytype,sname,payendtime,address,name,tel,email,drequest;
+	int snum,paynum,totprice;
 	
 	public PayDTO() {
 		super();
@@ -96,6 +101,84 @@ public class PayDTO {
 	}
 	public void setApproved_at(String approved_at) {
 		this.approved_at = approved_at;
+	}
+	public String getOrderid() {
+		return orderid;
+	}
+	public void setOrderid(String orderid) {
+		this.orderid = orderid;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPaytype() {
+		return paytype;
+	}
+	public void setPaytype(String paytype) {
+		this.paytype = paytype;
+	}
+	public String getSname() {
+		return sname;
+	}
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+	public String getPayendtime() {
+		return payendtime;
+	}
+	public void setPayendtime(String payendtime) {
+		this.payendtime = payendtime;
+	}
+	public int getPaynum() {
+		return paynum;
+	}
+	public void setPaynum(int paynum) {
+		this.paynum = paynum;
+	}
+	public int getTotprice() {
+		return totprice;
+	}
+	public void setTotprice(int totprice) {
+		this.totprice = totprice;
+	}
+	public int getSnum() {
+		return snum;
+	}
+	public void setSnum(int snum) {
+		this.snum = snum;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public String getName() {
+		return name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getDrequest() {
+		return drequest;
+	}
+	public void setDrequest(String drequest) {
+		this.drequest = drequest;
 	}
 	
 }

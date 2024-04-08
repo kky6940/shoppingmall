@@ -509,12 +509,11 @@ public class ProductController {
 		{
 			int snum = Integer.parseInt(request.getParameter("snum"));
 			
-			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크
-			// 상품 구입 후 상품 구입 목록을 저장하는 DB를 후에 따로 만들어 체크해야함
-			// 지금은 상품 리뷰 DB(productreview)에서 자체 체크 
+			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크			
 			Service ss = sqlSession.getMapper(Service.class);
-			Integer productbuy = ss.productbuysearch(id,snum);
-			if(productbuy == null || productbuy != 1)
+			Integer buysnum = ss.productbuysearch(id,snum);
+			
+			if(buysnum == null)
 			{
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
@@ -560,7 +559,7 @@ public class ProductController {
 		
 		return "redirect:/productout";
 	}
-	// 수량 체크
+	// detailview.jsp ajax 수량 체크
 	@ResponseBody
 	@RequestMapping(value = "/check", method = RequestMethod.POST)
 	public String stockcheck(HttpServletRequest request) {

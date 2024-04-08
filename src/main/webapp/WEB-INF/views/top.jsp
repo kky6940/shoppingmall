@@ -140,7 +140,7 @@ p{
 	<div class="header_util">
 		<span><a href="login">로그인</a></span>
 		<span><a href="membershipjoin2">회원가입</a></span>
-		<span><a href="login">마이페이지</a></span>
+		<span><a href="mypage">마이페이지</a></span>
 		<span><a href="login">장바구니</a></span>
 		<span><a href="qnahome">고객센터</a></span>
 	</div>
@@ -198,7 +198,7 @@ p{
 			<a href="">입력</a>
 			<div class="depth2">
 				<a href="productinput" class="depth2_list" >입력</a>
-				<a href="" class="depth2_list">비니</a>
+				<a href="productout" class="depth2_list">출력</a>
 				<a href="" class="depth2_list">헌팅캡/베레모</a>
 				<a href="" class="depth2_list">페도라</a>
 			</div>

@@ -12,6 +12,13 @@
 // 카카오 페이 결재
 function kakaopay() {
 	var formData = {
+			address: $('#display_address').val(),
+			name: $('#display_name').val(),
+			tel: $('#display_tel').val(),
+			email: $('#display_email').val(),
+			request: $('#request').val(),
+			
+			ordernum: $('#ordernum').val(),
 			snum: $('#snum').val(),
             sname: $('#sname').val(),
             guestbuysu: $('#guestbuysu').val(),
@@ -160,6 +167,7 @@ function openEmailUpdateWindow() {
 				<td colspan="4">
 					<input type="text" name="newaddress" value="${aa.address }" id="display_address" style="width: 300px;"> 
 					<input type="hidden" name="address" value="${aa.address }"> 
+					
 				</td>
 				<td>
 					<input type="button" value="수정" onclick="openAddressUpdateWindow()">
@@ -198,10 +206,10 @@ function openEmailUpdateWindow() {
 			<tr>
 				<th>배송 요청사항</th>
 				<td colspan="5">
-					<select name="request">
-						<option value="부재">부재시 연락주세요</option>
-						<option value="경비실">경비실에 보관해주세요</option>
-						<option value="문앞">문앞에 놓아주세요</option>
+					<select name="request" id="request">
+						<option value="부재시 연락주세요">부재시 연락주세요</option>
+						<option value="경비실에 보관해주세요">경비실에 보관해주세요</option>
+						<option value="문앞에 놓아주세요">문앞에 놓아주세요</option>
 					</select>
 				</td>
 			</tr>
@@ -218,6 +226,7 @@ function openEmailUpdateWindow() {
 			</tr>
 			<tr>
 				<td>
+					<input type="hidden" name="ordernum" value="${aa.ordernum }" id="ordernum"> <!-- 주문번호 -->
 					<img alt="" src="./image/${aa.image }" width="60px" height="60px">
 					<input type="hidden" name="image" value="${aa.image }"> 
 				</td>

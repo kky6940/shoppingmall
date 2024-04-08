@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -22,6 +23,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -56,24 +58,26 @@ public class ProductController {
 		String ssize = mul.getParameter("ssize");
 		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
+		String fname = "";
 		
-		MultipartFile mf = mul.getFile("image");
-		MultipartFile mf1 = mul.getFile("sideimage1");
-		MultipartFile mf2 = mul.getFile("sideimage2");
-		MultipartFile mf3 = mul.getFile("sideimage3");
+		 List<MultipartFile> fileList = mul.getFiles("image");
+
+         for (MultipartFile mf : fileList) {
+             String originFileName = mf.getOriginalFilename(); // 원본 파일 명
+             fname = fname + ", " +originFileName;
+
+             System.out.println("originFileName : " + originFileName);
+         
+             String safeFile = imagepath + originFileName;
+             
+             mf.transferTo(new File(safeFile));
 		
-		String fname = mf.getOriginalFilename();
-		String fname1 = mf1.getOriginalFilename();
-		String fname2 = mf2.getOriginalFilename();
-		String fname3 = mf3.getOriginalFilename();
+
+         }
 		
-		mf.transferTo(new File(imagepath+"\\"+fname));
-		mf1.transferTo(new File(imagepath+"\\"+fname1));
-		mf2.transferTo(new File(imagepath+"\\"+fname2));
-		mf3.transferTo(new File(imagepath+"\\"+fname3));
 
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,fname1,fname2,fname3);
+		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best);
 		
 		return "redirect:/main";
 	}
@@ -556,6 +560,15 @@ public class ProductController {
 		
 		return "redirect:/productout";
 	}
-	
-	
+	// 수량 체크
+	@ResponseBody
+	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	public String stockcheck(HttpServletRequest request) {
+		int snum =  Integer.parseInt(request.getParameter("snum"));
+		String ssize = request.getParameter("ssize");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+
+		return ss.stockcheck(snum,ssize);
+	}
 }

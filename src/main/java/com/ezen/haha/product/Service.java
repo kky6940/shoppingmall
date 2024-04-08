@@ -7,7 +7,7 @@ import com.ezen.haha.membership.MembershipDTO;
 public interface Service {
 
 	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String color, String fname,
-			String intro, int best, String fname1, String fname2, String fname3);
+			String intro, int best);
 
 	ArrayList<ProductDTO> productout(PageDTO dto);
 
@@ -62,6 +62,8 @@ public interface Service {
 	ArrayList<ProductreviewDTO> productreviewout(int snum);
 
 	Integer productbuysearch(String id, int snum);
+
+	String stockcheck(int snum, String ssize);
 
 	
 

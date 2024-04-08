@@ -10,6 +10,16 @@
       <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
    </definition>
    
+   <definition name="main" extends="baseLayout">
+      <put-attribute name="title" value="woman"/>
+      <put-attribute name="body" value="/WEB-INF/views/product_detail.jsp"/>
+   </definition>
+   
+   
+   
+   
+   
+   
    <definition name="woman2" extends="baseLayout">
       <put-attribute name="title" value="woman"/>
       <put-attribute name="body" value="/WEB-INF/views/mainlayer/woman.jsp"/>
@@ -23,11 +33,7 @@
       <put-attribute name="body" value="/WEB-INF/views/mainlayer/kids.jsp"/>
    </definition>
    
-   <definition name="main" extends="baseLayout">
-      <put-attribute name="title" value="메인화면"/>
-      <put-attribute name="body" value="/WEB-INF/views/main.jsp"/>
-   </definition>
-   
+
    <definition name="productinput" extends="baseLayout">
       <put-attribute name="title" value="상품입력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productinput.jsp"/>
@@ -83,6 +89,39 @@
       <put-attribute name="body" value="/WEB-INF/views/mypage/couponview.jsp"/>
    </definition>
    
+   <definition name="idserch" extends="baseLayout">
+      <put-attribute name="title" value="아이디찾기1"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/idserch.jsp"/>
+   </definition>
    
+   <definition name="idfind" extends="baseLayout">
+      <put-attribute name="title" value="아이디찾기2"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/idfind.jsp"/>
+   </definition>
+   
+   <definition name="pwserch" extends="baseLayout">
+      <put-attribute name="title" value="비밀번호찾기1"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/pwserch.jsp"/>
+   </definition>
+   
+   <definition name="pwfind" extends="baseLayout">
+      <put-attribute name="title" value="비밀번호찾기2"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/pwfind.jsp"/>
+   </definition>
+   
+    <definition name="qnahome" extends="baseLayout"> 
+       <put-attribute name="title" value="고객센터"/>
+       <put-attribute name="body" value="/WEB-INF/views/qna/qnahome.jsp"/>
+    </definition> 
+   
+   <definition name="noticepage" extends="baseLayout">
+       <put-attribute name="title" value="공지사항"/>
+      <put-attribute name="body" value="/WEB-INF/views/qna/noticepage.jsp"/>
+   </definition> 
+   
+   <definition name="noticeinputform" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/noticeinputform.jsp"/>
+  </definition>
    
 </tiles-definitions>

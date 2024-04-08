@@ -5,7 +5,7 @@
 <mapper namespace="com.ezen.haha.product.Service">
 	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
-		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12},#{param13})
+		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
@@ -160,6 +160,10 @@
 	<!-- 상품 리뷰 출력(detailview.jsp) -->
 	<select id="productreviewout" resultType="com.ezen.haha.product.ProductreviewDTO">
 		select id,btitle,bcontent,bpicture,to_char(bdate,'yyyy-MM-dd')bdate,productrank from productreview where snum=#{param1}
+	</select>
+	
+	<select id="stockcheck" resultType="String">
+		select su from product where snum = #{param1} and ssize = #{param2}
 	</select>
 	
 </mapper>

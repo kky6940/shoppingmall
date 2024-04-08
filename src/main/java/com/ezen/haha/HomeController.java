@@ -20,17 +20,17 @@ public class HomeController {
 	@RequestMapping(value = "/")
 	public String home() {
 		
-		return "woman2";
+		return "main";
 	}
 	@RequestMapping(value = "/main")
 	public String home2() {
 		
-		return "woman2";
+		return "main";
 	}
 	@RequestMapping(value = "/woman")
 	public String home3() {
 		
-		return "woman2";
+		return "main";
 	}
 	@RequestMapping(value = "/kids")
 	public String home4() {

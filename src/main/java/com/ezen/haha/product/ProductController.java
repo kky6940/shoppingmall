@@ -1,18 +1,27 @@
 package com.ezen.haha.product;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import org.w3c.dom.Document;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
@@ -21,13 +30,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 
 import com.ezen.haha.membership.MembershipDTO;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 
 @Controller
@@ -106,6 +124,7 @@ public class ProductController {
 		
 		mo.addAttribute("paging",dto);
 		mo.addAttribute("list", ss.productout(dto));
+		
 		
 		return "productout";
 	}
@@ -570,4 +589,135 @@ public class ProductController {
 
 		return ss.stockcheck(snum,ssize);
 	}
+	
+	// 베스트 상품 화면으로 가기
+	@RequestMapping(value = "/bestproductout")
+	public String bestproductout(HttpServletRequest request, Model mo) {
+		
+		return "bestproductout";
+	}
+	
+	// 베스트 상품 화면 날씨 API 적용
+	@PostMapping("/bestproductoutweatherview")
+    @ResponseBody
+    public String getWeather(@RequestBody Map<String, String> coordinates) {
+        // 좌표를 기반으로 날씨 정보 가져오는 로직을 작성
+        String latitude = coordinates.getOrDefault("convertedLatitude","");
+        String longitude = coordinates.getOrDefault("convertedLatitude","");
+      
+        System.out.println(latitude);
+        System.out.println(longitude);
+        String serviceKey = "YyEqjh8P0u6xMakFTsRYbV5DoxV57cDRQ8rf%2BUbTxrW9fxmGbEjiNcU%2Fh5U4UpQnGLdrNuFtDo7e1i5w1lK39A%3D%3D";
+        LocalDate currentDate = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String baseDate = currentDate.format(formatter);
+        System.out.println(baseDate);
+        String baseTime = "0500";
+        String nx = latitude;
+        String ny = longitude;
+
+        try {
+            // API 호출을 위한 URL 생성
+            String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+                            + "?serviceKey=" + serviceKey
+                            + "&numOfRows=400&pageNo=1"
+                            + "&base_date=" + baseDate
+                            + "&base_time=" + baseTime
+                            + "&nx=" + nx
+                            + "&ny=" + ny;
+
+            // HTTP 연결 설정
+            URL url = new URL(apiUrl);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+
+            // 응답 데이터 읽기
+            BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = br.readLine()) != null) {
+                response.append(line);
+            }
+            br.close();
+
+            // 응답 데이터 출력
+            String xmlResponse = response.toString();
+            parseWeatherData(xmlResponse);
+            System.out.println(xmlResponse);
+            conn.disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return "";
+	}
+	
+	private void parseWeatherData(String xmlResponse) {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder builder = factory.newDocumentBuilder();
+            Document doc = builder.parse(new InputSource(new StringReader(xmlResponse)));
+
+            // 파싱하여 필요한 정보 추출
+            NodeList itemList = doc.getElementsByTagName("item");
+            for (int i = 0; i < itemList.getLength(); i++) {
+                Node itemNode = itemList.item(i);
+                if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
+                    Element itemElement = (Element) itemNode;
+                    
+                    String category = itemElement.getElementsByTagName("category").item(0).getTextContent();
+                    String rebaseDate = null, rebaseTime = null, fcstDate = null, fcstTime = null, fcstValue = null,  TMXValue = null;
+                    String nx = null, ny = null;
+                    if (category.equals("TMN")) {
+                        TMXValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
+                        rebaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent();
+                        rebaseTime = itemElement.getElementsByTagName("baseTime").item(0).getTextContent();
+                        fcstDate = itemElement.getElementsByTagName("fcstDate").item(0).getTextContent();
+                        fcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent();
+                        fcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
+                        nx = itemElement.getElementsByTagName("nx").item(0).getTextContent();
+                        ny = itemElement.getElementsByTagName("ny").item(0).getTextContent();
+                        System.out.println("baseDate: " + rebaseDate);
+                        System.out.println("baseTime: " + rebaseTime);
+                        System.out.println("category: " + category);
+                        System.out.println("fcstDate: " + fcstDate);
+                        System.out.println("fcstTime: " + fcstTime);
+                        System.out.println("fcstValue: " + fcstValue);
+                        System.out.println("nx: " + nx);
+                        System.out.println("ny: " + ny);
+                        System.out.println();
+                    }
+                    
+                    if(category.equals("TMX"))
+                    {
+                    	TMXValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
+                        rebaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent();
+                        rebaseTime = itemElement.getElementsByTagName("baseTime").item(0).getTextContent();
+                        fcstDate = itemElement.getElementsByTagName("fcstDate").item(0).getTextContent();
+                        fcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent();
+                        fcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
+                        nx = itemElement.getElementsByTagName("nx").item(0).getTextContent();
+                        ny = itemElement.getElementsByTagName("ny").item(0).getTextContent();
+                        System.out.println("baseDate: " + rebaseDate);
+                        System.out.println("baseTime: " + rebaseTime);
+                        System.out.println("category: " + category);
+                        System.out.println("fcstDate: " + fcstDate);
+                        System.out.println("fcstTime: " + fcstTime);
+                        System.out.println("fcstValue: " + fcstValue);
+                        System.out.println("nx: " + nx);
+                        System.out.println("ny: " + ny);
+                        System.out.println();
+                    }
+                    
+                    
+
+                    // 추출한 정보 출력
+                   
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }
+	

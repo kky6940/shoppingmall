@@ -45,13 +45,13 @@ td{
 					<th>쇼핑정보</th>
 				</tr>
 				<tr>
-					<td>주문/배송</td>
+					<td><a href="payoutview">주문/배송</a></td>
 				</tr>
 				<tr>
 					<td>취소/교환/반품</td>
 				</tr>
 				<tr>
-					<td>장바구니</td>
+					<td><a href="basketout">장바구니</a></td>
 				</tr>
 				
 				

@@ -42,6 +42,12 @@
       <put-attribute name="title" value="상품출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productout.jsp"/>
    </definition>
+   
+   <definition name="bestproductout" extends="baseLayout">
+      <put-attribute name="title" value="베스트상품보기"/>
+      <put-attribute name="body" value="/WEB-INF/views/product/bestproductout.jsp"/>
+   </definition>
+   
    <definition name="detailview" extends="baseLayout">
       <put-attribute name="title" value="상품내용출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/detailview.jsp"/>
@@ -94,6 +100,11 @@
       <put-attribute name="body" value="/WEB-INF/views/mypage/couponview.jsp"/>
    </definition>
    
+   <definition name="adminpage" extends="baseLayout">
+      <put-attribute name="title" value="관리자페이지메인"/>
+      <put-attribute name="body" value="/WEB-INF/views/mypage/adminpage.jsp"/>
+   </definition>
+   
    <definition name="idserch" extends="baseLayout">
       <put-attribute name="title" value="아이디찾기1"/>
       <put-attribute name="body" value="/WEB-INF/views/membership/idserch.jsp"/>
@@ -112,6 +123,11 @@
    <definition name="pwfind" extends="baseLayout">
       <put-attribute name="title" value="비밀번호찾기2"/>
       <put-attribute name="body" value="/WEB-INF/views/membership/pwfind.jsp"/>
+   </definition>
+   
+   <definition name="memberviewall" extends="baseLayout">
+      <put-attribute name="title" value="관리자회원보기"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/memberviewall.jsp"/>
    </definition>
    
     <definition name="qnahome" extends="baseLayout"> 

@@ -215,7 +215,7 @@ public class PayController {
         	ss.payinsert(tid1,partner_order_id1,partner_user_id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest);
         	
         	// 결재 완료 후 출력
-        	ArrayList<PayDTO> list = ss.payout();
+        	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);
         	
         	// 결재 완료 후 해당 상품 재고 감소 업데이트
         	ss.productsuupdate(snum, quantity1);

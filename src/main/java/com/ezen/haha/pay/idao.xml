@@ -9,11 +9,12 @@
  	</insert>
  	<!-- 상품 결재 완료 후 결과 출력 -->
  	<select id="payout" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo
+ 		select * from payinfo where orderid=#{param1} and id=#{param2}
  	</select>
  	<!-- 상품 결재 완료 후 재고 감소 업데이트 -->
  	<update id="productsuupdate">
  		update product set su=su-#{param2} where snum=#{param1}
  	</update>
+ 	
  	
 </mapper>

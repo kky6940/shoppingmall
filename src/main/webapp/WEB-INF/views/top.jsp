@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -140,7 +141,14 @@ p{
 	<div class="header_util">
 		<span><a href="login">로그인</a></span>
 		<span><a href="membershipjoin2">회원가입</a></span>
-		<span><a href="mypage">마이페이지</a></span>
+		<c:choose>
+			<c:when test="${id eq 'admin' }">
+				<span><a href="adminpage">관리자페이지</a></span>
+			</c:when>
+			<c:otherwise>
+				<span><a href="mypage">마이페이지</a></span>
+			</c:otherwise>
+		</c:choose>
 		<span><a href="login">장바구니</a></span>
 		<span><a href="qnahome">고객센터</a></span>
 	</div>
@@ -199,7 +207,7 @@ p{
 			<div class="depth2">
 				<a href="productinput" class="depth2_list" >입력</a>
 				<a href="productout" class="depth2_list">출력</a>
-				<a href="" class="depth2_list">헌팅캡/베레모</a>
+				<a href="bestproductout" class="depth2_list">베스트상품</a>
 				<a href="" class="depth2_list">페도라</a>
 			</div>
 		</div>

@@ -40,4 +40,19 @@
  		select * from coupon where id=#{param1}
  	</select>
  	
+ 	<!-- 마이페이지에서 결재 목록 보기 화면으로 -->
+ 	<select id="payoutview" resultType="com.ezen.haha.pay.PayDTO">
+ 		select * from payinfo where id=#{param1}
+ 	</select>
+ 	
+ 	<!-- 관리자페이지에서 결재 목록 보기 화면으로 -->
+ 	<select id="payoutviewall" resultType="com.ezen.haha.pay.PayDTO">
+ 		select * from payinfo
+ 	</select>
+ 	
+ 	<!-- 관리자페이지에서 회원 목록 보기 화면으로 -->
+ 	<select id="memberviewall" resultType="com.ezen.haha.membership.MembershipDTO">
+ 		select * from member
+ 	</select>
+ 	
 </mapper>

@@ -285,6 +285,15 @@ H2{
 </style>
 </head>
 <body>
+<%
+	// 새로 실행 시 로그인 잔여물 및 null 값 치우기
+	HttpSession hs = request.getSession(); 
+	if(hs.getAttribute("loginstate")==null)
+	{
+		hs.setAttribute("loginstate", false);
+	}
+%>
+
 <section class="main">
 	<div class="slide_wrap">
 	  <div class="slide_box">

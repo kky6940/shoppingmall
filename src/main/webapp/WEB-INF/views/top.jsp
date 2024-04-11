@@ -157,7 +157,7 @@ p{
 			<a href="">인기</a>
 		</div>
 		<div class="gnb_category">
-			<a href="" class="gnb_categorylist">상의</a>
+			<a href="product_list?stype=상의" class="gnb_categorylist">상의</a>
 			<div class="depth2">
 				<a href="" class="depth2_list">맨투맨</a>
 				<a href="" class="depth2_list">후드티</a>

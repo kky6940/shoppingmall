@@ -169,4 +169,14 @@
 		select su from product where snum = #{param1} and ssize = #{param2}
 	</select>
 	
+	<!-- 관리자 상품 정보(목록) 출력 -->
+	<select id="searchout" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by snum) as rn, A.* from (
+        select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
+   </select>
+	<select id="totalSearch" resultType="int">
+	   select count(*) from product where stype=#{param1}
+	</select>
+	
 </mapper>

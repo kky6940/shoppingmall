@@ -22,21 +22,24 @@
 					<option value="0">일반상품</option>
 					<option value="1">베스트상품</option>
 		  </select>
-	      <label for="best" class="best" style="display: inline-block; ">인기상품 등록</label>
       </div>
       <div class="input_group">
 	      <label for="sname">상품명</label>
 	      <input type="text" id="sname" name="sname" required="required">
       </div>
       <div class="input_group">
-	      <label for="stype">상품타입</label>
-	      <select name="stype" id="stype">
+	      <label for="stype">분류</label>
+	      <select name="stype" id="stype" style="width: auto;" onchange="updateSubCategories()">
+	      	  <option value="">선택하세요</option>
 		      <option value="상의">상의</option>
 		      <option value="바지">바지</option>
 		      <option value="아우터">아우터</option>
 		      <option value="신발">신발</option>
 		      <option value="모자">모자</option>
 	      </select>
+	       <select id="stype_child" name="stype_child" style="width: auto;">
+            <option value="">선택하세요</option>
+        </select>
       </div>
       <div class="input_group">
 	      <label for="su">수량</label>
@@ -56,16 +59,12 @@
 	      </select>
       </div>
       <div class="input_group">
-      
-			<th>색상</th>
-			<td>
-				<select name="color">
+			<label for="color">색상</label>
+				<select name="color" id="color">
 					<option value="red">red</option>
 					<option value="blue">blue</option>
 					<option value="green">green</option>
 				</select>
-			</td> 
-		
 	  </div>
       <div class="input_group">
 	      <label for="intro">상품설명</label>
@@ -212,6 +211,53 @@
 	  }
 	)('att_zone', 'btnAtt')
 
+	
+	function updateSubCategories() {
+            var stype = document.getElementById('stype');
+            var stype_child = document.getElementById('stype_child');
+            var selectedCategory = stype.value;
+
+            // Remove existing options
+            while (stype_child.options.length > 1) {
+            	stype_child.remove(1);
+            }
+
+            // Add new options based on the selected category
+            switch (selectedCategory) {
+                case '상의':
+                    addOption(stype_child, '맨투맨');
+                    addOption(stype_child, '후드티');
+                    addOption(stype_child, '반소매티셔츠');
+                    addOption(stype_child, '셔츠/블라우스');
+                    break;
+                case '바지':
+                    addOption(stype_child, '데님팬츠');
+                    addOption(stype_child, '쇼트팬츠/슬랙스');
+                    addOption(stype_child, '트레이닝/조거팬츠');
+                    addOption(stype_child, '숏팬츠');
+                    break;
+                case '아우터':
+                    addOption(stype_child, '후드집업');
+                    addOption(stype_child, '카디건');
+                    addOption(stype_child, '코트');
+                    addOption(stype_child, '블루종');
+                    break;
+                case '모자':
+                    addOption(stype_child, '캡/야구모자');
+                    addOption(stype_child, '비니');
+                    addOption(stype_child, '헌팅캡/베레모');
+                    addOption(stype_child, '페도라');
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function addOption(selectElement, optionText) {
+            var option = document.createElement('option');
+            option.text = optionText;
+            selectElement.add(option);
+        }
 </script>
 </form>
 </body>

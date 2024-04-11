@@ -65,6 +65,10 @@ public interface Service {
 
 	String stockcheck(int snum, String ssize);
 
+	int totalSearch(String stype);
+
+	ArrayList<ProductDTO> searchout(String stype, int start, int end);
+
 	
 
 }

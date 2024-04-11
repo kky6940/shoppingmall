@@ -718,6 +718,34 @@ public class ProductController {
             e.printStackTrace();
         }
     }
+	
+	@RequestMapping(value = "/product_list", method = RequestMethod.GET)
+	   public String product_list(HttpServletRequest request, PageDTO dto, Model mo) {
+	      String stype = request.getParameter("stype");
+	      String nowPage=request.getParameter("nowPage");
+	        String cntPerPage=request.getParameter("cntPerPage");
+	        Service ss = sqlSession.getMapper(Service.class);
+	        
+	        int totalSearch=ss.totalSearch(stype);
+	        if(nowPage==null && cntPerPage == null) {
+	           nowPage="1";
+	           cntPerPage="10";
+	        }
+	        else if(nowPage==null) {
+	           nowPage="1";
+	        }
+	        else if(cntPerPage==null) {
+	           cntPerPage="10";
+	        }      
+	       
+	       dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+	      
+	      mo.addAttribute("paging",dto);
+	      mo.addAttribute("list", ss.searchout(stype,dto.getStart(),dto.getEnd()));
+	      mo.addAttribute("stype",stype);
+	      return "product_list";
+	      
+	   }
 
 }
 	

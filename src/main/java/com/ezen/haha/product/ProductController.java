@@ -53,7 +53,7 @@ public class ProductController {
 	@Autowired
 	SqlSession sqlSession;
 	
-	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\image";
+	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\image\\";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
@@ -78,22 +78,24 @@ public class ProductController {
 		int best = Integer.parseInt(mul.getParameter("best"));
 		int recommend = Integer.parseInt(mul.getParameter("recommend"));
 		String fname = "";
-		
-		 List<MultipartFile> fileList = mul.getFiles("image");
 
-         for (MultipartFile mf : fileList) {
-             String originFileName = mf.getOriginalFilename(); // 원본 파일 명
-             fname = fname + ", " +originFileName;
-
-             System.out.println("originFileName : " + originFileName);
-         
-             String safeFile = imagepath + "\\" + originFileName;
+		List<MultipartFile> fileList = mul.getFiles("image");
+		boolean firstfile = true;
+        for (MultipartFile mf : fileList) {
+             String originFileName = mf.getOriginalFilename(); // ��蹂� ���� 紐�
              
+             if(firstfile) {
+            	 fname = originFileName;
+            	 firstfile = false;
+             }
+             else {
+            	 fname = fname + ", " +originFileName;
+             }
+             System.out.println("originFileName : " + originFileName);
+             String safeFile = imagepath + originFileName;
              mf.transferTo(new File(safeFile));
-		
-
          }
-		
+        System.out.println("fname : " + fname);
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,recommend);
 		
@@ -452,7 +454,7 @@ public class ProductController {
 		}
 		else
 		{
-			mf.transferTo(new File(imagepath+"\\"+fname));
+			mf.transferTo(new File(imagepath+fname));
 			fname = mf.getOriginalFilename();
 			ss.updateproductmainimage(newsnum,sname,stype,su,price,ssize,color,fname,intro,best,snum); // 새 이미지 업데이트
 		}
@@ -465,7 +467,7 @@ public class ProductController {
 		}
 		else
 		{
-			mf1.transferTo(new File(imagepath+"\\"+fname1));
+			mf1.transferTo(new File(imagepath+fname1));
 			fname1 = mf1.getOriginalFilename();
 			ss.updateproductsideimage1(fname1,snum);
 		}
@@ -478,7 +480,7 @@ public class ProductController {
 		}
 		else
 		{
-			mf2.transferTo(new File(imagepath+"\\"+fname2));
+			mf2.transferTo(new File(imagepath+fname2));
 			fname2 = mf2.getOriginalFilename();
 			ss.updateproductsideimage1(fname2,snum);
 		}
@@ -491,7 +493,7 @@ public class ProductController {
 		}
 		else
 		{
-			mf3.transferTo(new File(imagepath+"\\"+fname3));
+			mf3.transferTo(new File(imagepath+fname3));
 			fname3 = mf3.getOriginalFilename();
 			ss.updateproductsideimage3(fname3,snum);
 		}

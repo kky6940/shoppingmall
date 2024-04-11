@@ -148,7 +148,7 @@ input[type="checkbox"]{
 			<option value="1">베스트상품지정</option>
  		 </select>
 		  <select name="recommend">
-		  <option value="">추천상품지정(온도구별)</option>
+		  <option value="1">추천상품지정(온도구별)</option>
 		  <option value="0">5℃ 이하</option>
 		  <option value="5">5℃ 이상</option>
 		  <option value="15">15℃ 이상</option>

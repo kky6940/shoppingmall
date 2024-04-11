@@ -5,7 +5,7 @@
 <mapper namespace="com.ezen.haha.product.Service">
 	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
-		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
+		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11})
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
@@ -14,8 +14,7 @@
         select 
             row_number() over (order by sname, snum) as rn, A.* 
         from (
-            select sname, snum, image, price, best 
-            from product) A
+            select * from product) A
     	) where rn between #{start} AND #{end}
 	</select>
 	
@@ -169,6 +168,12 @@
 		select su from product where snum = #{param1} and ssize = #{param2}
 	</select>
 	
+	<!-- 베스트 상품 화면 출력 -->
+	<select id="bestproductout" resultType="com.ezen.haha.product.ProductDTO">
+		select * from product where best=1
+	</select>
+	
+	
 	<!-- 관리자 상품 정보(목록) 출력 -->
 	<select id="searchout" resultType="com.ezen.haha.product.ProductDTO">      
       select * from (
@@ -179,4 +184,43 @@
 	   select count(*) from product where stype=#{param1}
 	</select>
 	
+	<!-- 추천 상품 찾기 -->
+	<select id="recommendsearch" resultType="com.ezen.haha.product.ProductDTO">
+		select * from product where recommend=#{recommendsearch}
+	</select>
+	
+	<select id="searchOutValue" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by snum) as rn, A.* from (
+        select * from product where sname like '%' || #{param1} || '%' ) A
+        ) where rn between #{param2} and #{param3}
+   </select>
+	<select id="totalValue" resultType="int">
+	   select count(*) from product where sname like '%' || #{param1} || '%'
+	</select>
+	
+	 <select id="searchOutKey" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by snum) as rn, A.* from (
+        select * from product where stype = #{param1} ) A
+        ) where rn between #{param2} and #{param3}
+   </select>
+	<select id="totalKey" resultType="int">
+	   select count(*) from product where stype = #{param1}
+	</select>
+	
+	<select id="searchOutKeyValue" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by snum) as rn, A.* from (
+        select * from product where stype = #{param1} and sname like '%' || #{param2} || '%' ) A
+        ) where rn between #{param3} and #{param4}
+   </select>
+	<select id="totalKeyValue" resultType="int">
+	   select count(*) from product where stype = #{param1} and sname like '%' || #{param2} || '%' 
+	</select>
+	
+	<!-- 삭제 찾기 -->
+	<select id="selectFile" resultType="String">
+		select image from product where snum=#{param1}
+	</select>
 </mapper>

@@ -76,6 +76,7 @@ public class ProductController {
 		String ssize = mul.getParameter("ssize");
 		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
+		int recommend = Integer.parseInt(mul.getParameter("recommend"));
 		String fname = "";
 		
 		 List<MultipartFile> fileList = mul.getFiles("image");
@@ -86,16 +87,15 @@ public class ProductController {
 
              System.out.println("originFileName : " + originFileName);
          
-             String safeFile = imagepath + originFileName;
+             String safeFile = imagepath + "\\" + originFileName;
              
              mf.transferTo(new File(safeFile));
 		
 
          }
 		
-
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best);
+		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,recommend);
 		
 		return "redirect:/main";
 	}
@@ -394,10 +394,18 @@ public class ProductController {
 	}
 	
 	// 상품 내용 화면에서 상품 삭제하기
-	@RequestMapping(value = "/deleteproduct")
+	@RequestMapping(value = "/deleteProduct")
 	public String deleteproduct(HttpServletRequest request) {
 		int snum = Integer.parseInt(request.getParameter("snum"));
 		Service ss = sqlSession.getMapper(Service.class);
+		String files = ss.selectFile(snum);
+		
+		String[] imageFiles = files.split(", "); 
+		for(String image : imageFiles) {
+			File imageFile = new File(imagepath+image);
+			imageFile.delete();
+		}
+		
 		ss.deleteproduct(snum);
 		
 		return "redirect:/productout";
@@ -590,34 +598,52 @@ public class ProductController {
 		return ss.stockcheck(snum,ssize);
 	}
 	
-	// 베스트 상품 화면으로 가기
+	// 베스트 상품 화면 출력
 	@RequestMapping(value = "/bestproductout")
 	public String bestproductout(HttpServletRequest request, Model mo) {
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<ProductDTO> list = ss.bestproductout();
+		mo.addAttribute("list", list);
 		
 		return "bestproductout";
 	}
 	
-	// 베스트 상품 화면 날씨 API 적용
+	// 추천 상품 화면으로 가기
+	@RequestMapping(value = "/recommendout")
+	public String recommendout(HttpServletRequest request, Model mo) {
+		
+		return "recommendout";
+	}
+	
+	// 추천 상품 화면, 기상청 단기예보 API에 데이터 보내기(https://www.data.go.kr/data/15084084/openapi.do?recommendDataYn=Y#/tab_layer_detail_function)
 	@PostMapping("/bestproductoutweatherview")
     @ResponseBody
-    public String getWeather(@RequestBody Map<String, String> coordinates) {
-        // 좌표를 기반으로 날씨 정보 가져오는 로직을 작성
+    public WeatherDTO getWeather(@RequestBody Map<String, String> coordinates, HttpServletRequest request) {
+		WeatherDTO dto = new WeatherDTO();
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+        // 자바스크립트문에서 계산한 좌표값 가져옴
         String latitude = coordinates.getOrDefault("convertedLatitude","");
-        String longitude = coordinates.getOrDefault("convertedLatitude","");
-      
-        System.out.println(latitude);
-        System.out.println(longitude);
+        String longitude = coordinates.getOrDefault("convertedLongitude","");
+        
+        // API 실행키
         String serviceKey = "YyEqjh8P0u6xMakFTsRYbV5DoxV57cDRQ8rf%2BUbTxrW9fxmGbEjiNcU%2Fh5U4UpQnGLdrNuFtDo7e1i5w1lK39A%3D%3D";
+        
+        // 오늘 날짜 지정
         LocalDate currentDate = LocalDate.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
         String baseDate = currentDate.format(formatter);
-        System.out.println(baseDate);
+        
+        // 단기예보 기준시간 설정(05시)
         String baseTime = "0500";
+        
+        // 좌표값 API에 보내는 변수에 맞게 nx,ny로 설정
         String nx = latitude;
         String ny = longitude;
 
         try {
-            // API 호출을 위한 URL 생성
+            // API 호출을 위한 URL 생성 및 데이터 보내기
             String apiUrl = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
                             + "?serviceKey=" + serviceKey
                             + "&numOfRows=400&pageNo=1"
@@ -629,7 +655,7 @@ public class ProductController {
             // HTTP 연결 설정
             URL url = new URL(apiUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod("GET"); // API 문서에 GET으로 보내달라고 해서 GET으로 설정
 
             // 응답 데이터 읽기
             BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
@@ -641,77 +667,61 @@ public class ProductController {
             br.close();
 
             // 응답 데이터 출력
+            dto.setId(id);
             String xmlResponse = response.toString();
-            parseWeatherData(xmlResponse);
-            System.out.println(xmlResponse);
+            parseWeatherData(xmlResponse, dto); // 밑에 따로 함수를 만들어서 데이터 출력과정 진행
             conn.disconnect();
+            
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return dto;
 	}
 	
-	private void parseWeatherData(String xmlResponse) {
+	// 추전 상품 화면, 기상청 단기예보 API에서 응답 받은 데이터로 화면 출력
+	private void parseWeatherData(String xmlResponse, WeatherDTO dto) {
+		
         try {
+        	// 기상청 단기예보 API에서 받은 데이터는 xml 형태이므로 이것을 읽을 수 있게 처리하는 과정
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
             Document doc = builder.parse(new InputSource(new StringReader(xmlResponse)));
-
-            // 파싱하여 필요한 정보 추출
+            //
+            
+            // 받은 데이터에서 필요한 정보 추출
             NodeList itemList = doc.getElementsByTagName("item");
             for (int i = 0; i < itemList.getLength(); i++) {
                 Node itemNode = itemList.item(i);
                 if (itemNode.getNodeType() == Node.ELEMENT_NODE) {
                     Element itemElement = (Element) itemNode;
                     
+                    // category = 데이터 자료구분 코드 -> category의 값이 TMN 이면 일 최저기온, TMX 면 일 최고기온 
                     String category = itemElement.getElementsByTagName("category").item(0).getTextContent();
-                    String rebaseDate = null, rebaseTime = null, fcstDate = null, fcstTime = null, fcstValue = null,  TMXValue = null;
-                    String nx = null, ny = null;
-                    if (category.equals("TMN")) {
-                        TMXValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
-                        rebaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent();
-                        rebaseTime = itemElement.getElementsByTagName("baseTime").item(0).getTextContent();
-                        fcstDate = itemElement.getElementsByTagName("fcstDate").item(0).getTextContent();
-                        fcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent();
-                        fcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
-                        nx = itemElement.getElementsByTagName("nx").item(0).getTextContent();
-                        ny = itemElement.getElementsByTagName("ny").item(0).getTextContent();
-                        System.out.println("baseDate: " + rebaseDate);
-                        System.out.println("baseTime: " + rebaseTime);
-                        System.out.println("category: " + category);
-                        System.out.println("fcstDate: " + fcstDate);
-                        System.out.println("fcstTime: " + fcstTime);
-                        System.out.println("fcstValue: " + fcstValue);
-                        System.out.println("nx: " + nx);
-                        System.out.println("ny: " + ny);
-                        System.out.println();
-                    }
+                    String lowbaseDate = null, lowfcstTime = null, lowfcstValue = null;
+                    String highbaseDate = null, highfcstTime = null, highfcstValue = null;
                     
-                    if(category.equals("TMX"))
+                    
+                    if (category.equals("TMN")) { // 일 최저 기온 출력
+                        
+                        lowbaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent(); // 예보 날짜(오늘 날짜)
+                        lowfcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent(); // 예보 시간(최저 기온 시간, 보통 06시)
+                        lowfcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent(); // 최저 온도 값
+                        dto.setLowbaseDate(lowbaseDate);
+                        dto.setLowfcstTime(lowfcstTime);
+                        dto.setLowfcstValue(lowfcstValue);
+                        
+                    }
+                    else if(category.equals("TMX")) // 일 최고 기온 출력
                     {
-                    	TMXValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
-                        rebaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent();
-                        rebaseTime = itemElement.getElementsByTagName("baseTime").item(0).getTextContent();
-                        fcstDate = itemElement.getElementsByTagName("fcstDate").item(0).getTextContent();
-                        fcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent();
-                        fcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
-                        nx = itemElement.getElementsByTagName("nx").item(0).getTextContent();
-                        ny = itemElement.getElementsByTagName("ny").item(0).getTextContent();
-                        System.out.println("baseDate: " + rebaseDate);
-                        System.out.println("baseTime: " + rebaseTime);
-                        System.out.println("category: " + category);
-                        System.out.println("fcstDate: " + fcstDate);
-                        System.out.println("fcstTime: " + fcstTime);
-                        System.out.println("fcstValue: " + fcstValue);
-                        System.out.println("nx: " + nx);
-                        System.out.println("ny: " + ny);
-                        System.out.println();
+                    	
+                    	highbaseDate = itemElement.getElementsByTagName("baseDate").item(0).getTextContent();
+                    	highfcstTime = itemElement.getElementsByTagName("fcstTime").item(0).getTextContent();
+                    	highfcstValue = itemElement.getElementsByTagName("fcstValue").item(0).getTextContent();
+                        dto.setHighbaseDate(highbaseDate);
+                        dto.setHighfcstTime(highfcstTime);
+                        dto.setHighfcstValue(highfcstValue);
+                        
                     }
-                    
-                    
-
-                    // 추출한 정보 출력
-                   
                 }
             }
         } catch (Exception e) {
@@ -719,6 +729,19 @@ public class ProductController {
         }
     }
 	
+	// 추천 상품 화면, 계산된 평균 온도값으로 추천 상품 출력
+	@PostMapping("/recommendsearch")
+    @ResponseBody
+    public ArrayList<ProductDTO> recommendsearch(@RequestBody Map<String, String> coordinates, Model mo) {
+		String avgTemp = coordinates.getOrDefault("avgTemp","");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<ProductDTO> list = ss.recommendsearch(avgTemp);
+		
+		return list;
+	}
+	
+	// 상품 타입에 따른 출력
 	@RequestMapping(value = "/product_list", method = RequestMethod.GET)
 	   public String product_list(HttpServletRequest request, PageDTO dto, Model mo) {
 	      String stype = request.getParameter("stype");
@@ -746,6 +769,92 @@ public class ProductController {
 	      return "product_list";
 	      
 	   }
+	
+	
+	@RequestMapping(value = "/product_search", method = RequestMethod.GET)
+	public String productSearch(HttpServletRequest request, PageDTO dto, Model mo) {
+		String searchKey = request.getParameter("search_key");
+		
+		String searchValue = request.getParameter("search_value");
+		
+		if(searchKey.equals("전체") && searchValue.isEmpty()) {
+
+			return "redirect:/productout";
+		}
+		else if(searchKey.equals("전체") && !searchValue.isEmpty()) {
+			String nowPage=request.getParameter("nowPage");
+			String cntPerPage=request.getParameter("cntPerPage");
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			int totalSearch=ss.totalValue(searchValue);
+			
+			if(nowPage==null && cntPerPage == null) {
+				nowPage="1";
+				cntPerPage="5";
+			}
+			else if(nowPage==null) {
+				nowPage="1";
+			}
+			else if(cntPerPage==null) {
+				cntPerPage="5";
+			}      
+			dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+			mo.addAttribute("paging",dto);
+			mo.addAttribute("list", ss.searchOutValue(searchValue,dto.getStart(),dto.getEnd()));
+			mo.addAttribute("search_key", searchKey);
+			mo.addAttribute("search_value", searchValue);
+			return "product_searchout";			
+		}
+		else if(!searchKey.equals("전체") && searchValue.isEmpty()) {
+			String nowPage=request.getParameter("nowPage");
+			String cntPerPage=request.getParameter("cntPerPage");
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			int totalSearch=ss.totalKey(searchKey);
+			if(nowPage==null && cntPerPage == null) {
+				nowPage="1";
+				cntPerPage="5";
+			}
+			else if(nowPage==null) {
+				nowPage="1";
+			}
+			else if(cntPerPage==null) {
+				cntPerPage="5";
+			}      
+			dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+			mo.addAttribute("paging",dto);
+			mo.addAttribute("list", ss.searchOutKey(searchKey,dto.getStart(),dto.getEnd()));
+			mo.addAttribute("search_key", searchKey);
+			mo.addAttribute("search_value", searchValue);
+			return "product_searchout";			
+		}
+		else {
+			String nowPage=request.getParameter("nowPage");
+			String cntPerPage=request.getParameter("cntPerPage");
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			int totalSearch=ss.totalKeyValue(searchKey,searchValue);
+			
+			if(nowPage==null && cntPerPage == null) {
+				nowPage="1";
+				cntPerPage="5";
+			}
+			else if(nowPage==null) {
+				nowPage="1";
+			}
+			else if(cntPerPage==null) {
+				cntPerPage="5";
+			}      
+			dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+			mo.addAttribute("paging",dto);
+			mo.addAttribute("list", ss.searchOutKeyValue(searchKey,searchValue,dto.getStart(),dto.getEnd()));
+			mo.addAttribute("search_key", searchKey);
+			mo.addAttribute("search_value", searchValue);
+			return "product_searchout";			
+		}
+
+	}
+	
 
 }
 	

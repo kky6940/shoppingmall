@@ -11,6 +11,39 @@
 
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
+.amdinline{ 
+	position: fixed;
+	left:300px;
+	top: 0;
+	height: 100vh;
+	border-right: 2px solid #eeeeee;
+}
+.admintable{
+	border: none;
+	z-index: 999;
+	position: relative;
+  	width: 300px;
+}
+.adminth{
+	padding-top: 25px;
+	padding-bottom: 10px;
+	text-align: center;
+	
+}
+.admintd{
+	padding-bottom: 5px;
+	text-align: center;
+	color: gray;
+}
+.admintd a{
+	text-decoration:none;
+	color: gray;
+}
+.bottomline{
+	padding-bottom: 3px;
+	border-bottom: 1px solid black;
+}
+
 
 body {
 	width: 100%;
@@ -208,12 +241,45 @@ p{
 				<a href="productinput" class="depth2_list" >입력</a>
 				<a href="productout" class="depth2_list">출력</a>
 				<a href="bestproductout" class="depth2_list">베스트상품</a>
-				<a href="recommendout" class="depth2_list">추천상품</a>
+				<a href="" class="depth2_list">페도라</a>
 			</div>
 		</div>
 	</div>
 </div>
 <div class="gray"></div>
+<div class="amdinline"></div>
+
+<table align="left"; class="admintable">
+	<tr>
+		<th class="adminth">상품 주문 현황</th>
+	</tr>
+	<tr>
+		<td class="admintd"><a href="payoutviewall">현재 주문 목록 보기</a></td>
+	</tr>
+	<tr>
+		<td class="admintd">환불 목록 보기</td>
+	</tr>
+	<tr>
+		<td class="admintd">교환 목록 보기</td>
+	</tr>
+	<tr>
+		<th class="adminth">상품 관리 현황</th>
+	</tr>
+	<tr>
+		<td class="admintd"><a href="productinput">상품 입력</a></td>
+	</tr>
+	<tr>
+		<td class="admintd"><a href="productout">상품 목록</a></td>
+	</tr>
+	<tr>
+		<th class="adminth">회원 가입 현황</th>
+	</tr>
+	<tr>
+		<td class="admintd"><a href="memberviewall">회원 목록</a></td>
+	</tr>
+</table>
+
+
 <script>
     // JavaScript로 hover 이벤트 처리
     var gnbCategories = document.querySelectorAll('.gnb_category');

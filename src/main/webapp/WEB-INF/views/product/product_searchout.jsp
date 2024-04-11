@@ -6,7 +6,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta charset="UTF-8">
 <style type="text/css">
 a{
@@ -120,15 +119,13 @@ h5{
 				    <td class="adminouttd">
 						<button type="button" class="cart_delete" onclick="modifyProduct(${aa.snum})">수정</button>
 						<button type="button" class="cart_delete" onclick="deleteProduct(${aa.snum})">삭제</button>
-					</td>
 				</tr> 
-				
 				</c:forEach> 
 				<tr style="border-left: none;border-right: none;border-bottom: none;">
 				   <td colspan="7" style="text-align: center; font-size: 15px;  padding: 10px;">
 	   
 	   			   <c:if test="${paging.startPage!=1 }"> 
-	      		   		<a href="productout?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> 
+	      		   		<a href="product_search?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}&search_key=${search_key}&search_value=${search_value}">◀</a> 
 	   			   </c:if>  
 	      		<c:forEach begin="${paging.startPage }" end="${paging.endPage}" var="p"> 
 	         	<c:choose>
@@ -136,12 +133,12 @@ h5{
 	               <b><span style="color: black;">${p}</span></b>
 	            </c:when>   
 	            <c:when test="${p != paging.nowPage }"> 
-	               <a href="productout?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
+	               <a href="product_search?nowPage=${p}&cntPerPage=${paging.cntPerPage}&search_key=${search_key}&search_value=${search_value}">${p}</a>
 	            </c:when>   
 		         </c:choose>
 		      </c:forEach>
 			      <c:if test="${paging.endPage != paging.lastPage}">
-			      <a href="productout?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
+			      <a href="product_search?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }&search_key=${search_key}&search_value=${search_value}">▶</a>
 			   </c:if>
 	   		</td>
 		</tr>

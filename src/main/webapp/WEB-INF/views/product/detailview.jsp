@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -46,7 +47,14 @@ function submitfrom(action) {
 			<table border="1" width="300px" align="center">
 				<tr>
 					<td>
-						<img alt="" src="./image/${aa.image }">
+						<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
+		   					<c:if test="${loop.index == 0}">
+		       					<img alt="" src="./image/${imageName }" width="100px" height="100px">
+		       					
+		   					</c:if>
+						</c:forEach>
+						
 						<input type="hidden" name="image" value="${aa.image }"> <!-- 구매 확인을 위한 hidden -->
 					</td>
 				</tr>

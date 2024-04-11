@@ -10,6 +10,15 @@
       <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
    </definition>
    
+   <definition name="adminLayout" template="/WEB-INF/views/layout.jsp">
+      <put-attribute name="title" value=""/>
+      <put-attribute name="top" value="/WEB-INF/views/top_admin.jsp"/>
+      <put-attribute name="body" value=""/>
+      <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
+   </definition>
+   
+   
+   
    <definition name="main" extends="baseLayout">
       <put-attribute name="title" value="woman"/>
       <put-attribute name="body" value="/WEB-INF/views/main.jsp"/>
@@ -34,11 +43,11 @@
    </definition>
    
 
-   <definition name="productinput" extends="baseLayout">
+   <definition name="productinput" extends="adminLayout">
       <put-attribute name="title" value="상품입력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productinput.jsp"/>
    </definition>
-   <definition name="productout" extends="baseLayout">
+   <definition name="productout" extends="adminLayout">
       <put-attribute name="title" value="상품출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productout.jsp"/>
    </definition>
@@ -74,8 +83,16 @@
       <put-attribute name="title" value="상품리뷰입력화면"/>
       <put-attribute name="body" value="/WEB-INF/views/product/productreviewinput.jsp"/>
    </definition>
+   <definition name="recommendout" extends="baseLayout">
+      <put-attribute name="title" value="추천상품화면"/>
+      <put-attribute name="body" value="/WEB-INF/views/product/recommendout.jsp"/>
+   </definition>
+    <definition name="product_searchout" extends="adminLayout">
+      <put-attribute name="title" value="관리자상품관리"/>
+      <put-attribute name="body" value="/WEB-INF/views/product/product_searchout.jsp"/>
+   </definition>
    
-   <definition name="payout" extends="baseLayout">
+   <definition name="payout" extends="adminLayout">
       <put-attribute name="title" value="상품구입후출력"/>
       <put-attribute name="body" value="/WEB-INF/views/pay/payout.jsp"/>
    </definition>
@@ -100,7 +117,7 @@
       <put-attribute name="body" value="/WEB-INF/views/mypage/couponview.jsp"/>
    </definition>
    
-   <definition name="adminpage" extends="baseLayout">
+   <definition name="adminpage" extends="adminLayout">
       <put-attribute name="title" value="관리자페이지메인"/>
       <put-attribute name="body" value="/WEB-INF/views/mypage/adminpage.jsp"/>
    </definition>
@@ -125,7 +142,8 @@
       <put-attribute name="body" value="/WEB-INF/views/membership/pwfind.jsp"/>
    </definition>
    
-   <definition name="memberviewall" extends="baseLayout">
+   
+   <definition name="memberviewall" extends="adminLayout">
       <put-attribute name="title" value="관리자회원보기"/>
       <put-attribute name="body" value="/WEB-INF/views/membership/memberviewall.jsp"/>
    </definition>

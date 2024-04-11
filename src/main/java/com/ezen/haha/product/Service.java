@@ -7,7 +7,7 @@ import com.ezen.haha.membership.MembershipDTO;
 public interface Service {
 
 	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String color, String fname,
-			String intro, int best);
+			String intro, int best, int recommend);
 
 	ArrayList<ProductDTO> productout(PageDTO dto);
 
@@ -69,6 +69,22 @@ public interface Service {
 
 	ArrayList<ProductDTO> searchout(String stype, int start, int end);
 
-	
+	ArrayList<ProductDTO> bestproductout();
+
+	ArrayList<ProductDTO> recommendsearch(String avgTemp);
+
+	int totalValue(String searchValue);
+
+	ArrayList<ProductDTO> searchOutValue(String searchValue, int start, int end);
+
+	int totalKey(String searchKey);
+
+	ArrayList<ProductDTO> searchOutKey(String searchKey, int start, int end);
+
+	int totalKeyValue(String searchKey, String searchValue);
+
+	ArrayList<ProductDTO> searchOutKeyValue(String searchKey, String searchValue, int start, int end);
+
+	String selectFile(int snum);
 
 }

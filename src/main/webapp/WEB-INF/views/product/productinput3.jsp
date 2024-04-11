@@ -5,133 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-<style type="text/css">
-@charset "UTF-8";
 
-body{  
-  
-  padding: 0;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-}
-h3{
-	text-align: center;
-}
-input[type="text"],
-input[type="number"]{
-    width: 330px;
-    padding: 4px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    display: inline-block;
-}
-
-label{
-	display: block;
-    max-width: 100%;
-    margin: 2px 0 2px 0;
-    font-weight: 700;	
-    vertical-align: middle;
-    
-}
-textarea{
-	width:600px;
-	height:80px;
-	padding: 4px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-    resize: none;
-}
-select {
-    width: 112px;
-    padding: 3px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f9f9f9;
-}
-select option {
-    font-size: 16px;
-}
-input[type="checkbox"]{
-	width: 20px;
-    height: 20px;
-    margin: 0 5px;
-    vertical-align: middle;
-}
-
-.product_input{
- 	margin-top: 24px;
-	width: 100%; 
-	min-width:1360px;
-	position:absolute;
-	display:flex;
-    justify-content: center;
-}
-.product_inputform{
-  	background-color: #fff;
-	border-radius: 9px;
-  	width: 706px;
-  	height: auto;
-	border:1px solid #808080;
-	position: relative;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-	padding: 0 20px 0 20px;
-	margin-bottom: 100px;
-}
-
-
-.btn1 {
-  background: lightslategray;
-  color: #fff;
-  border-radius: 100px;
-  width: 200px;
-  height: 44px;
-  font-size: 16px;
-  text-align:center;
-  border: none;
-  margin-bottom: 15px;
-}
-
-.btn1:hover {
-  background: slategray;
-}
-
-.filebox label {
-    display: inline-block;
-    padding: 10px 20px;
-    color: #fff;
-    vertical-align: middle;
-    background-color: lightslategray;
-    cursor: pointer;
-    height: 38px;
-    border-radius: 5px;
-}
-
-.att_zone{
-	width: 664px;
-	min-height:150px;
-	padding:10px;
-	border:1px solid #cccccc;
-	background-color: #f9f9f9;
-	border-radius: 5px;
-	margin-bottom: 15px
-}
-.att_zone:empty:before{
-	content : attr(data-placeholder);
-	color : #999;
-	font-size:17px;
-}
-
-
-
-</style>
-
+<link rel="stylesheet"  href="resources/css/product_input.css">
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
@@ -144,16 +19,16 @@ input[type="checkbox"]{
 	      <label for="snum">상품코드</label>
 	      <input type="text" id="snum" name="snum" required="required">
 	      <select name="best" id="best">
-			<option value="0">일반상품지정</option>
-			<option value="1">베스트상품지정</option>
- 		 </select>
+					<option value="0">일반상품지정</option>
+					<option value="1">베스트상품지정</option>
+		  </select>
 		  <select name="recommend">
-		  <option value="">추천상품지정(온도구별)</option>
-		  <option value="0">5℃ 이하</option>
-		  <option value="5">5℃ 이상</option>
-		  <option value="15">15℃ 이상</option>
-		  <option value="20">20℃ 이상</option>
-		</select>
+		  			<option value="">추천상품지정(온도구별)</option>
+					<option value="0">5℃ 이하</option>
+					<option value="5">5℃ 이상</option>
+					<option value="15">15℃ 이상</option>
+					<option value="20">20℃ 이상</option>
+		  </select>
       </div>
       <div class="input_group">
 	      <label for="sname">상품명</label>

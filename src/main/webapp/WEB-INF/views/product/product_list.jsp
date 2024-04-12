@@ -90,7 +90,7 @@
 					<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 		   					<c:if test="${loop.index == 0}">
-		       					<img alt="" src="resources/image/${imageName}" width="300px" height="360px">
+		       					<a href="detailview?snum=${aa.snum }"><img alt="" src="resources/image/${imageName}" width="300px" height="360px"></a>
 		   					</c:if>
 						</c:forEach>
 				</a></li>

@@ -71,7 +71,7 @@ public interface Service {
 
 	ArrayList<ProductDTO> bestproductout();
 
-	ArrayList<ProductDTO> recommendsearch(String avgTemp);
+	ArrayList<ProductDTO> recommendsearch(int avgTemp);
 
 	int totalValue(String searchValue);
 

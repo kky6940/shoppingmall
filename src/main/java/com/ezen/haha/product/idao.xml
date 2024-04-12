@@ -186,7 +186,7 @@
 	
 	<!-- 추천 상품 찾기 -->
 	<select id="recommendsearch" resultType="com.ezen.haha.product.ProductDTO">
-		select * from product where recommend=#{recommendsearch}
+		select * from product where recommend=#{param1}
 	</select>
 	
 	<select id="searchOutValue" resultType="com.ezen.haha.product.ProductDTO">      

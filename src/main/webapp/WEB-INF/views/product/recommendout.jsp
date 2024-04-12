@@ -7,6 +7,15 @@
 <html>
 <head>
 <style type="text/css">
+	/* 화면 새로고침 하였을 때 alert창이 떴을 시 HTML 글들이 보이는 문제(FOUC(Flash Of Unstyled Content)현상) 수정 */
+	body{
+		visibility: hidden;
+	}
+	body.visible{
+		visibility: visible;
+	}
+	/* */
+	
 	#tempertext{
 		margin-top: 50px;
 		text-align: center;
@@ -16,6 +25,11 @@
 		margin-top: 50px;
 		text-align: center;
 		
+	}
+	#tempertextrefuse {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 20px;
 	}
 	hr{
 		height: 2px;
@@ -29,11 +43,13 @@
 	.negative {
 	    color: blue;
 	}
-	/* */
 </style>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script type="text/javascript">
+
+
 // LCC DFS 좌표변환을 위한 기초 자료(기상청 단기예보 API에 위치 좌표 값을 넣어주려면 추가 변환이 필요)
 var RE = 6371.00877; // 지구 반경(km)
 var GRID = 5.0; // 격자 간격(km)
@@ -118,9 +134,16 @@ function getLocation() {
                 sendLocation(position); // 날씨 API에 위치 정보 전달 함수 호출
             }, showError);
         } else {
-            var locationElement = document.getElementById("location");
-            locationElement.innerHTML = "사용자가 위치 정보 제공을 거부했습니다.";
-            console.log("사용자가 위치 정보를 거부했습니다.");
+            
+            var tempertextElement = document.getElementById("tempertext");
+            tempertextElement.style.display = "none";
+            
+            var recommendlist = document.getElementById("recommendlist");
+            recommendlist.style.display = "none";
+            
+            var tempertextrefuse = document.getElementById("tempertextrefuse");
+            tempertextrefuse.style.display = "block";
+            
         }
     } else {
         console.log("Geolocation is not supported by this browser.");
@@ -238,28 +261,74 @@ function displayWeather(weatherData) {
     	$("#tempertextdetail").text("무더운 여름 날씨네요. 아래 상품을 추천드립니다.");
     }
     
+    // 온도 기준에 따른 추천 상품 출력
     $.ajax({
         type: "POST",
-        url: "recommendsearch", // recommendsearch 경로로 요청을 보냅니다. 이 경로는 실제로 해당 요청을 처리할 서버 측 엔드포인트여야 합니다.
+        url: "recommendsearch",
         contentType: "application/json",
-        data: JSON.stringify({ "avgTemp": avgTemp }), // avgTemp 값을 요청 데이터로 전송합니다.
+        data: JSON.stringify({ "avgTemp": avgTemp }),
         success: function(response) {
-            console.log(response);
+        	var html = '';
+            for (var i = 0; i < response.length; i++) {
+                var aa = response[i];
+                html += '<a href="detailview?snum=' + aa.snum + '">';
+                html += '<div>';
+                html += '<table width="200px" align="center">';
+                html += '<tr>';
+                html += '<td>';
+                if (aa.best == 1) {
+                    html += '베스트 상품';
+                }
+                html += '</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td>';
+                var imageArray = aa.image.split(', ');
+                for (var j = 0; j < imageArray.length; j++) {
+                    if (j == 0) {
+                        html += '<img alt="" src="./image/' + imageArray[j] + '" width="100px" height="100px">';
+                    }
+                }
+                html += '<input type="hidden" name="snum" value="' + aa.snum + '">';
+                html += '</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td>' + aa.sname + '</td>';
+                html += '</tr>';
+                html += '<tr>';
+                html += '<td>' + formatPrice(aa.price) + '원</td>'; // 가격 포맷 변환
+                html += '</tr>';
+                html += '</table>';
+                html += '</div>';
+                html += '</a>';
+            }
+            document.getElementById('recommendout').innerHTML = html; // 반복문 종료 후에 결과 출력
         },
         error: function(xhr, status, error) {
             alert("에러 발생: " + error);
         }
     });
+
+    // 가격 포맷 변환 함수(, 추가)
+    function formatPrice(price) {
+    	return new Intl.NumberFormat('ko-KR').format(price);
+    }
 }
 //
 
 
 // 페이지 로드 시 GPS API 및 위치 정보 가져오기 자동 실행
 window.onload = function() {
+	var tempertextrefuse = document.getElementById("tempertextrefuse");
+	tempertextrefuse.style.display = "none";
     getLocation();
 };
 //
 
+// 화면 새로고침 하였을 때 alert창이 떴을 시 HTML 글들이 보이는 문제(FOUC(Flash Of Unstyled Content)현상) 수정
+document.addEventListener('DOMContentLoaded', function() {
+	document.body.classList.add("visible")
+});
 
 </script>
 <meta charset="UTF-8">
@@ -268,51 +337,32 @@ window.onload = function() {
 <body>
 
 <div id="location"></div> <!-- 화면 시작 시 자바스크립트문 자동 실행  -->
+
+<!-- 온도 출력 부분 -->
 <div id="tempertext">
 	<p>현재 <span id="id"></span> 님이 계신 장소의 최저 온도는 금일 <span id="lowFcstTime"></span> 시 기준 <span id="lowFcstValue"></span> </p><br>
 	<p>최고 온도는 <span id="highFcstTime"></span> 시 기준 <span id="highFcstValue"></span> 입니다.</p><br>
 	<p id="tempertextdetail"></p>
 </div>
 
+<!-- 위치 정보 제공 요청을 거절했을 경우 -->
+<div id="tempertextrefuse">
+	<p>죄송합니다.<br><br> 현재 페이지는 위치 정보 제공 요청을 승인하였을 경우에만 이용할 수 있습니다. </p>
+
+</div>
+
+
+<!-- 추천 상품 타이틀 출력 부분 -->
 <div id="recommendlist">
 <hr/>
 	<h2>추천 상품</h2>
 <hr/>
 	
 </div>
-<c:forEach items="${list }" var="aa">
-	<a href="detailview?snum=${aa.snum}">
-		<div>
-			<table border="1" width="200px" align="center">
-				<tr>
-					<td>
-						<c:if test="${aa.best eq 1}"> <!-- best가 1이라면 베스트 상품 출력 -->
-							베스트 상품
-						</c:if>
-					</td>
-				</tr>
-				<tr>
-					<td>
-						<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
-						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
-		   					<c:if test="${loop.index == 0}">
-		       					<img alt="" src="./image/${imageName }" width="100px" height="100px">
-		       					
-		   					</c:if>
-						</c:forEach>
-						<input type="hidden" name="snum" value="${aa.snum }">
-					</td>
-				</tr>
-				<tr>
-					<td>${aa.sname }</td>
-				</tr>
-				<tr>	
-					<td><f:formatNumber value="${aa.price }" pattern="#,###원"/> </td>
-				</tr>
-			</table>
-		</div>
-	</a>
-</c:forEach>
-	
+
+<!-- 추천 상품 내용 출력 부분-->
+<div id="recommendout">
+
+</div>	
 </body>
 </html>

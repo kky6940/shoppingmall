@@ -38,6 +38,12 @@ public class MypageController {
 	public String mypagemain(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
+		
+		if(id == null) 
+		{
+			hs.setAttribute("loginstate", false);
+		}
+		
 		boolean loginstate = (boolean) hs.getAttribute("loginstate");
 		
 		if(loginstate)
@@ -104,6 +110,7 @@ public class MypageController {
 			return "redirect:/login";
 		}
 	}
+    
  // 관리자 페이지에서 결제 목록 보기 화면으로
     @RequestMapping(value = "/payoutviewall")
     public String payoutviewall(HttpServletRequest request, Model mo) {
@@ -113,6 +120,7 @@ public class MypageController {
 		
 		return "payout";
 	}
+    
  // 관리자 페이지에서 회원 목록 보기 화면으로
     @RequestMapping(value = "/memberviewall")
     public String memberviewall(HttpServletRequest request, Model mo) {

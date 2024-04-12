@@ -10,4 +10,8 @@ public interface Service {
 
 	void productsuupdate(int snum, int quantity1);
 
+	ArrayList<PayDTO> paysearch(String tid);
+
+	void deletepaylist(String tid1);
+
 }

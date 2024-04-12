@@ -732,10 +732,29 @@ public class ProductController {
     }
 	
 	// 추천 상품 화면, 계산된 평균 온도값으로 추천 상품 출력
-	@PostMapping("/recommendsearch")
+	@PostMapping("/recommendsearch") 
     @ResponseBody
     public ArrayList<ProductDTO> recommendsearch(@RequestBody Map<String, String> coordinates, Model mo) {
-		String avgTemp = coordinates.getOrDefault("avgTemp","");
+		double avgTempDouble = Double.parseDouble(coordinates.getOrDefault("avgTemp", "0")); // 일 평균 온도
+		int avgTemp = (int) avgTempDouble; // 정수로 전환
+		
+		// recommend DB 테이블에 저장된 값에 맞추기
+		if(avgTemp<5)
+		{
+			avgTemp=0;
+		}
+		else if(avgTemp>=5 && avgTemp<15)
+		{
+			avgTemp=5;
+		}
+		else if(avgTemp>=15 && avgTemp<20)
+		{
+			avgTemp=15;
+		}
+		else if(avgTemp>=20 && avgTemp<100)
+		{
+			avgTemp=20;
+		}
 		
 		Service ss = sqlSession.getMapper(Service.class);
 		ArrayList<ProductDTO> list = ss.recommendsearch(avgTemp);

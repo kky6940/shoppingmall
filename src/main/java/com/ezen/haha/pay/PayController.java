@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -235,5 +237,97 @@ public class PayController {
    
     }    
     
+    
+    // 환불 과정(카카오 단건결재 API)
+    @PostMapping("/paycancelrequest") // 데이터값 POST 지정, 카카오 서버는 POST 자료만 받는다고 명시되어 있음
+    public ResponseEntity<String> paycancelrequest(HttpServletRequest request, @RequestBody Map<String, String> formData) throws UnsupportedEncodingException {
+		String tid = formData.getOrDefault("tid", "");
+		int totprice = Integer.parseInt(formData.getOrDefault("totprice", ""));
+		
+        String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
+        String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String apiUrl = "https://open-api.kakaopay.com/online/v1/payment/cancel"; // 카카오 단건결제 결재 '요청' 링크
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Content-Type","application/json"); // 본문 형식을 JSON 으로 변경, 안하면 카카오 서버가 인식을 못한다.(API 문서에도 명시되어 있음)
+        headers.set("Authorization", auth); // 카카오 서버 시크릿 키 인증 틀
+
+        Map<String, Object> requestBodyMap = new LinkedHashMap<>();
+        // 아래는 카카오 결재 API 가 결재 요청에 요구하는 필수 데이터들, 아래 이외의 데이터도 추가해서 넣을 수 있다.(API 문서 참조)
+        requestBodyMap.put("cid", "TC0ONETIME"); // 가맹점 id(String), 테스트 아이디 "TC0ONETIME" 입력
+        requestBodyMap.put("tid", tid); // 결재 고유번호
+        requestBodyMap.put("cancel_amount", totprice); // 취소 금액(int)
+        requestBodyMap.put("cancel_tax_free_amount", 0); // 취소 비과세 금액(int)
+        
+        String requestBody = "";
+        try {
+            requestBody = objectMapper.writeValueAsString(requestBodyMap); // 카카오 서버에 json 형식으로 보내줘야 하기에 타입을 변경
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+            
+        }
+        
+        HttpEntity<String> requestEntity = new HttpEntity<>(requestBody, headers); // 위에 쓴 정보들을 가지고 카카오 서버에 요청
+        
+        RestTemplate restTemplate = new RestTemplate(); // 카카오 서버에 요청하고 그 결과물을 받기 위한 코드
+        
+        // 한글 인코딩, 안하면 카카오 결재창에서 상품명이 ?로 뜬다.
+        List<HttpMessageConverter<?>> messageConverters = new ArrayList<>();
+        StringHttpMessageConverter stringHttpMessageConverter = new StringHttpMessageConverter(StandardCharsets.UTF_8);
+        stringHttpMessageConverter.setWriteAcceptCharset(false);
+        messageConverters.add(stringHttpMessageConverter);
+        restTemplate.setMessageConverters(messageConverters);
+        // 한글 인코딩 end
+        
+        ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class); // 받은 자료들을 response에 저장
+        System.out.println(response);
+        if (response.getStatusCode().is2xxSuccessful()) { // response가 true 라면 아래 실행
+            // 받은 JSON 응답을 객체로 매핑하여 출력
+            try {
+                JsonNode root = objectMapper.readTree(response.getBody()); // 카카오 서버에서 받은 자료들을 JSON 문자열(JsonNode)로 변경
+                String tid1 = root.get("tid").asText(); // 결재 고유 번호
+                String partner_order_id = root.get("partner_order_id").asText(); // 가맹점 주문번호
+                String partner_user_id = root.get("partner_user_id").asText(); // 가맹점 회원 아이디
+                
+                JsonNode amountNode = root.get("amount"); // 결재 금액, amount에 복합적으로 내용이 들어가 있기에 따로 풀어야 한다.
+                int totalAmount = amountNode.get("total").asInt(); // 총 결재 금액 가져오기
+                                
+                JsonNode canceled_amount = root.get("canceled_amount"); // 취소 금액
+                int totalCanceled_amount = canceled_amount.get("total").asInt();
+                  
+                String item_name = root.get("item_name").asText(); // 상품 이름
+                String quantity = root.get("quantity").asText(); // 상품 수량
+                String approved_at = root.get("approved_at").asText(); // 결재 승인 시각
+                String canceled_at = root.get("canceled_at").asText(); // 결재 취소 시각
+                
+                System.out.println(tid1);
+                System.out.println(partner_order_id);
+                System.out.println(partner_user_id);
+                System.out.println(totalAmount);
+                System.out.println(totalCanceled_amount);
+                System.out.println(item_name);
+                System.out.println(quantity);
+                System.out.println(approved_at);
+                System.out.println(canceled_at);
+                
+                String message = "환불이 완료되었습니다.";
+                
+                Service ss = sqlSession.getMapper(Service.class);
+                ss.deletepaylist(tid1);
+                
+                return ResponseEntity.ok(message); 
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+               
+            }
+        } else {
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("환불 처리가 이미 완료되었습니다.");
+        }
+		
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("환불 처리가 이미 완료되었습니다.");
+    }
     
 }

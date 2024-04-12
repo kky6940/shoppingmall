@@ -15,6 +15,12 @@
  	<update id="productsuupdate">
  		update product set su=su-#{param2} where snum=#{param1}
  	</update>
+ 	<select id="paysearch" resultType="com.ezen.haha.pay.PayDTO">
+ 		select * from payinfo where tid=#{param1}
+ 	</select>
  	
+ 	<delete id="deletepaylist">
+ 		delete from payinfo where tid=#{param1}
+ 	</delete>
  	
 </mapper>

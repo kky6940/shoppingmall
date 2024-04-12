@@ -183,15 +183,7 @@ p{
 				<a href="" class="depth2_list">블루종</a>
 			</div>
 		</div>
-		<div class="gnb_category">
-			<a href="">신발</a>
-			<div class="depth2">
-				<a href="" class="depth2_list">구두</a>
-				<a href="" class="depth2_list">스니커즈</a>
-				<a href="" class="depth2_list">슬리퍼</a>
-				<a href="" class="depth2_list">샌들</a>
-			</div>
-		</div>
+		
 		<div class="gnb_category">
 			<a href="">모자</a>
 			<div class="depth2">

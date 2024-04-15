@@ -23,4 +23,11 @@ public interface Service {
 	//MembershipDTO naverlogin(String name, String email);
 
 	MembershipDTO naverlogin(String name);
+
+	ArrayList<MembershipDTO> membershipsearch(String id);
+
+	void membershipupdate(String newid, String pw, String name, String tel, String email, String pid, String address,
+			String id);
+
+	void membershipdelete(String id);
 }

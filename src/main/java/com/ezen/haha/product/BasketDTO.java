@@ -3,8 +3,10 @@ package com.ezen.haha.product;
 import com.ezen.haha.membership.MembershipDTO;
 
 public class BasketDTO {
-	String id,sname,stype,ssize,image,color;
-	int basketnum,snum,guestbuysu,price,totprice;
+	String id,psize,color;
+	int basketnum,snum,guestbuysu;
+	
+	ProductDTO productdto;
 	MembershipDTO membershipdto;
 	
 	public BasketDTO() {}
@@ -17,60 +19,20 @@ public class BasketDTO {
 		this.id = id;
 	}
 
-	public String getSname() {
-		return sname;
+	public String getPsize() {
+		return psize;
 	}
 
-	public void setSname(String sname) {
-		this.sname = sname;
+	public void setPsize(String psize) {
+		this.psize = psize;
 	}
 
-	public String getStype() {
-		return stype;
+	public String getColor() {
+		return color;
 	}
 
-	public void setStype(String stype) {
-		this.stype = stype;
-	}
-
-	public String getSsize() {
-		return ssize;
-	}
-
-	public void setSsize(String ssize) {
-		this.ssize = ssize;
-	}
-
-	public String getImage() {
-		return image;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
-
-	public int getSnum() {
-		return snum;
-	}
-
-	public void setSnum(int snum) {
-		this.snum = snum;
-	}
-
-	public int getTotprice() {
-		return totprice;
-	}
-
-	public void setTotprice(int totprice) {
-		this.totprice = totprice;
-	}
-
-	public int getGuestbuysu() {
-		return guestbuysu;
-	}
-
-	public void setGuestbuysu(int guestbuysu) {
-		this.guestbuysu = guestbuysu;
+	public void setColor(String color) {
+		this.color = color;
 	}
 
 	public int getBasketnum() {
@@ -81,6 +43,29 @@ public class BasketDTO {
 		this.basketnum = basketnum;
 	}
 
+	public ProductDTO getProductdto() {
+		return productdto;
+	}
+	
+	public void setProductdto(ProductDTO productdto) {
+		this.productdto = productdto;
+	}
+	public int getSnum() {
+		return snum;
+	}
+
+	public void setSnum(int snum) {
+		this.snum = snum;
+	}
+
+	public int getGuestbuysu() {
+		return guestbuysu;
+	}
+
+	public void setGuestbuysu(int guestbuysu) {
+		this.guestbuysu = guestbuysu;
+	}
+
 	public MembershipDTO getMembershipdto() {
 		return membershipdto;
 	}
@@ -89,20 +74,6 @@ public class BasketDTO {
 		this.membershipdto = membershipdto;
 	}
 
-	public int getPrice() {
-		return price;
-	}
 
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-	public String getColor() {
-		return color;
-	}
-
-	public void setColor(String color) {
-		this.color = color;
-	}
-	
 }
+	

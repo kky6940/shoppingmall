@@ -6,8 +6,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
-@charset "UTF-8";
-
 body{  
   
   padding: 0;
@@ -48,7 +46,7 @@ textarea{
     resize: none;
 }
 select {
-    width: 112px;
+    width: auto;
     padding: 3px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -148,7 +146,7 @@ input[type="checkbox"]{
 			<option value="1">베스트상품지정</option>
  		 </select>
 		  <select name="recommend">
-		  <option value="100">추천상품지정(온도구별)</option>
+		  <option value="1">추천상품지정(온도구별)</option>
 		  <option value="0">5℃ 이하</option>
 		  <option value="5">5℃ 이상</option>
 		  <option value="15">15℃ 이상</option>
@@ -166,30 +164,27 @@ input[type="checkbox"]{
 		      <option value="상의">상의</option>
 		      <option value="바지">바지</option>
 		      <option value="아우터">아우터</option>
-		      <option value="신발">신발</option>
 		      <option value="모자">모자</option>
 	      </select>
-	       <select id="stype_child" name="stype_child" style="width: auto;">
+	       <select id="stype_sub" name="stype_sub" style="width: auto;">
             <option value="">선택하세요</option>
         </select>
-      </div>
-      <div class="input_group">
-	      <label for="su">수량</label>
-	      <input type="number" id="su" name="su" required="required">
       </div>
       <div class="input_group">
 	      <label for="price">가격</label>
 	      <input type="text" id="price" name="price" required="required">
       </div>
       <div class="input_group">
-	      <label for="ssize">사이즈</label>
-	      <select name="ssize" id="ssize">
-	      	<option value="S">S</option>
-	      	<option value="M">M</option>
-	      	<option value="L">L</option>
-	      	<option value="XL">XL</option>
-	      </select>
-      </div>
+	      <label>사이즈별 재고</label>
+	      <label for="ssize" style="display: inline-block; vertical-align: text-bottom;">S&nbsp;: </label>
+	      <input type="number" min="0" value="0" name="ssize" id="ssize" style="width: 50px; margin: 0 5px;">
+	      <label for="msize" style="display: inline-block; vertical-align: text-bottom;">M&nbsp;: </label>
+	      <input type="number" min="0" value="0" name="msize" id="msize" style="width: 50px; margin: 0 5px;">
+	      <label for="lsize" style="display: inline-block; vertical-align: text-bottom;">L&nbsp;: </label>
+	      <input type="number" min="0" value="0" name="lsize" id="lsize" style="width: 50px; margin: 0 5px;">
+	      <label for="xlsize" style="display: inline-block; vertical-align: text-bottom;">XL&nbsp;: </label>
+	      <input type="number" min="0" value="0" name="xlsize" id="xlsize" style="width: 50px; margin: 0 5px;">
+	  </div>
       <div class="input_group">
 			<label for="color">색상</label>
 				<select name="color" id="color">
@@ -346,39 +341,39 @@ input[type="checkbox"]{
 	
 	function updateSubCategories() {
             var stype = document.getElementById('stype');
-            var stype_child = document.getElementById('stype_child');
+            var stype_sub = document.getElementById('stype_sub');
             var selectedCategory = stype.value;
 
             // Remove existing options
-            while (stype_child.options.length > 1) {
-            	stype_child.remove(1);
+            while (stype_sub.options.length > 1) {
+            	stype_sub.remove(1);
             }
 
             // Add new options based on the selected category
             switch (selectedCategory) {
                 case '상의':
-                    addOption(stype_child, '맨투맨');
-                    addOption(stype_child, '후드티');
-                    addOption(stype_child, '반소매티셔츠');
-                    addOption(stype_child, '셔츠/블라우스');
+                    addOption(stype_sub, '맨투맨');
+                    addOption(stype_sub, '후드티');
+                    addOption(stype_sub, '반소매티셔츠');
+                    addOption(stype_sub, '셔츠/블라우스');
                     break;
                 case '바지':
-                    addOption(stype_child, '데님팬츠');
-                    addOption(stype_child, '쇼트팬츠/슬랙스');
-                    addOption(stype_child, '트레이닝/조거팬츠');
-                    addOption(stype_child, '숏팬츠');
+                    addOption(stype_sub, '데님팬츠');
+                    addOption(stype_sub, '쇼트팬츠/슬랙스');
+                    addOption(stype_sub, '트레이닝/조거팬츠');
+                    addOption(stype_sub, '숏팬츠');
                     break;
                 case '아우터':
-                    addOption(stype_child, '후드집업');
-                    addOption(stype_child, '카디건');
-                    addOption(stype_child, '코트');
-                    addOption(stype_child, '블루종');
+                    addOption(stype_sub, '후드집업');
+                    addOption(stype_sub, '카디건');
+                    addOption(stype_sub, '코트');
+                    addOption(stype_sub, '블루종');
                     break;
                 case '모자':
-                    addOption(stype_child, '캡/야구모자');
-                    addOption(stype_child, '비니');
-                    addOption(stype_child, '헌팅캡/베레모');
-                    addOption(stype_child, '페도라');
+                    addOption(stype_sub, '캡/야구모자');
+                    addOption(stype_sub, '비니');
+                    addOption(stype_sub, '헌팅캡/베레모');
+                    addOption(stype_sub, '페도라');
                     break;
                 default:
                     break;

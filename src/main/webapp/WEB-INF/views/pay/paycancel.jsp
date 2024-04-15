@@ -52,6 +52,7 @@ function kakaopaycancel() {
 				${aa.payendtime }
 				<input type="hidden" name="tid" value="${aa.tid }" id="tid">	
 			</td>	
+			<td>${aa.paystate }</td>
 		</c:forEach>
 		
 	</tr>	

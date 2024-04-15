@@ -87,16 +87,13 @@ td{
 					<th>회원정보</th>
 				</tr>
 				<tr>
-					<td>회원정보 수정</td>
+					<td><a href="membershipupdateview">회원정보 수정</a></td>
 				</tr>
 				<tr>
 					<td>배송지 관리</td>
 				</tr>
 				<tr>
-					<td>결재 관리</td>
-				</tr>
-				<tr>
-					<td>회원 탈퇴</td>
+					<td><a href="membershipdeleteview">회원 탈퇴</a></td>
 				</tr>
 			</table>
 		</div>

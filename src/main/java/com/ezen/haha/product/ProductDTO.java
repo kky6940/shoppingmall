@@ -1,10 +1,11 @@
 package com.ezen.haha.product;
 
 public class ProductDTO {
-   int snum, su, price, totprice, best;
-   String sname, stype, color, ssize, image, intro;
+   int snum, price, totprice, best, ssize, msize, lsize, xlsize ;
+   String sname, stype, stype_sub, color, image, intro,recommend;
    
-   public ProductDTO() {}
+
+public ProductDTO() {}
 
    public int getSnum() {
       return snum;
@@ -13,13 +14,12 @@ public class ProductDTO {
    public void setSnum(int snum) {
       this.snum = snum;
    }
-
-   public int getSu() {
-      return su;
+   public String getRecommend() {
+	   return recommend;
    }
-
-   public void setSu(int su) {
-      this.su = su;
+   
+   public void setRecommend(String recommend) {
+	   this.recommend = recommend;
    }
 
    public int getPrice() {
@@ -38,23 +38,57 @@ public class ProductDTO {
       this.sname = sname;
    }
 
-   public String getStype() {
-      return stype;
-   }
 
-   public void setStype(String stype) {
-      this.stype = stype;
-   }
 
-   public String getSsize() {
-      return ssize;
-   }
+public String getStype() {
+	return stype;
+}
 
-   public void setSsize(String ssize) {
-      this.ssize = ssize;
-   }
+public void setStype(String stype) {
+	this.stype = stype;
+}
 
-   public String getImage() {
+public String getStype_sub() {
+	return stype_sub;
+}
+
+public void setStype_sub(String stype_sub) {
+	this.stype_sub = stype_sub;
+}
+
+public int getSsize() {
+	return ssize;
+}
+
+public void setSsize(int ssize) {
+	this.ssize = ssize;
+}
+
+public int getMsize() {
+	return msize;
+}
+
+public void setMsize(int msize) {
+	this.msize = msize;
+}
+
+public int getLsize() {
+	return lsize;
+}
+
+public void setLsize(int lsize) {
+	this.lsize = lsize;
+}
+
+public int getXlsize() {
+	return xlsize;
+}
+
+public void setXlsize(int xlsize) {
+	this.xlsize = xlsize;
+}
+
+public String getImage() {
       return image;
    }
 

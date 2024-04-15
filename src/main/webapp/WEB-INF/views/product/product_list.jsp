@@ -86,18 +86,18 @@
 		<div class="clear"></div>
  		<c:forEach items="${list }" var="aa">
 			<ul class="product">
-				<li><a href="#"> 
+				<li><a href="detailview?snum=${aa.snum}"> 
 					<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 		   					<c:if test="${loop.index == 0}">
-		       					<a href="detailview?snum=${aa.snum }"><img alt="" src="resources/image/${imageName}" width="300px" height="360px"></a>
+		       					<img alt="" src="./image/${imageName}" width="300px" height="360px">
 		   					</c:if>
 						</c:forEach>
 				</a></li>
-				<li class="name"><a href="#">${aa.sname}</a></li>
-				<li class="price"><a href="#"><f:formatNumber value="${aa.price }" pattern="#,###"/></a></li>
-				<li class="intro"><a href="#">${aa.intro }</a></li>
-				<li class="review"><a href="#">.리뷰갯수</a></li>
+				<li class="name"><a href="detailview?snum=${aa.snum}">${aa.sname}</a></li>
+				<li class="price"><a href="detailview?snum=${aa.snum}"><f:formatNumber value="${aa.price }" pattern="#,###"/></a></li>
+				<li class="intro"><a href="detailview?snum=${aa.snum}">${aa.intro }</a></li>
+				<li class="review"><a href="detailview?snum=${aa.snum}">.리뷰갯수</a></li>
 			</ul>
 		</c:forEach>
 		

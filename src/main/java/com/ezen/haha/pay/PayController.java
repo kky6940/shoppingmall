@@ -63,7 +63,7 @@ public class PayController {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        String apiUrl = "https://open-api.kakaopay.com/online/v1/payment/ready"; // 카카오 단건결제 결재 '요청' 링크
+        String apiUrl = "https://open-api.kakaopay.com/online/v1/payment/ready"; // 카카오 단건결재 결재 '요청' 링크
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type","application/json"); // 본문 형식을 JSON 으로 변경, 안하면 카카오 서버가 인식을 못한다.(API 문서에도 명시되어 있음)
@@ -212,9 +212,11 @@ public class PayController {
         	String created_at = root.get("created_at").asText(); // 결제 준비 요청 시각
         	String approved_at = root.get("approved_at").asText(); // 결제 승인 시각
         	
+        	int paystate = 1; // 결재 상태 1 = 결재 완료
+        	
         	// 결재 완료 후 클라이언트에게 보여줄 부분만 가져와서 DB에(payinfo) 저장
         	Service ss = sqlSession.getMapper(Service.class);
-        	ss.payinsert(tid1,partner_order_id1,partner_user_id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest);
+        	ss.payinsert(tid1,partner_order_id1,partner_user_id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate);
         	
         	// 결재 완료 후 출력
         	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);

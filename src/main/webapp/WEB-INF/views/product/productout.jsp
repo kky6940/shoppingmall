@@ -29,7 +29,11 @@ h5{
   width: 100%;
   font-size: 14px;
 }
-
+.adminoutth {
+  padding: 15px 0px;
+  border-bottom: 1px solid lightgrey;
+  text-align: center;
+}
 .adminouttd {
   padding: 15px 0px;
   border-bottom: 1px solid lightgrey;
@@ -94,13 +98,12 @@ h5{
         <div class="cart_list">    	
         	<table class="admintouttable" >
             	<tr>
-				    <td class="adminouttd">이미지</td>
-				    <td class="adminouttd">분류</td>
-				    <td class="adminouttd">상품명</td>
-				    <td class="adminouttd">사이즈</td>
-				    <td class="adminouttd">재고</td>
-				    <td class="adminouttd">상품금액</td>
-				    <td  class="adminouttd" style="width: 150px;">비고</td>
+				    <th class="adminoutth">이미지</th>
+				    <th class="adminoutth">분류</th>
+				    <th class="adminoutth">상품명</th>
+				    <th class="adminoutth">사이즈 별 재고</th>
+				    <th class="adminoutth">상품금액</th>
+				    <th class="adminoutth" style="width: 150px;">비고</th>
 				</tr>
  				<c:forEach items="${list }" var="aa">
  				 <tr class="cart_list_detail"> 
@@ -114,8 +117,12 @@ h5{
 					</td> 
 					<td class="adminouttd">${aa.stype}</td>
  				    <td class="adminouttd">${aa.sname}</td> 
- 				    <td class="adminouttd">${aa.ssize}</td> 
-				    <td class="adminouttd">${aa.su} </td> 
+ 				    <td class="adminouttd">
+ 				    	<p>S : ${aa.ssize}</p>
+ 				    	<p>M : ${aa.msize}</p>
+ 				    	<p>L : ${aa.lsize}</p>
+ 				    	<p>XL : ${aa.xlsize}</p>	
+ 				    </td> 
 					<td class="adminouttd"><f:formatNumber value="${aa.price }" pattern="#,###원"/> </td>
 				    <td class="adminouttd">
 						<button type="button" class="cart_delete" onclick="modifyProduct(${aa.snum})">수정</button>
@@ -159,7 +166,7 @@ function deleteProduct(snum) {
 	}
 }
 function modifyProduct(snum) {
-    window.location.href = "modifyProduct?snum=" + snum; 
+    window.location.href = "updateproductview?snum=" + snum; 
 }
 </script>
 </body>

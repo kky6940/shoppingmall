@@ -2,38 +2,250 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html>
 <head>
-<script>
-	// 1. 총 금액 계산 갱신 관련 스크립트
-    function totalprice(rowId) {
-        var price = document.getElementById("price_" + rowId).value;
-        var su = document.getElementById("su_" + rowId).value;
-        var totprice = parseInt(price) * parseInt(su);
 
-        document.getElementById("totpriceid_" + rowId).value = totprice; // hidden 총 금액
-        document.getElementById("totpriceview_" + rowId).innerText = numbercommas(totprice) + "원"; // 사용자에게 보여지는 총 금액, 위의 정규식 포함 결과값 끝에 원을 붙임
-        
-        updateTotalPrice(); // 총 가격 업데이트
-    }
-	
-    function numbercommas(a) {
-        return a.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ","); // 0,000원 결과값을 만들기 위한 정규식
-    }
-	
-    // c:forEash 반복 출력에 따른 각각의 목록 총 금액 갱신
-    window.addEventListener("load", function() {
-        var suInputs = document.querySelectorAll('input[name="guestbuysu"]');
-        suInputs.forEach(function(input) {
-            var rowId = input.getAttribute("data-row-id"); // 목록의 수량마다 고유 id 부여
-            totalprice(rowId);
-        });
+<style type="text/css">
+a{
+	text-decoration: none;
+	color: gray;
+}
+h2{
+  text-align:center;
+  margin:0;
+}
+h5{
+	margin-left: 5px;
+    font-size: 15px;
+    line-height: 4px;
+}
+
+.baskettable {
+  border-top: solid 2px black;
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 14px;
+}
+.basketth {
+  padding: 15px 0px;
+  border-bottom: 1px solid lightgrey;
+  text-align: center;
+}
+.baskettd {
+  padding: 15px 0px;
+  border-bottom: 1px solid lightgrey;
+  text-align: center;
+}
+.product_list{
+	margin-top: 24px;
+    width: 72%;
+    min-width:1360px;
+    left:330px;
+    position: absolute;
+
+}
+
+.cart_list_detail td:nth-child(1) { /* 이미지가 있는 두 번째 열의 td 요소를 선택합니다. */
+  width: 160px; /* 이미지 칸의 너비를 조정합니다. */
+  text-align: center; /* 이미지를 가운데 정렬합니다. */
+}
+
+.cart_list_detail td:not(:nth-child(1)) { /* 이미지가 아닌 나머지 열의 td 요소를 선택합니다. */
+  text-align: center; /* 텍스트를 가운데 정렬합니다. */
+}
+
+.cart_delete{
+  width: 60px;
+  height: 30px;
+  font-size: 12px;
+  margin: auto;
+  border-radius: 5px;
+  color: #000;
+  background-color:#fff;
+  border: 1px #808080 solid;
+}
+.totalPrice{
+	font-size: 24px;
+	font-weight: 700;
+}
+.view, .delete{
+	background-color: white;
+	border: 1px solid gray;
+	border-radius: 5px;
+	width: 70px;
+	height: 28px;
+}
+.view:hover, .delete:hover, .cart_btn.left:hover{
+	background-color: #eee;
+}
+.cart_mainbtns {
+  width: 420px;
+  height: 200px;
+  display: flex;
+  margin: auto;
+}
+
+.cart_btn {
+  width: 170px;
+  height: 50px;
+  font-size: 16px;
+  margin: auto;
+  border-radius: 5px;
+}
+
+.cart_btn.left {
+  background-color: #fff;
+  border: 1px #808080 solid;
+}
+
+.cart_btn.right {
+  background-color: lightslategray;
+  color: #fff;
+  border: none;
+}
+.cart_btn.right:hover {
+  background: slategray;
+}
+</style>
+<meta charset="UTF-8">
+<title>장바구니</title>
+</head>
+<body>
+<div class="product_list">
+<form id="formselect" method="post"> <!-- 하단 버튼과 자바스크립트로 form 장소 선택 -->
+    <table  class="baskettable" >
+        <tr>
+            <th class="basketth">선택</th>
+            <th class="basketth">상품이미지</th>
+            <th class="basketth">상품명</th>
+            <th class="basketth">상품색상</th>
+            <th class="basketth">상품사이즈</th>
+            <th class="basketth">상품수량</th>
+            <th class="basketth">상품가격</th>
+        </tr>
+                <c:forEach items="${list }" var="aa" varStatus="loop">
+                    <tr data-index="${loop.index}">
+						<!-- 선택 -->
+                        <td class="baskettd">
+                            <input type="checkbox" name="item" value="${aa.basketnum }" class="checkitem" style="width: 17px; height: 17px;">
+                            <input type="hidden" name="basketnum" value="${aa.basketnum }">
+                        </td>  
+						<!-- 이미지 -->
+						<td class="baskettd">
+                            <a href="detailview?snum=${aa.snum}">
+							<c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
+							<c:forEach items="${imageArray}" var="imageName" varStatus="loop_image">
+		   						<c:if test="${loop_image.index == 0}">
+		       						<img alt="" src="./image/${imageName}" width="80px" height="80px">
+		   						</c:if>
+							</c:forEach>
+							</a>
+							<input type="hidden" name="image" value="${aa.productdto.image}">
+						</td>
+                        <!-- 상품명 -->
+                        <td class="baskettd">
+                        	<a href="detailview?snum=${aa.snum}">
+                            <span>${aa.productdto.getSname() }</span>
+                            </a>
+                            <input type="hidden" name="sname" value="${aa.productdto.getSname() }">
+                        </td>
+                        <!-- 색상 -->
+                        <td class="baskettd">
+                            <span>${aa.color }</span>
+                            <input type="hidden" name="ssize" value="${aa.color }">
+                        </td>
+                        <!-- 사이즈 -->
+                        <td class="baskettd">
+                            <span>${aa.psize }</span>
+                            <input type="hidden" name="ssize" value="${aa.psize }">
+                        </td>
+                        <!-- 수량 -->
+                        <td class="baskettd">
+                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" min="1" max="99" onchange="totalprice(${loop.index})">
+                        </td>
+             
+                        <!-- 가격 -->
+                        <td class="baskettd">
+                            <span id="totpriceview_${loop.index}">
+                            
+                            <f:formatNumber value="${aa.productdto.price * aa.guestbuysu }" pattern="#,###원"/>
+                            </span>
+                            <input type="hidden" name="totprice"  id="totpriceid_${loop.index}">
+                            <input type="hidden" name="snum" value="${aa.snum }">
+                    	    <input type="hidden" name="price" value="${aa.productdto.price}" id="price_${loop.index}">
+                        </td>
+                    </tr>
+                    </c:forEach>
+                    <tr>
+                    	<td colspan="6" align="left" style="padding-top: 10px;">
+                    		<input type="button" value="전체 선택" onclick="toggleCheckboxtrue()" class="view">
+							<input type="button" value="전체 해제" onclick="toggleCheckboxfalse()" class="delete">
+                    	</td>
+                    	<td align="right" style="padding-top: 10px;">
+							<input type="button" value="선택 삭제" onclick="submitbasketdeleteAndcheckboxclick()" class="delete">
+                    	</td>
+                    </tr>
+                    <tr>
+                    	<td colspan="7" align="center" class="totalPrice" >
+                    		합계 : <span id="totalPriceDisplay"> 0원</span> 
+                    	</td>
+                    </tr>
+	 </table>    
+				      <div class="cart_mainbtns">
+            <button class="cart_btn left" onclick="history.back()">계속 쇼핑하기</button>
+            <button class="cart_btn right" onclick="submitbasketsellAndcheckboxclick()">주문하기</button>
+      </div>
+         
+</form>
+
+</div>
+
+
+<script>
+
+$(document).ready(function() {
+    // 수량이 변경되었을 때 총 가격 업데이트
+    $('input[name="guestbuysu"]').change(function() {
+        var index = $(this).attr('id').split('_')[1];
+        updatePriceForRow(index);
+        updateTotal();
     });
-   // 1. 총 금액 계산 갱신 관련 스크립트 end
-	
-   
-   // 2. 체크박스 선택 확인 및 각각 다른 submit을 실행
+
+    // 체크박스 상태가 변경될 때 총합 업데이트
+    $('.checkitem').change(function() {
+        updateTotal();
+    });
+
+    // 행별 가격 업데이트 함수
+    function updatePriceForRow(index) {
+        var price = parseInt($('#price_' + index).val(), 10);
+        var quantity = parseInt($('#su_' + index).val(), 10);
+        var totalPrice = price * quantity;
+        $('#totpriceview_' + index).text(numberCommas(totalPrice) + '원');
+    }
+
+    // 전체 가격 합계 업데이트 함수
+    function updateTotal() {
+        var total = 0;
+        $('.checkitem:checked').each(function() {
+            var index = $(this).closest('tr').data('index');
+            var price = parseInt($('#price_' + index).val(), 10);
+            var quantity = parseInt($('#su_' + index).val(), 10);
+            total += price * quantity;
+        });
+        $('#totalPriceDisplay').text(numberCommas(total) + '원');
+    }
+
+    // 숫자에 콤마 추가
+    function numberCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+    
+    
+ // 2. 체크박스 선택 확인 및 각각 다른 submit을 실행
 	function submitbasketdeleteAndcheckboxclick() {
 	    var checkboxes = document.querySelectorAll('input[name="item"]:checked');
 	    if (checkboxes.length === 0) {
@@ -61,8 +273,6 @@
 	    }
 	}
 
-	// 2. 체크박스 선택 확인 및 각각 다른 submit을 실행 end
-	
 	// 3. 체크박스 전체 선택 및 해제
 	function toggleCheckboxtrue() {
 	    var checkbox = document.querySelectorAll('input[type="checkbox"]');
@@ -72,7 +282,9 @@
 	        for (var i = 0; i < checkbox.length; i++) {
 	            checkbox[i].checked = true;
 	        }
-	    } 
+	        updateTotal();  // 합계 업데이트 호출
+
+	    }
 	}
 	
 	function toggleCheckboxfalse() {
@@ -83,200 +295,19 @@
 		        for (var i = 0; i < checkbox.length; i++) {
 		        	checkbox[i].checked = false;
 		        }
+		        updateTotal();  // 합계 업데이트 호출
 		 }
 	}
-	// 3. 체크박스 전체 선택 및 해제 end
-	
-	// 4. 장바구니에 등록된 목록의 총 가격을 업데이트하는 함수
-	// 위의 1. 총 금액 계산 갱신 관련 스크립트와 연계
-	function updateTotalPrice() {
-        var totalPrice = 0;
-        var spans = document.querySelectorAll('span[id^="totpriceview_"]');
-    
-        spans.forEach(function(span) {
-            var priceText = span.innerText.replace("원", "").replace(",", "");
-            totalPrice += parseInt(priceText);
-        });
-    
-        document.getElementById("totalPriceDisplay").innerText = numbercommas(totalPrice) + "원";
-    }
- 	// 4. 장바구니에 등록된 목록의 총 가격을 업데이트하는 함수 end
-    
+	window.submitbasketdeleteAndcheckboxclick = submitbasketdeleteAndcheckboxclick;
+    window.submitbasketsellAndcheckboxclick = submitbasketsellAndcheckboxclick;
+    window.toggleCheckboxtrue = toggleCheckboxtrue;
+    window.toggleCheckboxfalse = toggleCheckboxfalse;
+});
+
+
+   
+
  	
-    // 5. 체크박스를 체크한 목록의 총 가격을 업데이트 하는 함수
-    function updateCheckboxTotalPrice() {
-	    var totalPrice = 0;
-	
-	    // 선택된 체크박스들을 반복하며 총 가격 계산
-	    var checkboxes = document.querySelectorAll('input[name="item"]:checked');
-	    checkboxes.forEach(function(checkbox) {
-	        var rowId = checkbox.value; // checkbox의 value에는 각 항목의 basketnum이 들어 있음
-	        var totpriceView = document.getElementById("totpriceview_" + rowId);
-	        var priceText = totpriceView.innerText.replace("원", "").replace(",", "");
-	        totalPrice += parseInt(priceText);
-	    });
-	
-	    // 총 가격 업데이트
-	    document.getElementById("totalPriceCheckboxDisplay").innerText = numbercommas(totalPrice) + "원";
-	}
- 	// 5. 체크박스를 체크한 목록의 총 가격을 업데이트 하는 함수 end
 </script>
-<style type="text/css">s
-table {
-    width: 900px;
-    text-align: center;
-    border: 1px solid #fff;
-    border-spacing: 1px;
-    font-family: 'Cairo', sans-serif;
-  margin: auto;
-}
-
-caption {
-    font-weight: bold;
-}
-
-table td {
-    padding: 10px;
-    background-color: #eee;
-}
-
-table th {
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-}
-
-img {
-    width: 90px;
-    height: 90px;
-}
-
-.view,
-.delete {
-    border: none;
-    padding: 5px 10px;
-    color: #fff;
-    font-weight: bold;
-}
-
-.view {
-    background-color: #03A9F4;
-}
-
-.delete {
-    background-color: #E91E63;
-}
-
-.tablefoot {
-    padding: 0;
-    border-bottom: 3px solid #009688;
-}
-</style>
-<meta charset="UTF-8">
-<title>장바구니</title>
-</head>
-<body>
-<form id="formselect" method="post"> <!-- 하단 버튼과 자바스크립트로 form 장소 선택 -->
-    <table border="1" align="center">
-        <tr>
-            <th>선택</th>
-            <th>상품이미지</th>
-            <th>상품명</th>
-            <th>상품사이즈</th>
-            <th>상품색상</th>
-            <th>상품수량</th>
-            <th>상품가격</th>
-            <th>주문관리</th>
-        </tr>
-            <div>
-                <c:forEach items="${list }" var="aa" varStatus="loop">
-                    <tr>
-                        <td>
-                            <input type="checkbox" name="item" value="${aa.basketnum }">
-                            <input type="hidden" name="basketnum" value="${aa.basketnum }">
-                        </td>
-                        
-                        <td>
-                            <a href="detailview?snum=${aa.snum}">
-                            <img alt="" src="./image/${aa.image }" width="60px" height="60px">
-                            </a>
-                            <input type="hidden" name="image" value="${aa.image }"> 
-                        </td>
-                        <td>
-                        	<a href="detailview?snum=${aa.snum}">
-                            <span>${aa.sname }</span>
-                            </a>
-                            <input type="hidden" name="sname" value="${aa.sname }">
-                            
-                        </td>
-                        <td>
-                            <span>${aa.ssize }</span>
-                            <input type="hidden" name="ssize" value="${aa.ssize }">
-                        </td>
-                        <td>
-                            <span>${aa.color }</span>
-                            <input type="hidden" name="ssize" value="${aa.color }">
-                        </td>
-                        <td>
-                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" data-row-id="${loop.index}" min="1" max="99" onchange="totalprice(${loop.index})">
-            				<input type="hidden" name="price" value="${aa.price}" id="price_${loop.index}">
-                        </td>
-                        <td>
-                            <span id="totpriceview_${loop.index}">0원</span>
-                            <input type="hidden" name="totprice" value="${aa.totprice}" id="totpriceid_${loop.index}">
-                            <input type="hidden" name="snum" value="${aa.snum }">
-                            <input type="hidden" name="stype" value="${aa.stype }">
-                        </td>
-                       <td align="center">
-	                		<input type="button" value="목록삭제" onclick="submitbasketdeleteAndcheckboxclick()" class="delete">
-	                		<input type="button" value="구매하기" onclick="submitbasketsellAndcheckboxclick()" class="view">
-	                	</td>
-                    </tr>
-                    </c:forEach>
-                    <tr>
-                    	<td colspan="5" align="left">
-                    		<input type="button" value="전체 선택" onclick="toggleCheckboxtrue()" class="view">
-							<input type="button" value="전체 해제" onclick="toggleCheckboxfalse()" class="delete">
-                    	</td>
-                    	<td colspan="3" align="right">
-                    		총 가격 : <span id="totalPriceDisplay">0원</span>
-                    		체크박스 총 가격 : <span id="totalPriceCheckboxDisplay">0원</span>
-                    	</td>
-                    </tr>
-             </div>     
-	 </table>    
-				
-            <div>
-		    <!-- 페이징처리 -->
-			<table align="center">
-				<tr style="border-left: none;border-right: none;border-bottom: none">
-				   <td colspan="7" style="text-align: center;">
-				   
-				   <c:if test="${paging.startPage!=1 }"> 
-				      <a href="basketout?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> 
-				      
-				   </c:if>   
-				   
-				      <c:forEach begin="${paging.startPage }" end="${paging.endPage}" var="p"> 
-				         <c:choose>
-				            <c:when test="${p == paging.nowPage }"> 
-				               <b><span style="color: red;">${p}</span></b>
-				            </c:when>   
-				            <c:when test="${p != paging.nowPage }"> 
-				               <a href="basketout?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
-				            </c:when>   
-				         </c:choose>
-				      </c:forEach>
-				     
-				      <c:if test="${paging.endPage != paging.lastPage}">
-				      <a href="basketout?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
-				   </c:if>
-				   
-				   </td>
-				</tr>
-			</table>
-			<!-- 페이징처리 -->
-			</div>
-</form>
 </body>
 </html>

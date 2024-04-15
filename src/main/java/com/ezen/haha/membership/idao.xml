@@ -55,4 +55,17 @@
  		select * from member where name=#{param1}
  	</select>
  	
+ 	<!-- 회원정보 수정 화면 출력을 위한 select -->
+ 	<select id="membershipsearch" resultType="com.ezen.haha.membership.MembershipDTO">
+ 		select * from member where id=#{param1}
+ 	</select>
+ 	
+ 	<!-- 마이페이지 회원정보 수정 -->
+ 	<update id="membershipupdate">
+ 		update member set id=#{param1},pw=#{param2},name=#{param3},tel=#{param4},email=#{param5},pid=#{param6},address=#{param7} where id=#{param8}
+ 	</update>
+ 	
+ 	<delete id="membershipdelete">
+ 		delete from member where id=#{param1}
+ 	</delete>
 </mapper>

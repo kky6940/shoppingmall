@@ -62,7 +62,7 @@ h2{
 		<td>${aa.paynum }</td>
 		<td>${aa.totprice }</td>
 		<td>${aa.payendtime }</td>
-		<td>결재완료</td>
+		<td>${aa.paystate }</td>
 		<td style="width: 180px; text-align: center;">
 			<a href="paycancel?tid=${aa.tid }"><input type="button" value="환불하기"></a>
 			<input type="button" value="교환하기">

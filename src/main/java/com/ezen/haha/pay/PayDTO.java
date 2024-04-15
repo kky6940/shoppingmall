@@ -16,9 +16,11 @@ public class PayDTO {
 	String created_at; // 결제 준비 요청 시각
 	String approved_at; // 결제 승인 시각
 	
+	
 	// 결재 출력용 변수
 	String orderid,id,paytype,sname,payendtime,address,name,tel,email,drequest;
 	int snum,paynum,totprice;
+	String paystate; // 결재 상태, 1 = 결재완료 / 0 = 환불완료
 	
 	public PayDTO() {
 		super();
@@ -179,6 +181,12 @@ public class PayDTO {
 	}
 	public void setDrequest(String drequest) {
 		this.drequest = drequest;
+	}
+	public String getPaystate() {
+		return paystate;
+	}
+	public void setPaystate(String paystate) {
+		this.paystate = paystate;
 	}
 	
 }

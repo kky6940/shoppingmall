@@ -5,15 +5,9 @@ import java.util.ArrayList;
 import com.ezen.haha.membership.MembershipDTO;
 
 public interface Service {
-
-	void productinsert(int snum, String sname, String stype, int su, int price, String ssize, String color, String fname,
-			String intro, int best, int recommend);
-
 	ArrayList<ProductDTO> productout(PageDTO dto);
 
 	ArrayList<ProductDTO> detailview(int snum);
-
-	void basketinsert(String id, int snum, String sname, String stype, int guestbuysu, int price, int totprice, String ssize, String image, String color);
 
 	ArrayList<BasketDTO> basketout(String id, int start, int end);
 
@@ -86,5 +80,12 @@ public interface Service {
 	ArrayList<ProductDTO> searchOutKeyValue(String searchKey, String searchValue, int start, int end);
 
 	String selectFile(int snum);
+
+	void productinsert(int snum, String sname, String stype, String stype_sub, int price, int ssize, int msize,
+			int lsize, int xlsize, String color, String fname, String intro, int best, int recommend);
+
+	int duplicateCheck(String id, int snum, String size);
+
+	void basketinsert(String id, int snum, int guestbuysu, String size, String color);
 
 }

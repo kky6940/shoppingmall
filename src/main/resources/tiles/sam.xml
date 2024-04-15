@@ -147,6 +147,15 @@
       <put-attribute name="body" value="/WEB-INF/views/membership/pwfind.jsp"/>
    </definition>
    
+   <definition name="membershipupdateview" extends="baseLayout">
+      <put-attribute name="title" value="회원정보수정화면"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/membershipupdateview.jsp"/>
+   </definition>
+   <definition name="membershipdeleteview" extends="baseLayout">
+      <put-attribute name="title" value="회원정보삭제화면"/>
+      <put-attribute name="body" value="/WEB-INF/views/membership/membershipdeleteview.jsp"/>
+   </definition>
+   
    
    <definition name="memberviewall" extends="adminLayout">
       <put-attribute name="title" value="관리자회원보기"/>

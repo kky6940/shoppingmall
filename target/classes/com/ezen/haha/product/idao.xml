@@ -3,9 +3,39 @@
     "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.ezen.haha.product.Service">
+	<resultMap type="com.ezen.haha.product.ProductDTO" id="product">
+		<result property="image" column="image"/>
+		<result property="sname" column="sname"/>
+		<result property="price" column="price"/>
+	</resultMap>
+	<resultMap type="com.ezen.haha.membership.MembershipDTO" id="membership">
+		<result property="id" column="id"/>
+		<result property="pw" column="pw"/>
+		<result property="name" column="name"/>
+		<result property="tel" column="tel"/>
+		<result property="email" column="email"/>
+		<result property="pid" column="pid"/>
+		<result property="address" column="address"/>
+		<result property="stringrank" column="stringrank"/>
+		<result property="rank" column="rank"/>
+	</resultMap>
+	<resultMap type="com.ezen.haha.product.BasketDTO" id="basket">
+		<result property="id" column="id"/>
+		<result property="psize" column="psize"/>
+		<result property="basketnum" column="basketnum"/>
+		<result property="snum" column="snum"/>
+		<result property="guestbuysu" column="guestbuysu"/>
+		<result property="color" column="color"/>
+		<collection property="productdto" ofType="com.ezen.haha.product.ProductDTO" resultMap="product"/>
+		<collection property="membershipdto" ofType="com.ezen.haha.membership.MembershipDTO" resultMap="membership"/>
+	</resultMap>
+
+
 	<!-- 관리자 상품 정보 입력 -->
 	<insert id="productinsert">
-		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11})
+		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},
+								   #{param6},#{param7},#{param8},#{param9},#{param10},
+								   #{param11},#{param12},#{param13},#{param14})
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
@@ -20,7 +50,7 @@
 	
 	<!-- 상품 내용 출력 -->
 	<select id="detailview" resultType="com.ezen.haha.product.ProductDTO">
-		select snum,image,sname,stype,price,ssize,intro,su from product where snum=#{param1}
+		select * from product where snum=#{param1}
 	</select>
 	
 	<!-- 컬러에 맞는 제품의 상품 코드 가져오기 -->
@@ -33,20 +63,21 @@
 	</select>
 	
 	<!-- 장바구니 동일 제품이 있는지 중복 체크  -->
-	<select id="snumcheck" resultType="int">
-		select count(*) from basket where snum=#{param1} and ssize=#{param2} and color=#{param3}
+	<select id="duplicateCheck" resultType="int">
+		select count(*) from basket where id=#{param1} and snum=#{param2} and psize=#{param3}
 	</select>
 	<!-- 장바구니 데이터 DB에 저장 -->
 	<insert id="basketinsert">
-		insert into basket(basketnum,id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color) values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10})
+		insert into basket values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5})
 	</insert>
 	
 	<!-- 장바구니 출력 -->
-	<select id="basketout" resultType="com.ezen.haha.product.BasketDTO">
-		select * from ( 
-		select rownum rn,A.* from(  
-		select basketnum,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color from basket where id=#{param1} order by basketnum desc)A) 
-		where rn between #{param2} AND #{param3}
+	<select id="basketout" resultMap="basket">
+	select * from (
+    select rownum as rn, A.*, B.image, B.sname, B.price from (
+        select * from basket where id = #{param1} order by basketnum desc) A 
+    	join product B on A.snum = B.snum) 
+		where rn between #{param2} and #{param3}
 	</select>
 	
 	<!-- 장바구니에서 수정한 수량, 총 가격 업데이트 -->
@@ -54,30 +85,7 @@
 		update basket set guestbuysu=#{param1},totprice=#{param2} where basketnum=#{param3}
 	</update>
 	
-	<resultMap type="com.ezen.haha.membership.MembershipDTO" id="membership">
-		<result property="id" column="id"/>
-		<result property="pw" column="pw"/>
-		<result property="name" column="name"/>
-		<result property="tel" column="tel"/>
-		<result property="email" column="email"/>
-		<result property="pid" column="pid"/>
-		<result property="address" column="address"/>
-		<result property="stringrank" column="stringrank"/>
-		<result property="rank" column="rank"/>
-	</resultMap>
-	<resultMap type="com.ezen.haha.product.BasketDTO" id="basket">
-		<result property="id" column="id"/>
-		<result property="sname" column="sname"/>
-		<result property="stype" column="stype"/>
-		<result property="ssize" column="ssize"/>
-		<result property="image" column="image"/>
-		<result property="basketnum" column="basketnum"/>
-		<result property="snum" column="snum"/>
-		<result property="guestbuysu" column="guestbuysu"/>
-		<result property="totprice" column="totprice"/>
-		<result property="color" column="color"/>
-		<collection property="membershipdto" ofType="com.ezen.haha.membership.MembershipDTO" resultMap="membership"/>
-	</resultMap>
+
 		
 	<!-- 장바구니에서 체크박스 선택(장바구니 번호로 구분) 후 구매 화면으로 이동 -->
 	<select id="basketsell" resultMap="basket"> 
@@ -165,7 +173,7 @@
 	</select>
 	
 	<select id="stockcheck" resultType="String">
-		select su from product where snum = #{param1} and ssize = #{param2}
+		select ${param2} from product where snum = #{param1}
 	</select>
 	
 	<!-- 베스트 상품 화면 출력 -->

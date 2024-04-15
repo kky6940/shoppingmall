@@ -69,11 +69,14 @@ public class ProductController {
 	public String productsave(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
 		int snum = Integer.parseInt(mul.getParameter("snum"));
 		String stype = mul.getParameter("stype");
+		String stype_sub = mul.getParameter("stype_sub");
 		String color = mul.getParameter("color");
 		String sname = mul.getParameter("sname");
-		int su = Integer.parseInt(mul.getParameter("su"));
 		int price = Integer.parseInt(mul.getParameter("price"));
-		String ssize = mul.getParameter("ssize");
+		int ssize = Integer.parseInt(mul.getParameter("ssize"));
+		int msize = Integer.parseInt(mul.getParameter("msize"));
+		int lsize = Integer.parseInt(mul.getParameter("lsize"));
+		int xlsize = Integer.parseInt(mul.getParameter("xlsize"));
 		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
 		int recommend = Integer.parseInt(mul.getParameter("recommend"));
@@ -82,7 +85,7 @@ public class ProductController {
 		List<MultipartFile> fileList = mul.getFiles("image");
 		boolean firstfile = true;
         for (MultipartFile mf : fileList) {
-             String originFileName = mf.getOriginalFilename(); // ��蹂� ���� 紐�
+             String originFileName = mf.getOriginalFilename(); // 占쏙옙癰�占� 占쏙옙占쏙옙 筌�占�
              
              if(firstfile) {
             	 fname = originFileName;
@@ -97,7 +100,7 @@ public class ProductController {
          }
         System.out.println("fname : " + fname);
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,su,price,ssize,color,fname,intro,best,recommend);
+		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,color,fname,intro,best,recommend);
 		
 		return "redirect:/main";
 	}
@@ -148,7 +151,6 @@ public class ProductController {
 	// 상품 내용 창에서 장바구니 DB 저장
 	@RequestMapping(value = "/basket")
 	public String basket(HttpServletRequest request, HttpServletResponse response) throws IOException {
-		
 		// 로그인 시 id 가져오기
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
@@ -156,58 +158,35 @@ public class ProductController {
 		if(id != null) // 로그인 체크
 		{
 			Service ss = sqlSession.getMapper(Service.class);
-			String sname = request.getParameter("sname");
+			int snum = Integer.parseInt(request.getParameter("snum"));
+			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+			String size = request.getParameter("size");
 			String color = request.getParameter("color");
-			Integer snum = ss.colorsnumsearch(sname,color); // 색상에 맞는 상품의 상품코드 가져오기
 			
-			if(snum!=null) // 색상에 맞는 상품이 있는지 체크(사용자는 어드민 출력 화면이 아니라 상품 내용 화면에서 색상을 선택하고 넘어가기 때문에 따로 체크해야함)
-			{
-				String stype = request.getParameter("stype");
-				int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
-				int su = Integer.parseInt(request.getParameter("su"));
-				int price = Integer.parseInt(request.getParameter("price"));
-				int totprice = Integer.parseInt(request.getParameter("totprice"));
-				
-				String ssize = request.getParameter("ssize");
-				String image = request.getParameter("image");
-				
-				int jaegocheck = ss.jaegocheck(snum,ssize,color,guestbuysu); // 상품 존재 유무 및 재고 체크
-				int snumcheck = ss.snumcheck(snum,ssize,color); // 장바구니 중복 체크
-				
-				if(jaegocheck!=0) // 상품 재고 체크
-				{
-					if(snumcheck==0) // 장바구니 중복 체크
-					{
-						ss.basketinsert(id,snum,sname,stype,guestbuysu,price,totprice,ssize,image,color);
-						return "redirect:/basketout";
-					}
-					else
-					{
-						response.setContentType("text/html;charset=utf-8");
-						PrintWriter printw = response.getWriter();
-						printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); window.location.href='./basketout'; </script>");
-						printw.close();
-						return null;
-					}
-				}
-				else
-				{
-					response.setContentType("text/html;charset=utf-8");
-					PrintWriter printw = response.getWriter();
-					printw.print("<script> alert('해당 상품의 재고가 없습니다.'); window.history.back(); </script>");
-					printw.close();
-					return null;
-				}
-			}
-			else
-			{
+			int duplicateCheck = ss.duplicateCheck(id,snum,size); // 장바구니 중복 체크
+
+			if(duplicateCheck != 0) {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('해당 색상의 상품이 존재하지 않습니다.'); window.history.back(); </script>");
+				printw.print("<script> alert('중복된 제품이 장바구니에 있습니다.'); history.back(); </script>");
 				printw.close();
 				return null;
 			}
-			
+			else {
+				ss.basketinsert(id,snum,guestbuysu,size,color); // 장바구니 입력
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script>" +
+					    	 "if (confirm('장바구니로 이동하시겠습니까?')) {" +
+					    	 "    window.location.href='./basketout';" +
+					    	 "} else {" +
+					    	 "    history.back();" + // 현재 페이지 유지
+					    	 "}" +
+					    	 "</script>"
+					);
+				printw.close();
+				return null;
+			}
 		}
 		else
 		{
@@ -249,7 +228,6 @@ public class ProductController {
 	        
 	        mo.addAttribute("paging",dto);
 			mo.addAttribute("list", ss.basketout(id,dto.getStart(),dto.getEnd()));
-			
 			return "basketout";
 		}
 		else
@@ -267,7 +245,7 @@ public class ProductController {
 	@RequestMapping(value = "/basketsell", method = RequestMethod.POST)
 	public String basketsell(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.deleteproductsell(); // 구매 창을 누를 때마다 DB에 담긴 주문 정보 초기화(delete), 안하면 이전 주문정보를 전부 불러옴, 나중에 지금까지 구매했던 구매목록을 보고 싶다면 초기화 전에 다른 DB테이블을 따로 만들어서 저장하거나 다른 방법을 찾아야 할 것 같음
+		ss.deleteproductsell(); // 구매 창을 누를 때마다 DB에 담긴 주문 정보 초기화(delete), 안하면 이전 주문정보를 전부 불러옴, 구매 정보는 구매할 시 payinfo DB 테이블(결재 정보)에 따로 저장 
 		
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
@@ -590,14 +568,26 @@ public class ProductController {
 	}
 	// detailview.jsp ajax 수량 체크
 	@ResponseBody
-	@RequestMapping(value = "/check", method = RequestMethod.POST)
+	@RequestMapping(value = "/stockcheck", method = RequestMethod.POST)
 	public String stockcheck(HttpServletRequest request) {
 		int snum =  Integer.parseInt(request.getParameter("snum"));
-		String ssize = request.getParameter("ssize");
-		
+		String size = request.getParameter("size");
 		Service ss = sqlSession.getMapper(Service.class);
-
-		return ss.stockcheck(snum,ssize);
+		String result="";
+		if(size.equals("S")) {
+			result = ss.stockcheck(snum,"ssize");
+		}
+		else if(size.equals("M")) {
+			result = ss.stockcheck(snum,"msize");
+		}
+		else if(size.equals("L")) {
+			result = ss.stockcheck(snum,"lsize");
+		}
+		else {
+			result = ss.stockcheck(snum,"xlsize");
+		}
+		
+		return result;
 	}
 	
 	// 베스트 상품 화면 출력

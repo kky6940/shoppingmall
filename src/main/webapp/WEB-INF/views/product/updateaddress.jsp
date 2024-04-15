@@ -1,9 +1,9 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
+	<%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
-
+<link rel="stylesheet" type="text/css" href="../../../../resources/css/update_file.css">
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <script>
 // 주소 입력 API(https://postcode.map.daum.net/guide)
@@ -83,14 +83,18 @@ function sample6_execDaumPostcode() {
 <title>구매창 배송지 수정</title>
 </head>
 <body>
-<span><수정할 주소를 입력해주세요></span>
-<input type="text" id="sample6_postcode" placeholder="우편번호">
-<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-<input type="text" id="sample6_address" placeholder="주소"><br>
-<input type="text" id="sample6_detailAddress" placeholder="상세주소">
-<input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
-<br>
-<input type="button" value="주소 수정" onclick="submitUpdatedAddress()">
-
+<div class="member">
+	<b><수정할 주소를 입력해주세요></b>
+	
+	<div class="field address">
+	<input type="text" id="sample6_postcode" placeholder="우편번호">
+	<input type="button" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
+	<input type="text" id="sample6_address" placeholder="주소"><br>
+	<input type="text" id="sample6_detailAddress" placeholder="상세주소">
+	<input type="hidden" id="sample6_extraAddress" placeholder="참고항목">
+	</div>
+	
+	<input type="button" value="주소 수정" onclick="submitUpdatedAddress()">
+</div>
 </body>
 </html>

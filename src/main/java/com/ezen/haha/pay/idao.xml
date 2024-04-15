@@ -9,18 +9,26 @@
  	</insert>
  	<!-- 상품 결재 완료 후 결과 출력 -->
  	<select id="payout" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo where orderid=#{param1} and id=#{param2}
+ 		select orderid,sname,paynum,totprice,payendtime, 
+ 		case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료' end as paystate
+ 		from payinfo where orderid=#{param1} and id=#{param2}
  	</select>
  	<!-- 상품 결재 완료 후 재고 감소 업데이트 -->
  	<update id="productsuupdate">
  		update product set su=su-#{param2} where snum=#{param1}
  	</update>
  	<select id="paysearch" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo where tid=#{param1}
+ 		select orderid,sname,paynum,totprice,payendtime, 
+ 		case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료' end as paystate
+        from payinfo where tid=#{param1}
  	</select>
  	
  	<delete id="deletepaylist">
  		delete from payinfo where tid=#{param1}
  	</delete>
+ 	
+ 	
  	
 </mapper>

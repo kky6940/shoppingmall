@@ -97,7 +97,7 @@ public class MembershipController {
 			else {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('아이디랑 비밀번호가 틀리셨습니다. 다시 확인해주세요!'); window.location.href='logininput'; </script>");
+				printw.print("<script> alert('아이디랑 비밀번호가 틀리셨습니다. 다시 확인해주세요!'); window.history.back(); </script>");
 				printw.close();
 			}
 			return null;
@@ -142,6 +142,7 @@ public class MembershipController {
 						response.setContentType("text/html;charset=utf-8");
 						PrintWriter printw = response.getWriter();
 						printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='memershipjoin2'; </script>");
+						printw.close();
 					}
 					return null;
 				}
@@ -171,6 +172,7 @@ public class MembershipController {
 						response.setContentType("text/html;charset=utf-8");
 						PrintWriter printw = response.getWriter();
 						printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+						printw.close();
 					}
 					return null;
 				}
@@ -209,12 +211,14 @@ public class MembershipController {
 				        response.setContentType("text/html;charset=utf-8");
 				        PrintWriter printw = response.getWriter();
 				        printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+				        printw.close();
 				    }
 				    //email이 없을경우
 				    else if(ss.email_check(email) == null) {
 				        response.setContentType("text/html;charset=utf-8");
 				        PrintWriter printw = response.getWriter();
 				        printw.print("<script> alert('입력하신 정보로 가입 된 회원 이메일은 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+				        printw.close();
 				    }
 				    return null;
 				}
@@ -245,7 +249,99 @@ public class MembershipController {
 						response.setContentType("text/html;charset=utf-8");
 						PrintWriter printw = response.getWriter();
 						printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='.memershipjoin2'; </script>");
+						printw.close();
 					}
 					return null;
 				}
+				
+	// 마이페이지 메뉴의 회원정보 수정 화면 보기
+	@RequestMapping(value = "/membershipupdateview")
+	public String membershipupdateview(HttpServletRequest request, Model mo) {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<MembershipDTO> list = ss.membershipsearch(id);
+		mo.addAttribute("list", list);
+		
+		return "membershipupdateview";
+	}				
+	
+	// 마이페이지 메뉴의 회원정보 수정, id 수정 화면
+	@RequestMapping(value = "/updateid")
+	public String updateid() {
+		
+		return "updateid";
+	}
+	
+	// 마이페이지 메뉴의 회원정보 수정, 비밀번호 수정 화면
+	@RequestMapping(value = "/updatepw")
+	public String updatepw() {
+		
+		return "updatepw";
+	}
+	
+	// 마이페이지 메뉴의 회원정보 수정, 주민번호 수정 화면
+	@RequestMapping(value = "/updatepid")
+	public String updatepid() {
+		
+		return "updatepid";
+	}
+
+	// 마이페이지 메뉴의 회원정보 수정 기능
+	@RequestMapping(value = "/membershipupdate")
+	public String membershipupdate(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		String newid = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String name = request.getParameter("name");
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		String pid = request.getParameter("pid");
+		String address = request.getParameter("address");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.membershipupdate(newid,pw,name,tel,email,pid,address,id);
+		
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter printw = response.getWriter();
+		printw.print("<script> alert('회원정보 수정이 완료되었습니다.'); window.location.href='./mypage'; </script>");
+		printw.close();
+		
+		return "./mypage";
+	}
+	
+	// 마이페이지 메뉴의 회원 탈퇴 화면 보기
+	@RequestMapping(value = "/membershipdeleteview")
+	public String membershipdeleteview(HttpServletRequest request, Model mo) {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<MembershipDTO> list = ss.membershipsearch(id); // 쿼리문 재활용
+		mo.addAttribute("list", list);
+		
+		return "membershipdeleteview";
+	}
+	
+	@RequestMapping(value = "/membershipdelete")
+	public String membershipdelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		String id = request.getParameter("id");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.membershipdelete(id);
+		
+		HttpSession hs = request.getSession();
+		hs.removeAttribute("membership");
+		hs.removeAttribute("id");
+		hs.setAttribute("loginstate", false);
+		
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter printw = response.getWriter();
+		printw.print("<script> alert('회원탈퇴가 완료되었습니다.'); window.location.href='./main'; </script>");
+		printw.close();
+		return "./main";
+	}
+	
+	
 }

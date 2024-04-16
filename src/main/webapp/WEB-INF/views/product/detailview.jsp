@@ -277,7 +277,7 @@ input[type="number"] {
 	<div id="dynamicULArea"></div>
       <div class="product_mainbtns">
             <button class="product_btn left" onclick="submitfrom('./basket')">장바구니</button>
-            <button class="product_btn right"  onclick="submitfrom('./productsell')">바로구매</button>
+            <button class="product_btn right"  onclick="submitfrom('./directBuy')">바로구매</button>
       </div>
 
 </div>
@@ -423,6 +423,13 @@ function totalprice() {
 
 function submitfrom(action) {
 	var form = document.getElementById('formchoice');
+	var guestbuysuElement = document.getElementById('guestbuysu');
+	var color = document.getElementById('color').value;
+
+    if (!guestbuysuElement || !guestbuysuElement.value || color === "") {
+        alert('구매 수량 또는 색상을 선택해야 합니다.');
+        return false; 
+    }
 	
 	form.action = action;
 	form.submit();

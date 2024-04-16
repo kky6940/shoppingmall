@@ -70,6 +70,11 @@
 	<insert id="basketinsert">
 		insert into basket values(basket_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5})
 	</insert>
+	<!--  즉시구매 장바구니 데이터 DB에 저장 -->
+	<insert id="basketdirectinsert" parameterType="com.ezen.haha.product.BasketDTO" useGeneratedKeys="true" keyProperty="basketnum" keyColumn="basketnum">
+		insert into basket values(basket_seq.nextval,#{id},#{snum},#{guestbuysu},#{psize},#{color})
+	</insert>
+	
 	
 	<!-- 장바구니 출력 -->
 	<select id="basketout" resultMap="basket">
@@ -82,7 +87,7 @@
 	
 	<!-- 장바구니에서 수정한 수량, 총 가격 업데이트 -->
 	<update id="updatebasket">
-		update basket set guestbuysu=#{param1},totprice=#{param2} where basketnum=#{param3}
+		update basket set guestbuysu = #{param2} where basketnum = #{param1}
 	</update>
 	
 
@@ -114,6 +119,22 @@
 	<!-- 구매 버튼 누를 시 주문 정보 출력 -->
 	<select id="productsellout" resultType="com.ezen.haha.product.ProductSellDTO">
 		select * from productsell
+	</select>
+	
+	<!-- 주문 결제 창 정보 출력 -->
+	<select id="productsell" resultMap="basket">
+		select p.sname, b.color, b.psize, b.guestbuysu, p.image, p.price
+			   from basket b join product p
+			   on b.snum = p.snum
+			   where basketnum = #{param1}
+	</select>
+	
+	<!-- 주문 결제 창 정보(포인트,등급) 출력 -->
+	<select id="pointOut" resultType="String">
+		select point from member where id=#{param1} 
+	</select>
+	<select id="rankOut" resultType="String">
+		select rank from member where id=#{param1} 
 	</select>
 	
 	<!-- 페이징 처리 -->
@@ -230,5 +251,14 @@
 	<!-- 삭제 찾기 -->
 	<select id="selectFile" resultType="String">
 		select image from product where snum=#{param1}
+	</select>
+	
+	<!-- 주소지 목록 불러오기-->
+	<select id="addresslistout" resultType="com.ezen.haha.mypage.AddressListDTO">
+		select * from addresslist where id = #{param1}
+	</select>
+	<!-- 쿠폰 목록 불러오기-->
+	<select id="couponlistout" resultType="com.ezen.haha.mypage.CouponDTO">
+		select * from coupon where id = #{param1}
 	</select>
 </mapper>

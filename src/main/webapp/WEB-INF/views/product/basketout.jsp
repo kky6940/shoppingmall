@@ -131,7 +131,7 @@ h5{
 						<!-- 선택 -->
                         <td class="baskettd">
                             <input type="checkbox" name="item" value="${aa.basketnum }" class="checkitem" style="width: 17px; height: 17px;">
-                            <input type="hidden" name="basketnum" value="${aa.basketnum }">
+                            
                         </td>  
 						<!-- 이미지 -->
 						<td class="baskettd">
@@ -150,7 +150,7 @@ h5{
                         	<a href="detailview?snum=${aa.snum}">
                             <span>${aa.productdto.getSname() }</span>
                             </a>
-                            <input type="hidden" name="sname" value="${aa.productdto.getSname() }">
+                            <input type="hidden" name="sname" value="${aa.productdto.sname }">
                         </td>
                         <!-- 색상 -->
                         <td class="baskettd">
@@ -164,7 +164,7 @@ h5{
                         </td>
                         <!-- 수량 -->
                         <td class="baskettd">
-                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" min="1" max="99" onchange="totalprice(${loop.index})">
+                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" min="1">
                         </td>
              
                         <!-- 가격 -->
@@ -191,10 +191,11 @@ h5{
                     <tr>
                     	<td colspan="7" align="center" class="totalPrice" >
                     		합계 : <span id="totalPriceDisplay"> 0원</span> 
+                    		<input type="hidden" name="topPrice" value=""> 
                     	</td>
                     </tr>
 	 </table>    
-				      <div class="cart_mainbtns">
+	 <div class="cart_mainbtns">
             <button class="cart_btn left" onclick="history.back()">계속 쇼핑하기</button>
             <button class="cart_btn right" onclick="submitbasketsellAndcheckboxclick()">주문하기</button>
       </div>
@@ -237,6 +238,7 @@ $(document).ready(function() {
             total += price * quantity;
         });
         $('#totalPriceDisplay').text(numberCommas(total) + '원');
+        $('input[name="topPrice"]').val(total);
     }
 
     // 숫자에 콤마 추가
@@ -268,7 +270,7 @@ $(document).ready(function() {
 	        alert("하나 이상의 항목을 선택해야 합니다.");
 	    } else {
 	        var form = document.getElementById('formselect');
-	        form.action = 'basketsell';
+	        form.action = 'productsell';
 	        form.submit();
 	    }
 	}

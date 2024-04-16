@@ -3,6 +3,8 @@ package com.ezen.haha.product;
 import java.util.ArrayList;
 
 import com.ezen.haha.membership.MembershipDTO;
+import com.ezen.haha.mypage.AddressListDTO;
+import com.ezen.haha.mypage.CouponDTO;
 
 public interface Service {
 	ArrayList<ProductDTO> productout(PageDTO dto);
@@ -88,4 +90,17 @@ public interface Service {
 
 	void basketinsert(String id, int snum, int guestbuysu, String size, String color);
 
+	void updatebasket(String string, String string2);
+	
+	BasketDTO productsell(String string);
+
+	String pointOut(String id);
+
+	String rankOut(String id);
+	
+	ArrayList<AddressListDTO> addresslistout(String id);
+
+	ArrayList<CouponDTO> couponlistout(String id);
+
+	void basketdirectinsert(BasketDTO basketdto);
 }

@@ -181,5 +181,66 @@
       <put-attribute name="title" value="공지사항 입력"/> 
       <put-attribute name="body" value="/WEB-INF/views/product/product_list.jsp"/>
   </definition>
+  
+  <definition name="bcontentpage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/bcontentpage.jsp"/>
+  </definition>
+  <definition name="qnacontentpage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qnacontentpage.jsp"/>
+  </definition>
+  <definition name="faq_menubox" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/faq_menubox.jsp"/>
+  </definition>
+  
+  <definition name="faqinputform" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/faqinputform.jsp"/>
+  </definition>
+  <definition name="faqpage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/faqpage.jsp"/>
+  </definition>
+  <definition name="nmodifypage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/nmodifypage.jsp"/>
+  </definition>
+  <definition name="notice_menubox" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/notice_menubox.jsp"/>
+  </definition>
+  <definition name="noticepage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/noticepage.jsp"/>
+  </definition>
+  <definition name="qna_menubox" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qna_menubox.jsp"/>
+  </definition>
+  <definition name="qnahome" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qnahome.jsp"/>
+  </definition>
+  <definition name="qnainputform" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qnainputform.jsp"/>
+  </definition>
+  <definition name="qnapage" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qnapage.jsp"/>
+  </definition>
+  <definition name="noticeinputform" extends="baseLayout">
+      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/noticeinputform.jsp"/>
+  </definition>
+  
+  <definition name="qnacommentinput" extends="baseLayout">
+      <put-attribute name="title" value="답글 입력"/> 
+      <put-attribute name="body" value="/WEB-INF/views/qna/qnacommentinput.jsp"/>
+  </definition>
+  
+  
    
 </tiles-definitions>

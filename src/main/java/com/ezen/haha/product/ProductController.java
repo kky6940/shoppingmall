@@ -41,6 +41,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 import com.ezen.haha.membership.MembershipDTO;
+import com.ezen.haha.mypage.AddressListDTO;
+import com.ezen.haha.mypage.CouponDTO;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -298,58 +300,86 @@ public class ProductController {
 	@RequestMapping(value = "/productsell", method = RequestMethod.POST)
 	public String productsell(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.deleteproductsell(); // 구매 창을 누를 때마다 DB에 담긴 주문 정보 초기화(delete), 안하면 이전 주문정보를 전부 불러옴, 나중에 지금까지 구매했던 구매목록을 보고 싶다면 초기화 전에 다른 DB테이블을 따로 만들어서 저장하거나 다른 방법을 찾아야 할 것 같음
-			
-		String image = request.getParameter("image");
-		int snum = Integer.parseInt(request.getParameter("snum"));
-		String sname = request.getParameter("sname");
-		String ssize = request.getParameter("ssize");
-		String color = request.getParameter("color");
-		int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
-		int totprice = Integer.parseInt(request.getParameter("totprice"));
-		String stype = request.getParameter("stype");
 		
 		HttpSession hs = request.getSession();
-		String id = (String) hs.getAttribute("id"); // 로그인 중일 시 id 값을 가져옴
+		String id = (String) hs.getAttribute("id");
 		
-		int jaegocheck = ss.jaegocheck(snum,ssize,color,guestbuysu); // 상품 존재 유무 및 재고 체크
-		if(jaegocheck!=0) // 상품 재고 체크
-		{
-			if(id != null) // 로그인 유무 체크
-			{
-				ArrayList<MembershipDTO> IDlist = ss.IDinformation(id); // 구매 시 정보 입력을 위해 회원 정보를 가져옴
-				MembershipDTO dto = IDlist.get(0); // IDlist에 기록된 첫번째 값을 불러옴
-				String name = dto.getName();
-				String tel = dto.getTel();
-				String email = dto.getEmail();
-				String address = dto.getAddress();
-				
-				// 개인 정보와 구매 정보를 DB 테이블(Productsell)에 입력
-				ss.Productsellinsert(id,name,tel,email,address,image,snum,sname,ssize,guestbuysu,totprice,stype,color);
-				ArrayList<ProductSellDTO> pslist = ss.productsellout();
-				mo.addAttribute("list", pslist);
-				
-				return "productsellout";
+		if(id != null) // 로그인확인
+		{	
+			String [] items = request.getParameterValues("item"); // 체크된 상품들 가져오기
+			String [] reguestbuysu = request.getParameterValues("guestbuysu"); 
+			String totprice = request.getParameter("topPrice"); 
+			ArrayList<BasketDTO> list = new ArrayList<>(); 
+
+			for(int i=0; i<items.length; i++  ) {
+				ss.updatebasket(items[i], reguestbuysu[i]);
+				list.add(ss.productsell(items[i]));
 			}
-			else
-			{
-				response.setContentType("text/html;charset=utf-8");
-				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
-				printw.close();
-				return "redirect:./login";
-			}
+			mo.addAttribute("list", list);
+			mo.addAttribute("totprice", totprice);
+			mo.addAttribute("point", ss.pointOut(id));
+			mo.addAttribute("rank", ss.rankOut(id)); // 시간나면 수정 합쳐서
+			return "basketsellout";
 		}
 		else
 		{
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('해당 상품의 재고가 없습니다.'); window.history.back(); </script>");
+			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
 			printw.close();
-			return null;
+			return "redirect:./login";
 		}
-			
+	
 	}
+	// 즉시구매 시 basketDB에 저장 후 출력
+	@RequestMapping(value = "/directBuy")
+	public String directBuy(HttpServletRequest request, HttpServletResponse response, Model mo) throws IOException {
+		// 로그인 시 id 가져오기
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		if(id != null) // 로그인 체크
+		{
+			Service ss = sqlSession.getMapper(Service.class);
+			BasketDTO basketdto = new BasketDTO();
+			int snum = Integer.parseInt(request.getParameter("snum"));
+			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
+			String psize = request.getParameter("size");
+			String color = request.getParameter("color");
+			
+			basketdto.setColor(color);
+			basketdto.setGuestbuysu(guestbuysu);
+			basketdto.setId(id);
+			basketdto.setPsize(psize);
+			basketdto.setSnum(snum);
+			
+			ss.basketdirectinsert(basketdto); // 장바구니 입력
+			String basketnum = String.valueOf(basketdto.getBasketnum()); 
+			ArrayList<BasketDTO> list = new ArrayList<>(); 
+
+			list.add(ss.productsell(basketnum));
+			int totprice = list.get(0).productdto.price * guestbuysu;
+			
+			mo.addAttribute("list", list);
+			mo.addAttribute("totprice", totprice);
+			mo.addAttribute("point", ss.pointOut(id));
+			mo.addAttribute("rank", ss.rankOut(id));
+			return "basketsellout";
+		}
+		else
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+			printw.close();
+			return "redirect:./login";
+		}
+		
+	}
+	
+	
+	
+	
 	
 	// 장바구니 목록 선택 후 삭제
 	@RequestMapping(value = "/basketdelete")
@@ -866,6 +896,34 @@ public class ProductController {
 
 	}
 	
-
+	// 주소지 목록 가져오기
+		@RequestMapping(value = "/addressPopup",method = RequestMethod.GET)
+		public String addressPopup(HttpServletRequest request, Model mo) {
+			HttpSession hs = request.getSession();
+			String id = (String) hs.getAttribute("id");
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<AddressListDTO> list = ss.addresslistout(id);
+			
+			mo.addAttribute("list", list);
+			
+			return "addressPopup";
+		}	
+		// 보유 쿠폰 가져오기
+		@RequestMapping(value = "/couponPopup",method = RequestMethod.GET)
+		public String couponPopup(HttpServletRequest request, Model mo) {
+			HttpSession hs = request.getSession();
+			String id = (String) hs.getAttribute("id");
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<CouponDTO> list = ss.couponlistout(id);
+			
+			mo.addAttribute("list", list);
+			
+			return "couponPopup";
+		}			
+	
+	
+	
 }
 	

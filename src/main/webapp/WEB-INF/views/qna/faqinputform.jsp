@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="notice_menubox.jsp" %>
+<%@ include file="faq_menubox.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,7 +104,7 @@ h2 {
 </head>
 <body>
 	<div class="container" role="main">
-	<h2 class="notice">공지사항 글쓰기</h2>
+	<h2 class="notice">FAQ 글쓰기</h2>
 	<form action="noticesave" method="post" enctype="multipart/form-data" id="form">
 	<input type="hidden" class="form-control" name="bid" value="${membership.id}">
 	<input type="hidden" class="form-control" name="bcode" value="notice">

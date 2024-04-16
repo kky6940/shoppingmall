@@ -324,6 +324,7 @@ public class MembershipController {
 		return "membershipdeleteview";
 	}
 	
+	// 마이페이지 메뉴의 회원 탈퇴 기능
 	@RequestMapping(value = "/membershipdelete")
 	public String membershipdelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		String id = request.getParameter("id");

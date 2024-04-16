@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ include file="notice_menubox.jsp" %>
+<%@ include file="qna_menubox.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -104,16 +104,20 @@ h2 {
 </head>
 <body>
 	<div class="container" role="main">
-	<h2 class="notice">공지사항 글쓰기</h2>
-	<form action="noticesave" method="post" enctype="multipart/form-data" id="form">
+	<h2 class="notice">Q&A 글쓰기</h2>
+	<form action="qnasave" method="post" enctype="multipart/form-data" id="form">
 	<input type="hidden" class="form-control" name="bid" value="${membership.id}">
-	<input type="hidden" class="form-control" name="bcode" value="notice">
+	
 	<div class="inputform">
-	    <label for="selectbtype">공지유형</label>
+	    <label for="selectbtype">문의유형</label>
 	    <select id="selectbtype" name="btype">
 	        <option value="" disabled selected>유형선택</option>
-	        <option value="이벤트" id="event">이벤트</option>
-	        <option value="공지" id="notice">공지</option>
+	        <option value="상품문의" >상품문의</option>
+	        <option value="주문/결제문의" >주문/결제문의</option>
+	        <option value="배송문의">배송문의</option>
+	        <option value="교환/반품문의">교환/반품문의</option>
+	        <option value="환불문의">환불문의</option>
+	        <option value="회원문의">회원문의</option>
 	    </select>
 	</div>
 	<div class="inputform">

@@ -4,25 +4,9 @@
 <html>
 <head>
 <style type="text/css">
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
-* {
-	margin: 0; 
-	padding: 0; 
-	box-sizing: border-box; 		
-	font-family: 'Noto Sans KR', sans-serif;
-	}
 
-.container {
-  text-align: center;
-  margin-top: 5%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-h2 {
-  margin-bottom: 30px;
-  margin-top: 5%;
-  font-family: 'Noto Sans KR', sans-serif;
+.gap {
+	margin-bottom: 80px;
 }
 
 .menu_box {
@@ -78,69 +62,23 @@ h2 {
     transition: 0.5s;
 }
 
-.myqna {
-  background-color: #EAD8C0;
-  padding: 20px; 
-  border-radius: 10px;
-  margin-top: 20px;
-  color: #222831;
-}
-
-.myqna dl {
-  margin-bottom: 20px;
-}
-
-.myqna dt {
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-.myqna dd {
-  margin-left: 10px;
-  color: #1B3C73;
-}
 </style>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Insert title here</title>
 </head>
 <body>
-<div class="container">
-<h2>고객센터</h2>
+<div class="gap"></div>
 <div class="menu_box">
-    <nav class="nav">
-        <a href="qnahome" class="item active">Home</a>
-        <a href="notice" class="item">공지사항</a>
-        <a href="qna" class="item">Q&A</a>
-        <a href="faq" class="item">FAQ</a>
-        <span class="indicator"></span>
-    </nav>
+        <nav class="nav">
+            <a href="qnahome" class="item">Home</a>
+            <a href="notice" class="item">공지사항</a>
+            <a href="#" class="item">Q&A</a>
+            <a href="faq" class="item active">FAQ</a>
+        </nav>
+		<span class="indicator"></span>
 </div>
-    <c:choose>
-        <c:when test="${loginstate == true}">
-            <div class="myqna">
-                <dl>
-                <dt>MY문의 진행현황</dt>
-                <dd>
-                <span class="count">0</span>
-                 건 답변완료,
-                <span class="count">0</span>
-                건 답변대기중 입니다.
-                </dd>
-                <a onclick=""></a>
-                </dl>
-                </div>
-        </c:when>
-        <c:otherwise> 
-            <div class="myqna">
-                <dl>
-                <dt>MY문의 진행현황</dt>
-                <dd>문의를 보기 위해선 로그인 해주세요.</dd>
-                <a href="login">로그인</a>
-                </dl>
-                </div>
-        </c:otherwise>
-    </c:choose>
-</div>
+	
 <script type="text/javascript">
 document.addEventListener("DOMContentLoaded", function() {
     let navItems = document.querySelectorAll(".item");
@@ -170,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function() {
         changeIndicator(activeLink);
     }
 });
+
 </script>
 </body>
 </html>

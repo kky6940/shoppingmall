@@ -16,6 +16,7 @@
 	<resources mapping="/resources/**" location="/resources/" />
 	<resources mapping="/image/**" location="/image/" />
 	<resources mapping="/img/**" location="/img/" />
+	<resources mapping="/qnaimg/**" location="/qnaimg/" />
 	
 	<!-- Tiles를 사용할 시 주석 처리 -->
 	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
@@ -67,7 +68,8 @@
       <beans:property name="suffix" value=".jsp" />
       <beans:property name="order" value="2"/>
    </beans:bean>
- 
+ 	
+   
 	<!-- Tiles 설정 종료 -->
 	<!-- 필요한 라이브러리 환경설정 종료 -->
 	

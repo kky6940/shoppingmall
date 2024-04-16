@@ -51,6 +51,11 @@
 
 .inputform input[type="file"] {
     height: 45px;
+    margin-top: 10px;
+}
+
+#deleteimgBtn {
+    margin-top: 10px;
 }
 
 .btn-container button {
@@ -104,36 +109,46 @@ h2 {
 </head>
 <body>
 	<div class="container" role="main">
-	<h2 class="notice">공지사항 글쓰기</h2>
-	<form action="noticesave" method="post" enctype="multipart/form-data" id="form">
+	<h2 class="notice">공지사항 수정</h2>
+	<c:forEach items="${list}" var="aa">
+	<form action="noticemodify" method="post" enctype="multipart/form-data" id="form">
+	<input type="hidden" class="form-control" name="bnum" id="bnum" value="${aa.bnum}">
 	<input type="hidden" class="form-control" name="bid" value="${membership.id}">
 	<input type="hidden" class="form-control" name="bcode" value="notice">
 	<div class="inputform">
 	    <label for="selectbtype">공지유형</label>
 	    <select id="selectbtype" name="btype">
-	        <option value="" disabled selected>유형선택</option>
+	        <option value="${aa.btype}" selected>${aa.btype}</option>
 	        <option value="이벤트" id="event">이벤트</option>
 	        <option value="공지" id="notice">공지</option>
 	    </select>
 	</div>
+	
 	<div class="inputform">
 		<label for="btitle">제목</label>
-		<input type="text" class="form-control" name="btitle" id="btitle" placeholder="제목을 입력해 주세요">
+		<input type="text" class="form-control" name="btitle" id="btitle" value="${aa.btitle}">
 	</div>
 	<div class="inputform">
 		<label for="bcontent">내용</label>
-		<textarea class="form-control" rows="5" name="bcontent" id="bcontent" placeholder="내용을 입력해 주세요" ></textarea>
+		<textarea class="form-control" rows="5" name="bcontent" id="bcontent">${aa.bcontent}</textarea>
 	</div>
 	<div class="inputform">
-		<label for="bpicture">사진</label>
-		<input type="file" class="form-control" name="bpicture" id='btnAtt' multiple='multiple'>
-		<div id='att_zone' class="att_zone" data-placeholder='파일을 첨부 하려면 파일 선택 버튼을 클릭하거나 파일을 드래그앤드롭 하세요'></div>
+    <label for="bpicture">사진</label>
+    <!-- 이미지가 존재하는 경우에만 이미지를 표시 -->
+    <c:if test="${not empty aa.bpicture}">
+        <img src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" alt="" style="max-width: 100%; height: auto;">
+        <input type="hidden" name="originalbimg" value="${aa.bpicture}">
+		<button type="button" id="deleteimg">이미지 삭제</button>    
+    </c:if>
+    <input type="file" class="form-control" name="bpicture" id='btnAtt' multiple='multiple'>
+    <div id='att_zone' class="att_zone" data-placeholder='파일을 첨부 하려면 파일 선택 버튼을 클릭하거나 파일을 드래그앤드롭 하세요'></div>
 	</div>
 	<div class="btn-container">
-		<button type="button" class="btn btn-sm btn-primary" id="btnSave">등록</button>
-		<button type="button" class="btn btn-sm btn-primary" id="btnList">목록</button>
+		<button type="button" class="btn btn-sm btn-primary" id="btnSave">수정</button>
+		<button type="button" class="btn btn-sm btn-primary" id="btnList">취소</button>
 	</div>
 	</form>
+	</c:forEach>
 </div>
 <script type="text/javascript">
 ( /* att_zone : 이미지들이 들어갈 위치 id, btn : file tag id */
@@ -259,6 +274,7 @@ h2 {
 	  }
 	)('att_zone', 'btnAtt')
 	
+
 $(document).ready(function(){
 	$("#btnSave").click(function(event){
 		event.preventDefault();
@@ -282,10 +298,37 @@ $(document).ready(function(){
 		$("#form").submit();	
 	});
 });
-	$(document).on('click', '#btnList', function(e){		
-		e.preventDefault();				
-		location.href="./notice";
+$(document).on('click', '#btnList', function(e){		
+    e.preventDefault();				
+    location.href="./notice";
+});
+
+$(document).ready(function(){
+	$("#deleteimg").click(function(e){
+		e.preventDefault();
+		
+		var bnum = $("#bnum").val();
+		var originalbimg = $("input[name='originalbimg']").attr('src');
+		
+		var check = confirm("이미지를 삭제하시겠습니까?");
+		if (check) {
+			$.ajax({
+				type: "POST",
+				async: true,
+				url: "imgdelete",
+				data: {"bnum": bnum, "originalbimg": originalbimg},
+				success: function(response) {
+					alert("이미지 삭제가 완료되었습니다.");
+					location.href = "./bcontentpage?bnum=" + bnum;
+				},
+				error: function(xhr, status, error) {
+					alert("이미지 삭제에 실패했습니다.");
+					console.error(xhr.responseText);
+				}
+			});
+		}
 	});
+});
 </script>
 </body>
 </html>

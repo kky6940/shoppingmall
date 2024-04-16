@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@ include file="notice_menubox.jsp" %>
+<%@ include file="qna_menubox.jsp" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <!DOCTYPE html>
@@ -86,7 +86,7 @@ form {
 <body>
 
 <div class="container">
-    <h2 class="pagetitle">공지사항</h2>
+    <h2 class="pagetitle">Q&A</h2>
 <div class="row">
     <div class="col-xs-12 col-md-8 col-md-offset-2">
         <table class="table table-hover">
@@ -101,11 +101,17 @@ form {
             <tbody>
                 <c:forEach items="${list}" var="aa">
                     <tr>
-                        <td>${aa.btype}</td>
-                        <td class="tc"><a href="bcontentpage?bnum=${aa.bnum}">${aa.btitle}</a></td>
+                        <td>
+                        	<c:forEach var="i" begin="1" end="${aa.indent }"> <!-- 댓글 쓴만큼 들여쓰기(indent)를 하므로 반복 기준점으로 잡아줄 수 있다. -->
+							<!-- &emsp; --> <!-- &emsp = 한칸 띄우기 기능, 밑의 이모티콘을 출력하는 걸로 대체 -->
+							☞
+							</c:forEach>
+                        	${aa.btype}
+                        </td>
+                        <td class="tc"><a href="qnacontentpage?bnum=${aa.bnum}&bid=${aa.bid}&btitle=${aa.btitle}&step=${aa.step}">${aa.btitle}</a></td>
                         <td>${aa.bid}</td>
                         <td>${aa.bdate}</td>
-                    </tr>
+                    </tr>	
                 </c:forEach>
             </tbody>
             <!-- 페이징처리 -->
@@ -144,7 +150,7 @@ form {
         </div>
     </div>  
 </form>
-	<div class="btninput"><button onclick="location.href='./noticeinput'" class="intbtn">글쓰기</button></div>
+	<div class="btninput"><button onclick="location.href='./qnainputform'" class="intbtn">글쓰기</button></div>
     </div>
   </div>
 </div>

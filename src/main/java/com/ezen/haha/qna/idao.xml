@@ -4,11 +4,99 @@
 
 <mapper namespace="com.ezen.haha.qna.Service">
  	
- 	<!-- 아이디 중복확인 -->
- 	<select id="id_check" resultType="String">
- 		select count(*) from member where id=#{param1}
+ 	<!-- 고객센터 글쓰기(공지사항) -->
+ 	<insert id="noticeinsert">
+ 		insert into qna(bnum,bid,btype,btitle,bcontent,bpicture,bdate,bcode)
+ 		values (bnum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6})
+ 	</insert>
+ 	
+ 	<!-- 고객센터 출력(공지사항) -->
+ 	<select id="noticeout" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select * from (
+ 		select rownum rn,A.* from(
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate
+ 		from qna where bcode = 'notice' order by bnum desc)A)
+ 		where rn between #{param1} AND #{param2}
+ 	</select>
+ 	
+ 	<!-- 제목 클릭시 자세히보기 -->
+ 	<select id="contentpage" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD HH24:MI:SS')bdate,bcontent,bpicture
+ 		from qna where bnum = #{param1}
+ 	</select>
+ 	
+ 	<!-- 페이징처리에서 전체레코드수 구하기 -->
+	<select id="total" resultType="int">
+	   select count(*) from qna
+	</select>
+	
+	<!-- 공지사항 게시글 삭제 -->
+	<delete id="notice_delete" parameterType="int">
+    	delete from qna where bnum = #{bnum}
+	</delete>
+	
+	<!-- 공지사항 게시글 수정중 사진만 삭제 -->
+	<update id="notice_deleteimg" parameterType="int">
+    	update qna set bpicture = null where bnum = #{param1}
+	</update>
+	
+	<!-- 공지사항 게시글 수정 -->
+	<update id="noticeupdate">
+    	update qna set btype=#{param1},btitle=#{param2},bcontent=#{param3},bpicture=#{param4} where bnum=#{param5}
+	</update>
+	
+	<!-- 검색시 페이징처리에서 전체레코드수 구하기 -->
+	<select id="totalserch" resultType="int">
+	   select count(*) from qna where btitle like '%'||#{param1}||'%'
+	</select>
+	
+	<!-- 고객센터 출력(공지사항) -->
+ 	<select id="noticeserch" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select * from (
+ 		select rownum rn,A.* from(
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate
+ 		from qna where bcode = 'notice' and btitle like '%'||#{param1}||'%'
+ 		 order by bnum desc)A)
+ 		where rn between #{param2} AND #{param3}
+ 	</select>
+	
+	<!-- qna 글쓰기 DB에 저장 -->
+	<insert id="qnainsert">
+ 		insert into qnaboard(bnum,bid,btype,btitle,bcontent,bpicture,bdate)
+ 		values (qnanum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate)
+ 	</insert>
+ 	
+ 	<!-- qna 게시판 출력 -->
+ 	<select id="qnaout" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select * from (
+ 		select rownum rn,A.* from(
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate,groups,step,indent
+ 		from qnaboard order by bnum desc,step asc)A)
+ 		where rn between #{param1} AND #{param2}
+ 	</select>
+ 	
+ 	<!-- qna 게시판 제목 클릭시 자세히보기 -->
+ 	<select id="qnacontentpage" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD HH24:MI:SS')bdate,bcontent,bpicture
+ 		from qnaboard where bnum = #{param1} and bid=#{param2} and step=#{param3}
  	</select>
  	
  	
+ 	<!-- qna 게시판 답글 입력 화면으로 -->
+ 	<select id="commentinputview" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select * from qnaboard where bnum = #{param1} and step=#{param2}
+ 	</select>
  	
+ 	<!-- 새로운 답글을 달때 step만 증가하게 만듬 -->
+ 	<update id="stepup">
+  		update qnaboard set step=step+1 where groups=#{param1} and step>#{param2}
+  	</update>
+  	
+  	<!-- 답글 DB에 저장 -->
+  	<insert id="qnacommentsave">
+  		insert into qnaboard(bnum,bid,btype,btitle,bcontent,groups,step,indent) values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8}) 
+ 	</insert>
+  	
+ 	
+	
 </mapper>

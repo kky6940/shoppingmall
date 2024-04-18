@@ -102,13 +102,18 @@ h5{
 }
 
 .cart_btn.right {
-  background-color: lightslategray;
-  color: #fff;
+  background-color: #333;
+  color: white;
   border: none;
 }
 .cart_btn.right:hover {
   background: slategray;
 }
+
+input[type="number"]{
+	width:50px;
+}
+
 </style>
 <meta charset="UTF-8">
 <title>장바구니</title>
@@ -164,13 +169,20 @@ h5{
                         </td>
                         <!-- 수량 -->
                         <td class="baskettd">
-                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" min="1">
+                        	<c:choose>
+                        		<c:when test="${aa.stock == 0 }">
+									<input type="number" name="guestbuysu" value="0" id="su_${loop.index}" min="0" max="${aa.stock }" oninput="checkNumber(this)" >
+                        		</c:when>
+                        		<c:otherwise>
+		                            <input type="number" name="guestbuysu" value="${aa.guestbuysu}" id="su_${loop.index}" min="1" max="${aa.stock }" oninput="checkNumber(this)" >
+                        		</c:otherwise>
+                        	</c:choose>
+                            <p>재고 : ${aa.stock }</p>
                         </td>
              
                         <!-- 가격 -->
                         <td class="baskettd">
-                            <span id="totpriceview_${loop.index}">
-                            
+                            <span id="totpriceview_${loop.index}">  
                             <f:formatNumber value="${aa.productdto.price * aa.guestbuysu }" pattern="#,###원"/>
                             </span>
                             <input type="hidden" name="totprice"  id="totpriceid_${loop.index}">
@@ -304,12 +316,20 @@ $(document).ready(function() {
     window.submitbasketsellAndcheckboxclick = submitbasketsellAndcheckboxclick;
     window.toggleCheckboxtrue = toggleCheckboxtrue;
     window.toggleCheckboxfalse = toggleCheckboxfalse;
+    window.updateTotal = updateTotal;
+    window.updatePriceForRow = updatePriceForRow;
 });
 
-
-   
-
- 	
+function checkNumber(element) {
+	  var max = parseInt(element.max, 10);  // 최대값
+	  var value = parseInt(element.value, 10);  // 현재 입력 값
+	  if (isNaN(value)) {
+	    element.value = 1;  // 숫자가 아니면 1로 설정
+	  } else if (value > max) {
+	    element.value = max;  // 최대값을 초과하면 최대값으로 설정
+	  
+	}
+}
 </script>
 </body>
 </html>

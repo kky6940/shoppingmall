@@ -149,7 +149,6 @@ public class ProductController {
 		mo.addAttribute("list1", list1);
 		return "detailview";
 	}
-	
 	// 상품 내용 창에서 장바구니 DB 저장
 	@RequestMapping(value = "/basket")
 	public String basket(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -166,7 +165,7 @@ public class ProductController {
 			String color = request.getParameter("color");
 			
 			int duplicateCheck = ss.duplicateCheck(id,snum,size); // 장바구니 중복 체크
-
+			
 			if(duplicateCheck != 0) {
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
@@ -202,46 +201,32 @@ public class ProductController {
 	}
 	
 	// DB 저장한 장바구니 출력
-	@RequestMapping(value = "/basketout")
-	public String basketout(HttpServletRequest request, PageDTO dto, Model mo, HttpServletResponse response) throws IOException {
-		HttpSession hs = request.getSession();
-		String id = (String) hs.getAttribute("id");
-		
-		if(id != null) {
-			String nowPage=request.getParameter("nowPage");
-	        String cntPerPage=request.getParameter("cntPerPage");
-	        
-	        Service ss = sqlSession.getMapper(Service.class);
-
-	        int total=ss.totalbasket(id);
-	    
-	        if(nowPage==null && cntPerPage == null) {
-	           nowPage="1";
-	           cntPerPage="5";
-	        }
-	        else if(nowPage==null) {
-	           nowPage="1";
-	        }
-	        else if(cntPerPage==null) {
-	           cntPerPage="5";
-	        }      
-	       
-	        dto = new PageDTO(total, Integer.parseInt(nowPage), Integer.parseInt(cntPerPage));
-	        
-	        mo.addAttribute("paging",dto);
-			mo.addAttribute("list", ss.basketout(id,dto.getStart(),dto.getEnd()));
-			return "basketout";
-		}
-		else
-		{
-			response.setContentType("text/html;charset=utf-8");
-			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
-			printw.close();
-			return "redirect:./login";
-		}
-		
-	}
+			@RequestMapping(value = "/basketout")
+			public String basketout(HttpServletRequest request, PageDTO dto, Model mo, HttpServletResponse response) throws IOException {
+				HttpSession hs = request.getSession();
+				String id = (String) hs.getAttribute("id");
+				Service ss = sqlSession.getMapper(Service.class);
+				if(id != null) {
+					ArrayList<BasketDTO> list = ss.basketout(id);
+					for(BasketDTO basket : list) {
+						String stock = ss.stockcheck(basket.snum, basket.psize);	
+						basket.setStock(Integer.parseInt(stock));
+					}
+					
+					mo.addAttribute("list", list);
+					
+					return "basketout";
+				}
+				else
+				{
+					response.setContentType("text/html;charset=utf-8");
+					PrintWriter printw = response.getWriter();
+					printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
+					printw.close();
+					return "redirect:./login";
+				}
+				
+			}
 	
 	// 장바구니에서 체크박스 선택 후 구매확인 화면으로 이동
 	@RequestMapping(value = "/basketsell", method = RequestMethod.POST)
@@ -346,13 +331,13 @@ public class ProductController {
 			int guestbuysu = Integer.parseInt(request.getParameter("guestbuysu"));
 			String psize = request.getParameter("size");
 			String color = request.getParameter("color");
-			
+			int stock = Integer.parseInt(ss.stockcheck(snum,psize));
 			basketdto.setColor(color);
 			basketdto.setGuestbuysu(guestbuysu);
 			basketdto.setId(id);
 			basketdto.setPsize(psize);
 			basketdto.setSnum(snum);
-			
+			basketdto.setStock(stock);
 			ss.basketdirectinsert(basketdto); // 장바구니 입력
 			String basketnum = String.valueOf(basketdto.getBasketnum()); 
 			ArrayList<BasketDTO> list = new ArrayList<>(); 
@@ -365,6 +350,7 @@ public class ProductController {
 			mo.addAttribute("point", ss.pointOut(id));
 			mo.addAttribute("rank", ss.rankOut(id));
 			return "basketsellout";
+			
 		}
 		else
 		{
@@ -545,6 +531,8 @@ public class ProductController {
 		if(id != null) // 로그인 유무 체크
 		{
 			int snum = Integer.parseInt(request.getParameter("snum"));
+			String sname = request.getParameter("sname");
+			String image = request.getParameter("image");
 			
 			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크			
 			Service ss = sqlSession.getMapper(Service.class);
@@ -562,6 +550,8 @@ public class ProductController {
 			else
 			{
 				mo.addAttribute("snum", snum);
+				mo.addAttribute("sname", sname);
+				mo.addAttribute("image", image);
 				return "productreviewinput";
 			}
 			
@@ -584,6 +574,8 @@ public class ProductController {
 		String id = (String) hs.getAttribute("id"); 
 		String btitle = mul.getParameter("btitle");
 		int snum = Integer.parseInt(mul.getParameter("snum"));
+		String sname = mul.getParameter("sname");
+		String image = mul.getParameter("image");
 		String bcontent = mul.getParameter("bcontent");
 		int productrank = Integer.parseInt(mul.getParameter("productrank"));
 		
@@ -592,7 +584,7 @@ public class ProductController {
 		mf.transferTo(new File(imagepath+"\\"+fname));
 		
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productreviewsave(snum,id,btitle,bcontent,fname,productrank);
+		ss.productreviewsave(snum,sname,id,btitle,bcontent,fname,productrank,image);
 		
 		return "redirect:/productout";
 	}
@@ -603,20 +595,8 @@ public class ProductController {
 		int snum =  Integer.parseInt(request.getParameter("snum"));
 		String size = request.getParameter("size");
 		Service ss = sqlSession.getMapper(Service.class);
-		String result="";
-		if(size.equals("S")) {
-			result = ss.stockcheck(snum,"ssize");
-		}
-		else if(size.equals("M")) {
-			result = ss.stockcheck(snum,"msize");
-		}
-		else if(size.equals("L")) {
-			result = ss.stockcheck(snum,"lsize");
-		}
-		else {
-			result = ss.stockcheck(snum,"xlsize");
-		}
-		
+		String result=ss.stockcheck(snum,size);;
+
 		return result;
 	}
 	
@@ -921,9 +901,34 @@ public class ProductController {
 			mo.addAttribute("list", list);
 			
 			return "couponPopup";
-		}			
-	
-	
-	
+		}		
+		// 검색(상품명) 기능
+		@RequestMapping(value = "/gnb_search", method = RequestMethod.GET)
+		   public String search_list(HttpServletRequest request, PageDTO dto, Model mo) {
+		      String sname = request.getParameter("sname");
+		      String nowPage=request.getParameter("nowPage");
+		      String cntPerPage=request.getParameter("cntPerPage");
+		      Service ss = sqlSession.getMapper(Service.class);
+		        
+		      int totalSearch=ss.totalValue(sname);
+		     
+		      if(nowPage==null && cntPerPage == null) {
+		         nowPage="1";
+		         cntPerPage="10";
+		      }
+		      else if(nowPage==null) {
+		         nowPage="1";
+		      }
+		      else if(cntPerPage==null) {
+		         cntPerPage="10";
+		      }      
+		       
+		      dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		      
+		      mo.addAttribute("paging",dto);
+		      mo.addAttribute("list", ss.searchOutValue(sname,dto.getStart(),dto.getEnd()));
+		      mo.addAttribute("sname",sname);
+		      return "gnb_search";
+		   }
 }
 	

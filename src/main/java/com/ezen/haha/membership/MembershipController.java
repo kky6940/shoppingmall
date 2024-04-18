@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -110,9 +111,10 @@ public class MembershipController {
 			hs.removeAttribute("membership");
 			hs.removeAttribute("id");
 			hs.setAttribute("loginstate", false);
+
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('로그아웃 되었습니다.'); window.location.href='main'; </script>");
+			printw.print("<script> alert('로그아웃 되었습니다.'); window.location.href='./main'; </script>");
 			printw.close();
 			return null;
 		}
@@ -344,5 +346,29 @@ public class MembershipController {
 		return "./main";
 	}
 	
+	@RequestMapping(value = "/roulette")
+	public String roulette() {
+		
+		return "roulette";
+	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/couponUpdate")
+	public String couponupdate(HttpServletRequest request) {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		String win = request.getParameter("win");
+		Service ss = sqlSession.getMapper(Service.class);
+		if(win.equals("1")) {
+			ss.couponUpdate("mannum",id);
+		}
+		else if(win.equals("3")) {
+			ss.couponUpdate("tennum",id);
+		}
+		else {
+			ss.couponUpdate("twentinum",id);
+		}
+		ss.couponTotal(id);
+		return "O";
+	}
 }

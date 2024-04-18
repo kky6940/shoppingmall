@@ -30,4 +30,8 @@ public interface Service {
 			String id);
 
 	void membershipdelete(String id);
+
+	void couponUpdate(String string, String id);
+
+	void couponTotal(String id);
 }

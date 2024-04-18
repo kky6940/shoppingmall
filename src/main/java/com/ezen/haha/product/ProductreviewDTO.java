@@ -3,6 +3,9 @@ package com.ezen.haha.product;
 public class ProductreviewDTO {
 	String id,btitle,bcontent,bpicture,bdate;
 	int productrank;
+	String sname;
+	int snum;
+	String image;
 	
 	public ProductreviewDTO() {}
 
@@ -53,4 +56,29 @@ public class ProductreviewDTO {
 	public void setProductrank(int productrank) {
 		this.productrank = productrank;
 	}
+
+	public String getSname() {
+		return sname;
+	}
+
+	public void setSname(String sname) {
+		this.sname = sname;
+	}
+
+	public int getSnum() {
+		return snum;
+	}
+
+	public void setSnum(int snum) {
+		this.snum = snum;
+	}
+
+	public String getImage() {
+		return image;
+	}
+
+	public void setImage(String image) {
+		this.image = image;
+	}
+	
 }

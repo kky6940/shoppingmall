@@ -136,7 +136,7 @@ h2 {
     <label for="bpicture">사진</label>
     <!-- 이미지가 존재하는 경우에만 이미지를 표시 -->
     <c:if test="${not empty aa.bpicture}">
-        <img src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" alt="" style="max-width: 100%; height: auto;">
+        <img src="./image/${aa.bpicture }" alt="" style="max-width: 100%; height: auto;">
         <input type="hidden" name="originalbimg" value="${aa.bpicture}">
 		<button type="button" id="deleteimg">이미지 삭제</button>    
     </c:if>

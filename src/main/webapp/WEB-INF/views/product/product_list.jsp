@@ -28,7 +28,7 @@
 	margin-top: 15px;
 }
 .box{
-	height: 1020px;
+	overflow: auto;
 }
 .clear{ 
 	clear: both;

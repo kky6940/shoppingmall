@@ -1,14 +1,18 @@
 package com.ezen.haha.pay;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ezen.haha.product.BasketDTO;
 
 
 @Controller
@@ -27,4 +31,86 @@ public class PayOrderController {
 		return "paycancel";
 	}
     
+    
+    
+    //무통장입금
+    
+    @RequestMapping(value = "/bankAction")
+	public String bankDepositAction(HttpServletRequest request,Model mo) {
+    	HttpSession hs = request.getSession();
+    	com.ezen.haha.pay.Service ss = sqlSession.getMapper(com.ezen.haha.pay.Service.class);
+    	String id = (String) hs.getAttribute("id");
+		String name = request.getParameter("name");
+		String tel = request.getParameter("tel");
+    	String address = request.getParameter("postcode") + "," + request.getParameter("address1") + "," +
+    					 request.getParameter("address2");
+    	String sname = request.getParameter("sname");
+    	int paynum = Integer.parseInt(request.getParameter("guestbuysu"));
+    	String payment = request.getParameter("payment");
+    	String snum = request.getParameter("snum");
+    	String email = ss.email(id);
+    	
+
+    	String price = request.getParameter("price");
+    	price = price.replace(",", "");
+    	int totprice = Integer.parseInt(price);
+    	
+    	String stringSavePoint = request.getParameter("savepoint");
+    	stringSavePoint = stringSavePoint.replace(",", "");
+    	int savePoint = Integer.parseInt(stringSavePoint);
+    	
+    	int usePoint;
+    	if(request.getParameter("point") == null) {
+    		usePoint = 0;
+    	}
+    	else {
+    		String point = request.getParameter("point");
+    		
+    		point = point.replace(",", "");
+    		usePoint = Integer.parseInt(point);     		
+    	}
+    	String useCoupon = request.getParameter("useCoupon");
+
+    	ss.bankinsert(id,name,address,tel,email,payment,snum,sname,paynum,totprice);
+    	
+    	String basketnum = request.getParameter("basketnum");
+    	System.out.println(basketnum);
+    	String[] basketnums = basketnum.split(",");
+        for (String basket : basketnums) {
+        	ArrayList<BasketDTO> list = ss.basketInfo(basket);
+        	for(BasketDTO aa : list) {
+        		ss.productsuupdate(aa);
+        	}
+        	ss.basketDelete(basket);
+        }
+    	if(useCoupon.equals("10000원 할인쿠폰")) {
+    		ss.couponUpdate(id,"mannum");    		
+    	}
+    	else if(useCoupon.equals("10% 할인쿠폰")) {
+    		ss.couponUpdate(id,"tennum");    		
+    	}
+    	else if(useCoupon.equals("20% 할인쿠폰")) {
+    		ss.couponUpdate(id,"twentinum");    		
+    	}
+    	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
+    	mss.couponTotal(id);
+  		ss.pointUpdate(id,usePoint,savePoint);
+    	
+    	
+    	Random random = new Random();
+        StringBuilder accountNumber = new StringBuilder();
+        accountNumber.append(random.nextInt(9) + 1);
+        for (int i = 0; i < 10; i++) {
+            int digit = random.nextInt(10); //
+            accountNumber.append(digit);
+        }
+        String account = accountNumber.toString();
+        account =  account.substring(0, 3) + "-" + account.substring(3, 7) + "-" + account.substring(7);
+        System.out.println("acoount:"+account);
+        String bankChoice = request.getParameter("bankChoice");
+        mo.addAttribute("account", account);
+        mo.addAttribute("bankChoice", bankChoice);
+    	
+		return "bankaction";
+	}
 }

@@ -59,7 +59,7 @@ pre {
         </tr>
         <tr>
 	    <td colspan="4" class="text-left" valign="top" height="300">
-	        <img alt="" id="bpicture" src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" style="max-width: 100%; height: auto;">
+	        <img alt="" id="bpicture" src="./image/${aa.bpicture }" style="max-width: 100%; height: auto;">
 	        <div>
 	            <pre style="white-space: pre-wrap;border:none;background-color: white;">${aa.bcontent}</pre>    
 	        </div>

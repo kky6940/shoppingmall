@@ -16,9 +16,9 @@ public class PayDTO {
 	String created_at; // 결제 준비 요청 시각
 	String approved_at; // 결제 승인 시각
 	
-	
+	int orderid;
 	// 결재 출력용 변수
-	String orderid,id,paytype,sname,payendtime,address,name,tel,email,drequest;
+	String id,paytype,sname,payendtime,address,name,tel,email,drequest;
 	int snum,paynum,totprice;
 	String paystate; // 결재 상태, 1 = 결재완료 / 0 = 환불완료
 	
@@ -104,10 +104,12 @@ public class PayDTO {
 	public void setApproved_at(String approved_at) {
 		this.approved_at = approved_at;
 	}
-	public String getOrderid() {
+
+	
+ 	public int getOrderid() {
 		return orderid;
 	}
-	public void setOrderid(String orderid) {
+	public void setOrderid(int orderid) {
 		this.orderid = orderid;
 	}
 	public String getId() {

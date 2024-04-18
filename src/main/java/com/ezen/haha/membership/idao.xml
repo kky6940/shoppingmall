@@ -11,7 +11,7 @@
  	
  	<!-- 회원가입 -->
  	<insert id="membersave">
- 		insert into member values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},1)
+ 		insert into member values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},1,0)
  	</insert>
  	
  	<!-- 로그인 -->
@@ -68,4 +68,14 @@
  	<delete id="membershipdelete">
  		delete from member where id=#{param1}
  	</delete>
+ 	
+ 	<!-- 룰렛 쿠폰 추가 -->
+ 	<update id="couponUpdate">
+ 		update coupon set ${param1}=${param1}+1 where id = #{param2}
+ 	</update>
+ 	<update id="couponTotal">
+ 		update coupon set couponnum = mannum + twentinum + tennum where id = #{param1}
+ 	</update>
+ 	
+ 	
 </mapper>

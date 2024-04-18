@@ -108,7 +108,12 @@ form {
 							</c:forEach>
                         	${aa.btype}
                         </td>
-                        <td class="tc"><a href="qnacontentpage?bnum=${aa.bnum}&bid=${aa.bid}&btitle=${aa.btitle}&step=${aa.step}">${aa.btitle}</a></td>
+                        <td class="tc">
+	                        <c:forEach var="i" begin="1" end="${aa.secret }">
+	                        🔒︎
+	                        </c:forEach>
+	                        <a href="qnacontentpage?bnum=${aa.bnum}&bid=${aa.bid}&step=${aa.step}&secret=${aa.secret}">${aa.btitle}</a>
+                        </td>
                         <td>${aa.bid}</td>
                         <td>${aa.bdate}</td>
                     </tr>	
@@ -119,7 +124,7 @@ form {
 	   <td colspan="7" style="text-align: center;">
 	   
 	   <c:if test="${paging.startPage!=1 }"> <!-- 현재 페이지가 1페이지가 아니라면 -->
-	      <a href="page?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> <!--"page?nowPage=${paging.startPage-1 } = 시작 페이지에서 -1 빼서 넘김 -->
+	      <a href="qna?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> <!--"page?nowPage=${paging.startPage-1 } = 시작 페이지에서 -1 빼서 넘김 -->
 	      
 	   </c:if>   
 	   
@@ -129,20 +134,20 @@ form {
 	               <b><span style="color: blue;">${p}</span></b>
 	            </c:when>   
 	            <c:when test="${p != paging.nowPage }"> <!-- 현재 페이지가 아니면 페이지 정보를 넘김 -->
-	               <a href="page?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
+	               <a href="qna?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
 	            </c:when>   
 	         </c:choose>
 	      </c:forEach>
 	     
 	      <c:if test="${paging.endPage != paging.lastPage}">
-	      <a href="page?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
+	      <a href="qna?nowPage=${paging.endPage+1}&cntPerPage=${paging.cntPerPage }">▶</a>
 	   </c:if>
 	   
 	   </td>
 	</tr>
 <!-- 페이징처리 -->
         </table>
-        <form action="searchgogo" method="post">
+        <form action="qnasearchgogo" method="post">
     <div class="search_wrap">
         <div class="search_area">
             <input type="text" name="keyword" placeholder="검색어를 입력하세요">

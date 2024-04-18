@@ -41,7 +41,7 @@
  	</select>
  	
  	<!-- 마이페이지에서 결재 목록 보기 화면으로 -->
- 	<select id="payoutview" resultType="com.ezen.haha.pay.PayDTO">
+ 	<select id="guestpayoutview" resultType="com.ezen.haha.pay.PayDTO">
  		select * from payinfo where id=#{param1}
  	</select>
  	
@@ -55,4 +55,35 @@
  		select * from member
  	</select>
  	
+ 	<!-- 마이페이지에서 한달 기간의 주문목록 보기 -->
+ 	<select id="payoutviewmonth" resultType="com.ezen.haha.pay.PayDTO">
+ 		select orderid, sname, paynum, totprice, payendtime, 
+        case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료'
+        end as paystate
+		from payinfo 
+		where id = #{param1}
+		and payendtime >= to_date(add_months(sysdate, -1))
+ 	</select>
+ 	
+ 	<!-- 마이페이지 환불 목록 보기 -->
+ 	<select id="refundview" resultType="com.ezen.haha.pay.PayDTO">
+ 		select * from payinfo where id=#{param1} and paystate=0
+ 	</select>
+ 	
+ 	<!-- 마이페이지 나의 리뷰 목록 보기 -->
+ 	<select id="myproductreview" resultType="com.ezen.haha.product.ProductreviewDTO">
+ 		select * from productreview where id=#{param1}
+ 	</select>
+ 	
+ 	<!-- 나의 상품 리뷰에서 리뷰한 상품 보기 -->
+	<select id="detailview" resultType="com.ezen.haha.product.ProductDTO">
+		select * from product where snum=#{param1} and sname=#{param2}
+	</select>
+ 	
+ 	<!-- 리뷰한 상품의 리뷰(detail.jsp) 보기 -->
+	<select id="productreviewout" resultType="com.ezen.haha.product.ProductreviewDTO">
+		select id,btitle,bcontent,bpicture,to_char(bdate,'yyyy-MM-dd')bdate,productrank from productreview where snum=#{param1} and sname=#{param2}
+	</select>
+	
 </mapper>

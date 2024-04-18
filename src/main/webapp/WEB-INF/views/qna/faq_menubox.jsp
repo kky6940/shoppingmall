@@ -73,7 +73,7 @@
         <nav class="nav">
             <a href="qnahome" class="item">Home</a>
             <a href="notice" class="item">공지사항</a>
-            <a href="#" class="item">Q&A</a>
+            <a href="qna" class="item">Q&A</a>
             <a href="faq" class="item active">FAQ</a>
         </nav>
 		<span class="indicator"></span>

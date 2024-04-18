@@ -6,9 +6,6 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
-
-
-
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 
@@ -81,6 +78,29 @@ p{
 	width: 100%;
 	text-align: center;
 }
+.header_gnb2{
+	position: absolute;
+	top: 50%;
+	left: 92%;
+	transform: translate(-50%, -50%);
+	margin-top: 26px;
+	padding: 6px; 
+	width: 300px;
+	text-align: center;
+	padding-right: 50px;
+	z-index: 1;
+}
+
+.header_gnb2 label{
+	background: url("./image/ico_search.png") no-repeat center;
+	display: inline-block;
+	width: 30px;
+	height: 27px;
+	margin: 0;
+	vertical-align: bottom;
+	cursor: pointer;
+}
+
 .gnb_category {
 	display: inline-block;
 }
@@ -127,7 +147,29 @@ p{
     opacity: 0; /* 초기에 투명하게 설정 */
     display: none;
 }
-
+.fix_btn{
+	position: fixed;
+	z-index: 50;
+	right: 0;
+	bottom: 0;
+	background-color: #000;
+	border-radius: 20px 0 0 0;
+}
+.fix_btn button{
+	width: 60px;
+	height: 60px;
+	vertical-align: middle;
+	border: none;
+	margin: 0 5px;
+}
+.rouletteBtn{
+	background: url("./image/ico_roulette.png") center no-repeat;
+	background-size: 35px 40px;
+}
+.topBtn{
+	background: url("./image/ico_top.png") center no-repeat;
+	background-size: 40px 40px;
+}
 
 
 
@@ -139,18 +181,24 @@ p{
 		<a href="main"></a>
 	</div>
 	<div class="header_util">
-		<span><a href="login">로그인</a></span>
-		<span><a href="membershipjoin2">회원가입</a></span>
 		<c:choose>
-			<c:when test="${id eq 'admin' }">
-				<span><a href="adminpage">관리자페이지</a></span>
+			<c:when test="${loginstate == false }">
+				<span><a href="login">로그인</a></span>
+				<span><a href="membershipjoin2">회원가입</a></span>
+				<span><a href="login">장바구니</a></span>
+				<span><a href="qnahome">고객센터</a></span>
 			</c:when>
 			<c:otherwise>
+				<span><a href="logout">로그아웃</a></span>
 				<span><a href="mypage">마이페이지</a></span>
-			</c:otherwise>
+				<span><a href="basketout">장바구니</a></span>
+				<span><a href="qnahome">고객센터</a></span>
+				<c:if test="${id eq 'admin' }">
+					<span><a href="adminpage">관리자페이지</a></span>
+				</c:if>		
+			</c:otherwise>	
 		</c:choose>
-		<span><a href="login">장바구니</a></span>
-		<span><a href="qnahome">고객센터</a></span>
+
 	</div>
 	<div class="header_gnb">
 		<div class="gnb_category">
@@ -204,8 +252,22 @@ p{
 			</div>
 		</div>
 	</div>
+	<form action="gnb_search" method="get">
+		<div class="header_gnb2">
+			<div class="gnb_category">
+				<input type="text" name="sname" class="gnb_searchBar">
+				<label for="gnb_submit"> </label>
+				<input type="submit" id="gnb_submit" value="전송" style="display: none;">
+			</div>
+		</div>
+	</form>
 </div>
 <div class="gray"></div>
+
+<div class="fix_btn">
+	<button type="button" onclick="location.href='roulette'" class="rouletteBtn"></button>
+	<button type="button" onclick="gotop()" class="topBtn"></button>
+</div>
 <script>
     // JavaScript로 hover 이벤트 처리
     var gnbCategories = document.querySelectorAll('.gnb_category');
@@ -238,6 +300,13 @@ p{
             }, 100); // 필요한 만큼 지연 시간을 조절합니다.
         });
     });
+    
+    function gotop() {
+    	window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+	}
 </script>
 </body>
 </html>

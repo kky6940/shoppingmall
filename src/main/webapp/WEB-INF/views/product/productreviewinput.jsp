@@ -14,6 +14,8 @@
 			<td>
 				<input type="text" name="btitle"> 
 				<input type="hidden" name="snum" value="${snum }">
+				<input type="hidden" name="sname" value="${sname }">
+				<input type="hidden" name="image" value="${image }">
 			</td>
 		</tr>
 		<tr>

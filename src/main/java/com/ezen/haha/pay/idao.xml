@@ -7,6 +7,12 @@
  	<insert id="payinsert">
 		insert into payinfo values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},#{param11},#{param12},#{param13},#{param14}) 	
  	</insert>
+ 	<insert id="bankinsert">
+		insert into payinfo(orderid,id,name,address,tel,email,payment,snum,sname,paynum,totprice) 
+			values(orderid_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10}) 	
+ 	</insert>
+ 	
+ 	
  	<!-- 상품 결재 완료 후 결과 출력 -->
  	<select id="payout" resultType="com.ezen.haha.pay.PayDTO">
  		select orderid,sname,paynum,totprice,payendtime, 
@@ -14,10 +20,7 @@
             when paystate = 0 then '환불완료' end as paystate
  		from payinfo where orderid=#{param1} and id=#{param2}
  	</select>
- 	<!-- 상품 결재 완료 후 재고 감소 업데이트 -->
- 	<update id="productsuupdate">
- 		update product set su=su-#{param2} where snum=#{param1}
- 	</update>
+ 	
  	<select id="paysearch" resultType="com.ezen.haha.pay.PayDTO">
  		select orderid,sname,paynum,totprice,payendtime, 
  		case when paystate = 1 then '결재완료'
@@ -28,7 +31,33 @@
  	<delete id="deletepaylist">
  		delete from payinfo where tid=#{param1}
  	</delete>
+ 	<!-- 상품 결재 완료 후 재고 감소 업데이트 -->
+ 	<update id="productsuupdate">
+ 		update product set ${psize}size = ${psize}size -${guestbuysu} where snum = #{snum} 
+ 	</update>
  	
- 	
+ 	<!-- 이메일 가져오기 -->
+ 	<select id="email" resultType="String">
+ 		select email from member where id = #{param1}
+ 	</select>
+ 	<!-- 재고 감소를 위한 정보가져오기 -->
+ 	<select id="basketInfo" resultType="com.ezen.haha.product.BasketDTO">
+ 		select * from basket where basketnum = #{param1}
+ 	</select>
+ 	<!-- 장바구니 삭제 -->
+ 	<delete id="basketDelete">
+ 		delete from basket where basketnum = #{param1}
+ 	</delete>
+ 	<!-- 결제 후 포인트 및 쿠폰업데이트 -->
+ 	 <update id="couponUpdate" >
+ 		update coupon set ${param2} = ${param2} - 1 where id = #{param1}
+ 	</update>
+ 	 <update id="pointUpdate" >
+ 		update member set point = point-${param2}+${param3} where id = #{param1}
+ 	</update>
+ 	<!-- 주문번호 만들기 -->
+ 	<insert id="insertorderid" parameterType="com.ezen.haha.pay.PayDTO" useGeneratedKeys="true" keyProperty="orderid" keyColumn="orderid">
+ 		insert into payinfo(orderid) values(orderid_seq.nextval)
+ 	</insert>
  	
 </mapper>

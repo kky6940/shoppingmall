@@ -32,6 +32,21 @@ pre {
     background-color: white;
     word-wrap: break-word;
 }
+#button{
+	border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
+    border-bottom-left-radius: 3px;
+    background-color: #FFE214; 
+    width:76px; 
+    height:22px; 
+    transform: translateY(2px); 
+    border: 1px;
+    border-color : #FFE000; 
+    color: white;
+}
+
 </style>
 <meta charset="UTF-8">
 <title>답글 입력</title>
@@ -48,7 +63,7 @@ pre {
          <th>제목</th>
          <td>
          	
-         	<input type="text" name="btitle">
+         	<input type="text" name="btitle" style="width: 98%;">
          	
          	<input type="hidden" name="bnum" value="${aa.bnum}">
          	<input type="hidden" name="btype" value="문의답변글">
@@ -66,14 +81,14 @@ pre {
 	   	        
 	        <div>
 	            <pre style="white-space: pre-wrap;border:none;background-color: white;">
-	            	<textarea rows="10" cols="40" name="bcontent"></textarea>
+	            	<textarea name="bcontent" style="width:98%; height:300px; resize: none;"></textarea>
 	            </pre>    
 	        </div>
 	    </td>
 		</tr>
         <tr>
           <td colspan="4" class="text-right">
-          	<button type="submit">답글쓰기</button>
+          	<button type="submit" id="button">답글쓰기</button>
             
             <a href="qna" class="btn btn-xs btn-success">목록</a>
           </td>

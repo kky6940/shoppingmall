@@ -44,25 +44,35 @@ public class PayController {
 	// 결재 요청
     @PostMapping("/payready") // 데이터값 POST 지정, 카카오 서버는 POST 자료만 받는다고 명시되어 있음
     public ResponseEntity<String> createPayment(HttpServletRequest request, @RequestBody Map<String, String> formData) throws UnsupportedEncodingException {
+    	
     	HttpSession hs = request.getSession();
+    	Service ss = sqlSession.getMapper(Service.class);
 		String id = (String) hs.getAttribute("id");
 		String address = formData.getOrDefault("address", "");
 		String name = formData.getOrDefault("name", "");
 		String tel = formData.getOrDefault("tel", "");
-		String email = formData.getOrDefault("email", "");
 		String drequest = formData.getOrDefault("request", "");
 		
 		String sname = formData.getOrDefault("sname", "");
 		int snum = Integer.parseInt(formData.getOrDefault("snum", ""));
-		int guestbuysu = Integer.parseInt(formData.getOrDefault("guestbuysu", "")); 
-		int totprice = Integer.parseInt(formData.getOrDefault("totprice", "")); 
-		String orderid = formData.getOrDefault("ordernum", "");
+		int guestbuysu = Integer.parseInt(formData.getOrDefault("guestbuysu", ""));
+		String email = ss.email(id);
+		
+		String stringTotprice =formData.getOrDefault("totprice", "");
+		stringTotprice = stringTotprice.replace(",", "");
+		int totprice = Integer.parseInt(stringTotprice); 
+		PayDTO paydto = new PayDTO();
+		
+		paydto.setId(id);
+		ss.insertorderid(paydto);
+		
+		String orderid = String.valueOf(paydto.orderid);
 		
         String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
         String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
-
+        
         ObjectMapper objectMapper = new ObjectMapper();
-
+        
         String apiUrl = "https://open-api.kakaopay.com/online/v1/payment/ready"; // 카카오 단건결재 결재 '요청' 링크
 
         HttpHeaders headers = new HttpHeaders();
@@ -117,7 +127,7 @@ public class PayController {
                 
              // 결재 승인 요청에서 사용할 정보를 DTO에 저장
                 dto.setTid(tid); 
-                dto.setOrderid(orderid);
+                dto.setOrderid(paydto.orderid);
                 dto.setSnum(snum);
                 dto.setPartner_user_id(id);
                 dto.setTotal_amount(totprice);
@@ -147,7 +157,7 @@ public class PayController {
     	// 이후 pg_token과 tid 및 요구 필수 데이터들을 카카오 서버에 보내어 최종적으로 결재 승인 요청을 진행하고 결재 완료 결과물을 받는다. 
     	String tid = dto.getTid(); 
     	String id = dto.getPartner_user_id();
-    	String orderid = dto.getOrderid();
+    	String orderid = String.valueOf(dto.getOrderid());
     	int snum = dto.getSnum();
     	int totprice = dto.getTotal_amount();
     	String address = dto.getAddress();
@@ -216,6 +226,7 @@ public class PayController {
         	
         	// 결재 완료 후 클라이언트에게 보여줄 부분만 가져와서 DB에(payinfo) 저장
         	Service ss = sqlSession.getMapper(Service.class);
+        	 
         	ss.payinsert(tid1,partner_order_id1,partner_user_id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate);
         	
         	// 결재 완료 후 출력

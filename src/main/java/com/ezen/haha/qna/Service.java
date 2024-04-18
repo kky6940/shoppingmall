@@ -28,17 +28,33 @@ public interface Service {
 
 	int totalserch(String keyword);
 
-	void qnainsert(String bid, String btype, String btitle, String bcontent, String fname);
+	void qnainsert(String bid, String btype, String btitle, String bcontent, String fname, int secret);
 	
 	ArrayList<QnaDTO> qnaout(int start, int end);
 
 	ArrayList<QnaDTO> commentinputview(int bnum, int step);
 
-	ArrayList<QnaDTO> qnacontentpage(int bnum, String bid, int step);
+	ArrayList<QnaDTO> qnacontentpage(int bnum, int step);
 
 	void stepup(int groups, int step);
 
 	void qnacommentsave(int bnum, String btype, String bid, String btitle, String bcontent, int groups, int step, int indent);
+
+	int qnatotal();
+
+	int qna_delete(int bnum);
+
+	ArrayList<QnaDTO> qnacontentview(int bnum, int step);
+
+	int qna_deleteimg(int bnum);
+
+	void qnaupdate(String btype, String btitle, String bcontent, String fname, int bnum, String step);
+
+	int qnatotalsearch(String keyword);
+
+	ArrayList<QnaDTO> qnasearch(String keyword, int start, int end, int bnum);
+
+	int bnumsearch(String keyword);
 
 
 	

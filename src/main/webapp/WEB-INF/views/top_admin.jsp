@@ -172,18 +172,23 @@ p{
 		<a href="main"></a>
 	</div>
 	<div class="header_util">
-		<span><a href="login">로그인</a></span>
-		<span><a href="membershipjoin2">회원가입</a></span>
 		<c:choose>
-			<c:when test="${id eq 'admin' }">
-				<span><a href="adminpage">관리자페이지</a></span>
+			<c:when test="${loginstate == false }">
+				<span><a href="login">로그인</a></span>
+				<span><a href="membershipjoin2">회원가입</a></span>
+				<span><a href="login">장바구니</a></span>
+				<span><a href="qnahome">고객센터</a></span>
 			</c:when>
 			<c:otherwise>
+				<span><a href="logout">로그아웃</a></span>
 				<span><a href="mypage">마이페이지</a></span>
-			</c:otherwise>
+				<span><a href="basketout">장바구니</a></span>
+				<span><a href="qnahome">고객센터</a></span>
+				<c:if test="${id eq 'admin' }">
+					<span><a href="adminpage">관리자페이지</a></span>
+				</c:if>		
+			</c:otherwise>	
 		</c:choose>
-		<span><a href="login">장바구니</a></span>
-		<span><a href="qnahome">고객센터</a></span>
 	</div>
 	<div class="header_gnb">
 		<div class="gnb_category">

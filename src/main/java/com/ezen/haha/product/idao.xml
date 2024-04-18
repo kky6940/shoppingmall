@@ -26,6 +26,7 @@
 		<result property="snum" column="snum"/>
 		<result property="guestbuysu" column="guestbuysu"/>
 		<result property="color" column="color"/>
+		<result property="stock" column="stock"/>
 		<collection property="productdto" ofType="com.ezen.haha.product.ProductDTO" resultMap="product"/>
 		<collection property="membershipdto" ofType="com.ezen.haha.membership.MembershipDTO" resultMap="membership"/>
 	</resultMap>
@@ -78,11 +79,10 @@
 	
 	<!-- 장바구니 출력 -->
 	<select id="basketout" resultMap="basket">
-	select * from (
-    select rownum as rn, A.*, B.image, B.sname, B.price from (
-        select * from basket where id = #{param1} order by basketnum desc) A 
-    	join product B on A.snum = B.snum) 
-		where rn between #{param2} and #{param3}
+		select b.*, p.image, p.sname, p.price 
+			from basket b join product p 
+			on b.snum = p.snum
+			where id = #{param1} 
 	</select>
 	
 	<!-- 장바구니에서 수정한 수량, 총 가격 업데이트 -->
@@ -185,7 +185,7 @@
 	
 	<!-- 상품 리뷰 입력 후 DB에 저장 -->
 	<insert id="productreviewsave">
-		insert into productreview values(review_seq.nextval,#{param1},#{param2},1,#{param3},#{param4},#{param5},sysdate,#{param6})
+		insert into productreview values(review_seq.nextval,#{param1},#{param2},#{param3},1,#{param4},#{param5},#{param6},sysdate,#{param7},#{param8})
 	</insert>
 	
 	<!-- 상품 리뷰 출력(detailview.jsp) -->
@@ -194,7 +194,7 @@
 	</select>
 	
 	<select id="stockcheck" resultType="String">
-		select ${param2} from product where snum = #{param1}
+		select ${param2}size from product where snum = #{param1}
 	</select>
 	
 	<!-- 베스트 상품 화면 출력 -->

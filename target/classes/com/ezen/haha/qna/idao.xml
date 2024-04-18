@@ -30,6 +30,11 @@
 	   select count(*) from qna
 	</select>
 	
+	<!-- qna게시판 페이징처리에서 전체레코드수 구하기 -->
+	<select id="qnatotal" resultType="int">
+	   select count(*) from qnaboard
+	</select>
+	
 	<!-- 공지사항 게시글 삭제 -->
 	<delete id="notice_delete" parameterType="int">
     	delete from qna where bnum = #{bnum}
@@ -62,15 +67,15 @@
 	
 	<!-- qna 글쓰기 DB에 저장 -->
 	<insert id="qnainsert">
- 		insert into qnaboard(bnum,bid,btype,btitle,bcontent,bpicture,bdate)
- 		values (qnanum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate)
+ 		insert into qnaboard(bnum,bid,btype,btitle,bcontent,bpicture,bdate,secret)
+ 		values (qnanum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6})
  	</insert>
  	
  	<!-- qna 게시판 출력 -->
  	<select id="qnaout" resultType="com.ezen.haha.qna.QnaDTO">
  		select * from (
  		select rownum rn,A.* from(
- 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate,groups,step,indent
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate,groups,step,indent,secret
  		from qnaboard order by bnum desc,step asc)A)
  		where rn between #{param1} AND #{param2}
  	</select>
@@ -78,7 +83,7 @@
  	<!-- qna 게시판 제목 클릭시 자세히보기 -->
  	<select id="qnacontentpage" resultType="com.ezen.haha.qna.QnaDTO">
  		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD HH24:MI:SS')bdate,bcontent,bpicture
- 		from qnaboard where bnum = #{param1} and bid=#{param2} and step=#{param3}
+ 		from qnaboard where bnum = #{param1} and step=#{param2}
  	</select>
  	
  	
@@ -97,6 +102,45 @@
   		insert into qnaboard(bnum,bid,btype,btitle,bcontent,groups,step,indent) values(#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8}) 
  	</insert>
   	
+  	<!-- qna 게시글 삭제 -->
+	<delete id="qna_delete" parameterType="int">
+    	delete from qnaboard where bnum = #{bnum}
+	</delete>
  	
+ 	<!-- qna 글 수정을 위한 화면 보기 -->
+ 	<select id="qnacontentview" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD HH24:MI:SS')bdate,bcontent,bpicture,groups,step,indent
+ 		from qnaboard where bnum = #{param1} and step=#{param2}
+ 	</select>
+ 	
+ 	<!-- qna 게시글 수정중 사진만 삭제 -->
+	<update id="qna_deleteimg" parameterType="int">
+    	update qnaboard set bpicture = null where bnum = #{param1}
+	</update>
+	
+	<!-- qna 게시글 수정 -->
+	<update id="qnaupdate">
+    	update qnaboard set btype=#{param1},btitle=#{param2},bcontent=#{param3},bpicture=#{param4} where bnum=#{param5} and step=#{param6}
+	</update>
+	
+	<!-- qna 게시판 검색 시 답글도 같이 가져오기 위해 글번호 검색 -->
+	<select id="bnumsearch" resultType="int">
+		select bnum from qnaboard where btitle like '%'||#{param1}||'%'
+	</select>
+	
+	<!-- qna 게시판 검색 시 페이징 처리에 필요한 카운트  -->
+	<select id="qnatotalsearch" resultType="int">
+	   select count(*) from qnaboard where btitle like '%'||#{param1}||'%'
+	</select>
+	
+	<!-- qna 게시판 검색 출력 -->
+ 	<select id="qnasearch" resultType="com.ezen.haha.qna.QnaDTO">
+ 		select * from (
+ 		select rownum rn,A.* from(
+ 		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate,groups,step,indent,secret
+ 		from qnaboard where btitle like '%'||#{param1}||'%' or bnum=#{param4}
+ 		 order by bnum desc)A)
+ 		where rn between #{param2} AND #{param3}
+ 	</select>
 	
 </mapper>

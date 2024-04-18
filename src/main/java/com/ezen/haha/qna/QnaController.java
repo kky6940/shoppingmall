@@ -217,7 +217,7 @@ public class QnaController {
 
 	    // 기존 이미지를 삭제
 	    String originalbimg = mul.getParameter("originalbimg"); 
-	    System.out.println("이미지 파일 이름 : " + originalbimg);
+	    
 	    deleteFile(originalbimg);
 	    
 	    Service ss = sqlSession.getMapper(Service.class);
@@ -225,7 +225,8 @@ public class QnaController {
 	    ss.noticeupdate(btype, btitle, bcontent, fname, bnum);
 	    response.setContentType("text/html;charset=utf-8");
 	    PrintWriter printw = response.getWriter();
-	    printw.print("<script> alert('수정이 완료되었습니다.');</script>");
+	    printw.print("<script> alert('수정이 완료되었습니다.'); window.location.href='./notice'; </script>");
+	    printw.close();
 	    return "redirect:/notice";
 	}
 	
@@ -295,7 +296,7 @@ public class QnaController {
         String cntPerPage=request.getParameter("cntPerPage");
 		Service ss = sqlSession.getMapper(Service.class);
 		
-		int total=ss.total();
+		int total=ss.qnatotal();
 		if(nowPage==null && cntPerPage == null) {
 			nowPage="1";
 			cntPerPage="7";
@@ -340,13 +341,14 @@ public class QnaController {
 	public String qnasave(MultipartHttpServletRequest mul, HttpServletResponse response) throws IllegalStateException, IOException {
 		HttpSession hs = mul.getSession();
 		String id = (String) hs.getAttribute("id");
+		String bid = mul.getParameter("bid");
 		
-		if(id != null)
+		if(id != null || bid != null)
 		{
-			String bid = mul.getParameter("bid");
 			String btype = mul.getParameter("btype");
 			String btitle = mul.getParameter("btitle");
 			String bcontent = mul.getParameter("bcontent");
+			int secret = Integer.parseInt(mul.getParameter("secret"));
 			
 			List<String> filename = new ArrayList<>();
 			
@@ -363,7 +365,7 @@ public class QnaController {
 		    String fname = String.join(",", filename);
 
 		    Service ss = sqlSession.getMapper(Service.class);
-		    ss.qnainsert(bid, btype, btitle, bcontent, fname);
+		    ss.qnainsert(bid, btype, btitle, bcontent, fname, secret);
 		    
 		    return "redirect:/qna";
 		}
@@ -380,16 +382,40 @@ public class QnaController {
 	
 	// qna 게시판 제목 클릭 시 내용
 	@RequestMapping(value = "/qnacontentpage")
-	public String qnacontentpage(HttpServletRequest request,Model mo) throws UnsupportedEncodingException {
+	public String qnacontentpage(HttpServletRequest request,Model mo,HttpServletResponse response) throws IOException {
 		request.setCharacterEncoding("utf-8");
-		int bnum = Integer.parseInt(request.getParameter("bnum"));
+		int secret = Integer.parseInt(request.getParameter("secret"));
+		
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
 		String bid = request.getParameter("bid");
-		String btitle = request.getParameter("btitle");
-		int step = Integer.parseInt(request.getParameter("step"));
-		Service ss = sqlSession.getMapper(Service.class);
-		ArrayList<QnaDTO> list = ss.qnacontentpage(bnum,bid,step);
-		mo.addAttribute("list", list);
-		return "qnacontentpage";
+		
+		// 글쓴이와 관리자만 비밀글 들어갈 수 있게 조정
+		if(id.equals(bid) || id.equals("admin"))
+		{
+			secret = 0;
+		}
+		
+		if(secret == 1)
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('해당 글은 비밀글입니다.'); window.history.back(); </script>");
+			printw.close();
+			return null;
+		}
+		else
+		{
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			int step = Integer.parseInt(request.getParameter("step"));
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<QnaDTO> list = ss.qnacontentpage(bnum,step);
+			mo.addAttribute("list", list);
+			return "qnacontentpage";
+		}
+		
 	}
 	
 	// qna 게시판 답글 쓰기 화면으로
@@ -398,9 +424,6 @@ public class QnaController {
 		request.setCharacterEncoding("utf-8");
 		int bnum = Integer.parseInt(request.getParameter("bnum"));
 		int step = Integer.parseInt(request.getParameter("step"));
-		
-		System.out.println(bnum);
-		System.out.println(step);
 		
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
@@ -455,7 +478,145 @@ public class QnaController {
 		
 	}
 	
-	
-	
+	//qna 게시판 글 삭제
+	@ResponseBody
+	@RequestMapping(value = "/qnadelete")
+	public String qnadelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		String bid = request.getParameter("bid");
+		
+		if(id.equals(bid) || id.equals("admin"))
+		{
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+		    String originalbimg = request.getParameter("originalbimg");
+		    deleteFile(originalbimg); // 이미지 파일 삭제
 
+		    Service ss = sqlSession.getMapper(Service.class);
+		    int deletecount = ss.qna_delete(bnum);
+		    return (deletecount > 0) ? "success" : "failure";
+		}
+		else
+		{
+			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); // 서버 오류 상태 코드 반환
+		    return "failure";
+		}
+	    
+	}
+	
+	// qna 게시판 글 수정
+	@RequestMapping(value = "/qnamodify")
+	public String qnamodify(HttpServletRequest request,Model mo, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		int bnum = Integer.parseInt(request.getParameter("bnum"));
+		String bid = request.getParameter("bid");
+		int step = Integer.parseInt(request.getParameter("step"));
+		if(id.equals(bid) || id.equals("admin"))
+		{
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<QnaDTO> list = ss.qnacontentview(bnum,step);
+			mo.addAttribute("list", list);
+			return "qnamodifypage";
+		}
+		else
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('해당 글 수정은 작성자 혹은 관리자만 가능합니다.'); window.history.back(); </script>");
+			printw.close();
+			return null;
+		}
+	}
+	
+	// qna 글 수정하는 부분에서 전에 있던 사진삭제
+	@ResponseBody
+	@RequestMapping(value = "/qnaimgdelete")
+	public String qnaimgdelete(HttpServletRequest request) {
+		int bnum = Integer.parseInt(request.getParameter("bnum"));
+		String originalbimg = request.getParameter("originalbimg");
+		boolean hasimg = (originalbimg != null && !originalbimg.isEmpty());
+		Service ss = sqlSession.getMapper(Service.class);
+		int deletecount = 0;
+		
+		if (hasimg) {
+			deleteFile(originalbimg); // 이미지 삭제
+	        deletecount = ss.qna_deleteimg(bnum);
+	    } else {
+	        deletecount = ss.qna_deleteimg(bnum);
+	    }
+
+	    return (deletecount > 0) ? "success" : "failure";
+	}
+	
+	// qna 게시판 글 수정 DB에 업데이트
+		@RequestMapping(value = "/qnamodify", method = RequestMethod.POST)
+		public String qnamodify(MultipartHttpServletRequest mul, HttpServletResponse response) throws IllegalStateException, IOException {
+		    int bnum = Integer.parseInt(mul.getParameter("bnum"));
+		    String step = mul.getParameter("step");
+		    String btype = mul.getParameter("btype");
+		    String btitle = mul.getParameter("btitle");
+		    String bcontent = mul.getParameter("bcontent");
+		    List<String> filename = new ArrayList<>();
+
+		    // 새로운 이미지 업로드
+		    List<MultipartFile> fileList = mul.getFiles("bpicture");
+		    for (MultipartFile mf : fileList) {
+		        String originalfilename = mf.getOriginalFilename();
+		        String extension = FilenameUtils.getExtension(originalfilename);
+		        String uuid = UUID.randomUUID().toString();
+		        String newfilename = uuid + "_" + System.currentTimeMillis() + "." + extension;
+		        String fname = filesave(newfilename, mf.getBytes(), originalfilename);
+		        filename.add(fname);
+		    }
+		    String fname = String.join(",", filename);
+
+		    // 기존 이미지를 삭제
+		    String originalbimg = mul.getParameter("originalbimg"); 
+		    
+		    deleteFile(originalbimg);
+		    
+		    Service ss = sqlSession.getMapper(Service.class);
+
+		    ss.qnaupdate(btype, btitle, bcontent, fname, bnum, step);
+		    response.setContentType("text/html;charset=utf-8");
+		    PrintWriter printw = response.getWriter();
+		    printw.print("<script> alert('수정이 완료되었습니다.'); window.location.href='./qna'; </script>");
+		    printw.close();
+		    return "redirect:/qna";
+		}
+
+	// qna 게시판 검색
+	@RequestMapping(value = "/qnasearchgogo")
+	public String qnasearchgogo(HttpServletRequest request, com.ezen.haha.qna.PageDTO dto , Model mo) {
+		String keyword = request.getParameter("keyword");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		int bnum = ss.bnumsearch(keyword); // 검색하는 글의 답글까지 가져오기 위해 글번호 검색 포함
+		
+		String nowPage=request.getParameter("nowPage");
+		String cntPerPage=request.getParameter("cntPerPage");
+		
+		
+		int total=ss.qnatotalsearch(keyword);
+		if(nowPage==null && cntPerPage == null) {
+			nowPage="1";
+			cntPerPage="7";
+		}
+		else if(nowPage==null) {
+			nowPage="1";
+		}
+		else if(cntPerPage==null) {
+			cntPerPage="7";
+		}
+		
+		dto = new com.ezen.haha.qna.PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		mo.addAttribute("paging",dto);
+		mo.addAttribute("list", ss.qnasearch(keyword,dto.getStart(),dto.getEnd(),bnum));
+		
+		return "qnapage";
+	}	
+	
 }

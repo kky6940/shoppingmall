@@ -82,11 +82,11 @@ input::-webkit-inner-spin-button {
   	background-color: #fff;
 	border-radius: 9px;
   	width: 300px; 
-  	height: 420px;
+  	height: fit-content;
 	border:1px solid #808080;
 	position: relative;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-	padding: 0 20px 0 20px;
+	padding: 0 20px 60px 20px;
 	margin-left: 20px;
 	
 }
@@ -154,7 +154,7 @@ input::-webkit-inner-spin-button {
 </head>
 <body>
 
-<form action="productsell" method="post">
+<form action="" method="post" id="paymentForm">
 <div class="product_sell">
   <div class="product_sellform">
       <h3>주문 / 결제</h3>
@@ -163,15 +163,14 @@ input::-webkit-inner-spin-button {
       
       	  <input type="hidden" value="${rank }" id="rank">
       	  <label for="name">이름</label> 
-      	  <input type="text" name="name" id="name" >
+      	  <input type="text" name="name" id="name" required="required">
       	  <label for="tel">연락처</label>
-      	  <input type="text" name="tel" id="tel" >
-	      <label for="snum">배송지</label>
-	      
-	      <input type="text" name="postcode" class="form-input3" id="postcode" placeholder="우편번호">
+      	  <input type="text" name="tel" id="tel" required="required">
+	      <label for="">배송지</label>
+	      <input type="text" name="postcode" class="form-input3" id="postcode" placeholder="우편번호" required="required">
 		  <input type="button" class="btn1" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
-		  <input type="text" name="address1" class="form-input" id="address1" placeholder="주소"><br>
-		  <input type="text" name="address2" class="form-input" id="address2" placeholder="상세주소">
+		  <input type="text" name="address1" class="form-input" id="address1" placeholder="주소" required="required"><br>
+		  <input type="text" name="address2" class="form-input" id="address2" placeholder="상세주소" required="required">
       </div>
      
      <div class="input_group">
@@ -179,29 +178,44 @@ input::-webkit-inner-spin-button {
 		<select name="request" class="request">
 			<option value="부재">부재시 연락주세요</option>
 			<option value="경비실">경비실에 보관해주세요</option>
-			<option value="문앞">문앞에 놓아주세요</option>
+			<option value="문앞" selected="selected">문앞에 놓아주세요</option>
 		</select>
      </div>
      
     <div class="input_group">
 	      <label>주문상품</label>
+	      <c:choose>
+      		    <c:when test="${fn:length(list) >= 2}">
+					 <c:set var="guestbuysu" value="0"/>
+       				 <c:set var="sname" value="${list[0].productdto.sname} 외 ${fn:length(list) - 1}건"/>		
+	      		</c:when>
+	      		<c:otherwise>
+	      			 <c:set var="guestbuysu" value="0"/>
+       				 <c:set var="sname" value="${list[0].productdto.sname}"/>
+	      		</c:otherwise>
+	      </c:choose>
+	      
 	      <c:forEach items="${list }" var="aa">
 	      <div class="product_view">
-	      <div>
-		  	<c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
-						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
-		   					<c:if test="${loop.index == 0}">
-		       					<img alt="" src="./image/${imageName}" width="70px" height="70px">
-		   					</c:if>
-			</c:forEach>
-		  	</div>
-		  	<div>
-		  	<p>${aa.productdto.getSname() }</p>
-		  	<p style="font-size: 14px; color: gray;">색상 : ${aa.color} / 사이즈 : ${aa.psize} / 수량 : ${aa.guestbuysu} </p>
-	      	
-	      	</div>
+	     	 	<div>
+		  			<c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
+							<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
+			   					<c:if test="${loop.index == 0}">
+			       					<img alt="" src="./image/${imageName}" width="70px" height="70px">
+			   					</c:if>
+							</c:forEach>
+		  		</div>
+		  		<div>
+		  			<p>${aa.productdto.getSname() }</p>
+		  			<p style="font-size: 14px; color: gray;">색상 : ${aa.color} / 사이즈 : ${aa.psize} / 수량 : ${aa.guestbuysu} </p>
+		  			<c:set var="guestbuysu" value="${guestbuysu + aa.guestbuysu}"/>
+					<c:set var="snum" value="${empty snum ? aa.snum : snum + ',' + aa.snum}"/>
+					<c:set var="basketnum" value="${empty basketnum ? aa.basketnum : basketnum + ',' + aa.basketnum}"/>
+	      		</div>
 	      </div>
 	      </c:forEach>
+	      
+	      
       </div>
       <div class="input_group">
 	      <label>쿠폰</label>
@@ -212,7 +226,7 @@ input::-webkit-inner-spin-button {
 	      <label>포인트</label>
 	      <div class="point">
 	      	<p>보유 포인트 : <input type="text" id="availablePoint" value="${point }" readonly="readonly"> </p>
-			<p style="display: inline-block;">사용 포인트 : <input type="text" id="point" name="point"  oninput="pointsPrice()" onchange=""></p>
+			<p style="display: inline-block;">사용 포인트 : <input type="text" id="point" name="point" value="0" oninput="pointsPrice()"></p>
 	      	<button type="button" class="btn1" onclick="allPointsPrice()">전액 사용</button>
 	      </div>
       </div>
@@ -238,10 +252,26 @@ input::-webkit-inner-spin-button {
 					<input type="radio" id="kakaopay" value="카카오페이" name="payment" style="width: 17px;">
 					<label for="kakaopay" id="payment"><img alt="" src="./image/ico_kakaopay.png" width="52px" height="23px">카카오페이</label>
 				<br>
-				<input type="submit" value="결 제" id="submit_btn">
+				<div id="bank-selection" style="display: none;">
+				    <label for="bank-choice">은행 선택:</label>
+				    <select id="bank-choice" name="bankChoice" style="width: 100px; height: 30px;">
+				        <option value="농협">농협은행</option>
+				        <option value="국민">국민은행</option>
+				        <option value="신한">신한은행</option>
+				        <option value="우리">우리은행</option>
+				        <option value="기업">기업은행</option>
+				        <option value="하나">하나은행</option>
+				    </select>
+				</div>
+				<input type="hidden" value="" id="guestbuysu" name="guestbuysu">
+				<input type="hidden" value="" id="sname" name="sname">
+				<input type="hidden" value="" id="snum" name="snum">
+				<input type="hidden" value="" id="basketnum" name="basketnum">
+				<input type="button" value="결 제" id="submit_btn" data-guestbuysu="${guestbuysu}" 
+					   data-sname="${sname}" data-snum="${snum}" data-basketnum="${basketnum}" onclick="submitForm(this)">
       	  </div>
-  </div> 
-</div>
+  	</div> 
+	</div>
 </div>
 </form>
 <script type="text/javascript">
@@ -323,22 +353,21 @@ function pointsPrice() {
     var finalPrice = totPrice - salePrice;
     
     
+    var html="";
     // 할인 금액과 최종 금액 업데이트
     document.getElementById('saleprice').value = numberWithCommas(salePrice);
     document.getElementById('price').value = numberWithCommas(finalPrice);
     if(rankdiscount>0){
-	    document.getElementById('detailSale').innerHTML = "<p>&nbsp;ㄴ 등급할인 -" + numberWithCommas(rankdiscount) + " </p>";
+	    html += "<p>&nbsp;ㄴ 등급할인 -" + numberWithCommas(rankdiscount) + " </p>";
     }
     if(coupondiscount>0){
-    	document.getElementById('detailSale').innerHTML += "<p>&nbsp;ㄴ 쿠폰할인 -" + numberWithCommas(coupondiscount) + " </p>";    	
+    	html += "<p>&nbsp;ㄴ 쿠폰할인 -" + numberWithCommas(coupondiscount) + " </p>";    	
     }
     if(usedPoint>0){
-    	document.getElementById('detailSale').innerHTML += "<p>&nbsp;ㄴ 포인트할인 -" + numberWithCommas(usedPoint) + " </p>";    	    	
+    	html += "<p>&nbsp;ㄴ 포인트할인 -" + numberWithCommas(usedPoint) + " </p>";    	    	
     }
-    
-
+    document.getElementById('detailSale').innerHTML = html
 }
-
 
 function allPointsPrice() {
 	var salePrice = 0;
@@ -360,20 +389,20 @@ function allPointsPrice() {
 
     salePrice += usedPoint;
     var finalPrice = totPrice - salePrice;
-
+	var html="";
     // 할인 금액과 최종 금액 업데이트
     document.getElementById('saleprice').value = numberWithCommas(salePrice);
     document.getElementById('price').value = numberWithCommas(finalPrice);
     if(rankdiscount>0){
-	    document.getElementById('detailSale').innerHTML = "<p>&nbsp;ㄴ 등급할인 -" + numberWithCommas(rankdiscount) + " </p>";
+	    html += "<p>&nbsp;ㄴ 등급할인 -" + numberWithCommas(rankdiscount) + " </p>";
     }
     if(coupondiscount>0){
-    	document.getElementById('detailSale').innerHTML += "<p>&nbsp;ㄴ 쿠폰할인 -" + numberWithCommas(coupondiscount) + " </p>";    	
+    	html += "<p>&nbsp;ㄴ 쿠폰할인 -" + numberWithCommas(coupondiscount) + " </p>";    	
     }
     if(usedPoint>0){
-    	document.getElementById('detailSale').innerHTML += "<p>&nbsp;ㄴ 포인트할인 -" + numberWithCommas(usedPoint) + " </p>";    	    	
+    	html += "<p>&nbsp;ㄴ 포인트할인 -" + numberWithCommas(usedPoint) + " </p>";    	    	
     }
-    
+    document.getElementById('detailSale').innerHTML = html
 }
 	
 function couponPrice() {
@@ -402,6 +431,92 @@ function openCouponPopup() {
     var popup = window.open("couponPopup", "Coupon Popup", "width=550,height=500");
     popup.focus();
 }
+
+
+
+
+
+function kakaopay() {
+	var postcode = document.getElementById('postcode').value;
+	var address1 = document.getElementById('address1').value;
+	var address2 = document.getElementById('address2').value;
+	var address = postcode + ', ' + address1 + ', ' + address2;
+	console.log(address);
+	var formData = {
+	     address: address,
+	     name: $('#name').val(),
+	     tel: $('#tel').val(),
+	     request: $('#request').val(),
+	     
+	     snum: $('#snum').val(),
+	     sname: $('#sname').val(),
+	     guestbuysu: $('#guestbuysu').val(),
+	     totprice: $('#price').val()
+	    };
+	
+    $.ajax({
+        type: 'POST',
+        url: 'payready',
+        contentType: 'application/json',
+        data: JSON.stringify(formData),
+        success: function (response) {
+            // Ajax 요청이 성공하면 다음 페이지로 리디렉션
+        	window.location.href = response;
+            
+        },
+        error: function (xhr, status, error) {
+            // 에러 처리
+            console.error(error);
+        }
+    });
+}
+
+function submitForm(element) {
+	var form = document.getElementById('paymentForm');
+    var paymentTypeInput = document.querySelector('input[name="payment"]:checked');
+    var paymentType = paymentTypeInput ? paymentTypeInput.value : null;
+    var guestbuysu = element.getAttribute('data-guestbuysu');
+    var sname = element.getAttribute('data-sname');
+    var snum = element.getAttribute('data-snum');
+    var basketnum = element.getAttribute('data-basketnum');
+    
+    document.getElementById('guestbuysu').value = guestbuysu;
+    document.getElementById('sname').value = sname;
+    document.getElementById('snum').value = snum;
+    document.getElementById('basketnum').value = basketnum;
+ // 폼의 유효성 검사 및 제출
+    if (!form.checkValidity()) {
+    	alert('모든 필수 항목을 채워주세요.');
+        form.reportValidity();
+        return;
+    } 
+    // 결제 방식이 선택되지 않았을 때 경고 표시
+    if (!paymentType) {
+        alert('결제 방식을 선택해주세요.');
+        return; // 함수를 여기서 종료
+    }
+    if (paymentType === '무통장입금') {
+        form.action = 'bankAction';
+        form.submit();
+
+    } else if (paymentType === '카카오페이') {
+        kakaopay();
+        return; // 카카오페이는 별도의 처리가 필요하므로 여기서 함수를 종료
+    }
+}
+
+document.querySelectorAll('input[name="payment"]').forEach((input) => {
+    input.addEventListener('change', function() {
+        const bankSelection = document.getElementById('bank-selection');
+        // '무통장입금' 선택 시 은행 선택 드롭다운 보이기
+        if (this.value === '무통장입금' && this.checked) {
+            bankSelection.style.display = 'block';
+        } else {
+            bankSelection.style.display = 'none';
+        }
+    });
+});
+
 
 //주소API
 function sample6_execDaumPostcode() {

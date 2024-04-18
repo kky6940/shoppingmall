@@ -70,7 +70,7 @@
 	justify-content: center;
     position: relative;
     max-width: 1920px;
-    min-width:1370px;
+    min-width:1380px;
     margin: 0 auto;
     padding: 0 80px;
     margin-top: 30px;
@@ -128,7 +128,7 @@
 }
 
 .product_btn.right {
-  background-color: slategray;
+  background-color: #333;
   color: #fff;
   border: none;
 }
@@ -176,7 +176,6 @@ input[type="number"] {
   width: 30px; /* 버튼 너비 조절 */
   height: 30px; /* 버튼 높이 조절 */
   vertical-align: middle;
- 
 }
 
 
@@ -281,7 +280,13 @@ input[type="number"] {
       </div>
 
 </div>
-
+<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+<c:if test="${not empty imageArray}">
+    <div class="slide_content">
+    <!-- 이미지 첫번째만 가져가기 -->
+        <a href="productreviewinput?snum=${aa.snum }&sname=${aa.sname}&image=${imageArray[0]}"><button type="button">리뷰쓰기</button></a>
+    </div>
+</c:if>
 </c:forEach>
 	
 </section>
@@ -315,11 +320,10 @@ input[type="number"] {
 				</tr> 
 				
 			</table>
+		
 		</c:forEach>
 
 </section>
-
-
 
 <script type="text/javascript">
 
@@ -395,7 +399,6 @@ function checkMax(input, stock) {
   if (parseInt(input.value) > parseInt(stock)) {
     alert("최대 주문 가능한 수량은 " + stock + "개 입니다.");
     input.value = stock; // 입력된 값이 최대값을 초과하는 경우 최대값으로 변경
-    
   }
 }
 function removeul(element) {
@@ -427,7 +430,7 @@ function submitfrom(action) {
 	var color = document.getElementById('color').value;
 
     if (!guestbuysuElement || !guestbuysuElement.value || color === "") {
-        alert('구매 수량 또는 색상을 선택해야 합니다.');
+        alert('구매 수량과 색상을 선택해야 합니다.');
         return false; 
     }
 	

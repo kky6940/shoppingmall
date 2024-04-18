@@ -125,6 +125,12 @@ h2 {
 		<input type="text" class="form-control" name="btitle" id="btitle" placeholder="제목을 입력해 주세요">
 	</div>
 	<div class="inputform">
+		<label for="btitle">
+			<input type="checkbox" name="secret" value='1' id="input_check"/>
+			<input type="hidden" name="secret" value='0' id="input_check_hidden"/>
+		 비밀 글쓰기</label>
+	</div>
+	<div class="inputform">
 		<label for="bcontent">내용</label>
 		<textarea class="form-control" rows="5" name="bcontent" id="bcontent" placeholder="내용을 입력해 주세요" ></textarea>
 	</div>
@@ -140,6 +146,12 @@ h2 {
 	</form>
 </div>
 <script type="text/javascript">
+
+// 비밀글 여부, 체크하면 1 안하면 0을 전송
+if(document.getElementById("input_check").checked) {
+    document.getElementById("input_check_hidden").disabled = true;
+}
+
 ( /* att_zone : 이미지들이 들어갈 위치 id, btn : file tag id */
 	    imageView = function imageView(att_zone, btn){
 

@@ -53,7 +53,7 @@ public interface Service {
 
 	String countfind();
 
-	void productreviewsave(int snum, String id, String btitle, String bcontent, String fname, int productrank);
+	void productreviewsave(int snum, String sname, String id, String btitle, String bcontent, String fname, int productrank, String image);
 
 	ArrayList<ProductreviewDTO> productreviewout(int snum);
 
@@ -103,4 +103,6 @@ public interface Service {
 	ArrayList<CouponDTO> couponlistout(String id);
 
 	void basketdirectinsert(BasketDTO basketdto);
+
+	ArrayList<BasketDTO> basketout(String id);
 }

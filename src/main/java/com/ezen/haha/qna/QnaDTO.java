@@ -3,7 +3,7 @@ package com.ezen.haha.qna;
 public class QnaDTO {
 	int bnum;
 	String bid, btype, btitle, bcontent, bpicture, bdate, bcode;
-	int groups,step,indent;
+	int groups,step,indent,secret;
 	
 	public QnaDTO() {}
 
@@ -93,6 +93,14 @@ public class QnaDTO {
 
 	public void setIndent(int indent) {
 		this.indent = indent;
+	}
+
+	public int getSecret() {
+		return secret;
+	}
+
+	public void setSecret(int secret) {
+		this.secret = secret;
 	}
 	
 }

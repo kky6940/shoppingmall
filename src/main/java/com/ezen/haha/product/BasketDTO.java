@@ -4,12 +4,23 @@ import com.ezen.haha.membership.MembershipDTO;
 
 public class BasketDTO {
 	String id,psize,color;
-	int basketnum,snum,guestbuysu;
+	int basketnum,snum,guestbuysu,stock;
 	
 	ProductDTO productdto;
 	MembershipDTO membershipdto;
 	
 	public BasketDTO() {}
+
+	
+	public int getStock() {
+		return stock;
+	}
+
+
+	public void setStock(int stock) {
+		this.stock = stock;
+	}
+
 
 	public String getId() {
 		return id;

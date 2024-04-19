@@ -15,7 +15,10 @@ public class PayDTO {
 	String pgtoken; // 클라이언트 결재 후 결제 최종 승인에 필요한 토큰
 	String created_at; // 결제 준비 요청 시각
 	String approved_at; // 결제 승인 시각
-	
+	String basketnum; // 재고 및 장바구니 삭제
+	String usecoupon; // 쿠폰 업데이트
+	String usepoint; // 포인트 업데이트
+	String savepoint; // 포인트 업데이트
 	int orderid;
 	// 결재 출력용 변수
 	String id,paytype,sname,payendtime,address,name,tel,email,drequest;
@@ -106,7 +109,13 @@ public class PayDTO {
 	}
 
 	
- 	public int getOrderid() {
+ 	public String getBasketnum() {
+		return basketnum;
+	}
+	public void setBasketnum(String basketnum) {
+		this.basketnum = basketnum;
+	}
+	public int getOrderid() {
 		return orderid;
 	}
 	public void setOrderid(int orderid) {
@@ -189,6 +198,24 @@ public class PayDTO {
 	}
 	public void setPaystate(String paystate) {
 		this.paystate = paystate;
+	}
+	public String getUsecoupon() {
+		return usecoupon;
+	}
+	public void setUsecoupon(String usecoupon) {
+		this.usecoupon = usecoupon;
+	}
+	public String getUsepoint() {
+		return usepoint;
+	}
+	public void setUsepoint(String usepoint) {
+		this.usepoint = usepoint;
+	}
+	public String getSavepoint() {
+		return savepoint;
+	}
+	public void setSavepoint(String savepoint) {
+		this.savepoint = savepoint;
 	}
 	
 }

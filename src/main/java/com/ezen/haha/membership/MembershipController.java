@@ -369,6 +369,7 @@ public class MembershipController {
 			ss.couponUpdate("twentinum",id);
 		}
 		ss.couponTotal(id);
-		return "O";
+		return "O";	
 	}
+	
 }

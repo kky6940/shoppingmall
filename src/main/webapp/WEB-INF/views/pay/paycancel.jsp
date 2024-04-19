@@ -4,6 +4,39 @@
 <!DOCTYPE html>
 <html>
 <head>
+<style type="text/css">
+
+h2{
+  text-align:center;
+  margin:0;
+}
+.order_list{
+	margin-top: 24px;
+    width: 72%;
+    min-width:1360px;
+    left:330px;
+    position: absolute;
+}
+.ordertable {
+    width: 50%;
+    margin-top:20px;
+    border-collapse: collapse;
+}
+
+.ordertable th, .ordertable td {
+    padding: 8px;
+    border: 1px solid #dddddd;
+    background-color: #ffffff;
+}
+
+.ordertable th {
+    background-color: #333;
+    color: #ffffff;
+}
+
+
+</style>
+
 <script type="text/javascript">
 function kakaopaycancel() {
 	var formData = {
@@ -31,7 +64,7 @@ function kakaopaycancel() {
 <title>결제환불</title>
 </head>
 <body>
-<table border="1" width="700px" align="center">
+<table align="center" class="ordertable">
 	<tr>
 		<th>주문번호</th>
 		<th>상품명</th>
@@ -52,7 +85,7 @@ function kakaopaycancel() {
 				${aa.payendtime }
 				<input type="hidden" name="tid" value="${aa.tid }" id="tid">	
 			</td>	
-			<td>${aa.paystate }</td>
+			
 		</c:forEach>
 		
 	</tr>	

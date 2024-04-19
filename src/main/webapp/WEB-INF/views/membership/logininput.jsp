@@ -67,7 +67,7 @@ body, html {
   border: 1px solid #808080;
   border-radius: 5px;
   padding: 14px 10px;
-  width: 320px;
+  width: 340px;
   outline: none;
   color: #000;
   transition: all .2s ease-out;
@@ -143,7 +143,7 @@ a:hover {
   border:0;
   background: #333;
   color: #fff;
-  border-radius: 100px;
+  border-radius: 10px;
   width: 340px;
   height: 49px;
   font-size: 16px;
@@ -241,6 +241,14 @@ a:hover {
   background-color: #FFF;
   z-index: 1;  
   position: relative;
+}
+.social_login{
+	margin-bottom: 10px;
+}
+.social_login img{
+	width: 160px;
+	height: 48px;
+	margin-right: 4px;
 }
 </style>
 </head>

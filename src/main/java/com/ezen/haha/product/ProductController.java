@@ -303,7 +303,7 @@ public class ProductController {
 			mo.addAttribute("list", list);
 			mo.addAttribute("totprice", totprice);
 			mo.addAttribute("point", ss.pointOut(id));
-			mo.addAttribute("rank", ss.rankOut(id)); // 시간나면 수정 합쳐서
+			mo.addAttribute("rank", ss.rankOut(id)); 
 			return "basketsellout";
 		}
 		else
@@ -767,28 +767,40 @@ public class ProductController {
 	   public String product_list(HttpServletRequest request, PageDTO dto, Model mo) {
 	      String stype = request.getParameter("stype");
 	      String nowPage=request.getParameter("nowPage");
-	        String cntPerPage=request.getParameter("cntPerPage");
-	        Service ss = sqlSession.getMapper(Service.class);
+	      String cntPerPage=request.getParameter("cntPerPage");
+	      String sort =  request.getParameter("sort");
+	      Service ss = sqlSession.getMapper(Service.class);
+	      int totalSearch=ss.totalSearch(stype);  
 	        
-	        int totalSearch=ss.totalSearch(stype);
-	        if(nowPage==null && cntPerPage == null) {
-	           nowPage="1";
-	           cntPerPage="10";
-	        }
-	        else if(nowPage==null) {
-	           nowPage="1";
-	        }
-	        else if(cntPerPage==null) {
-	           cntPerPage="10";
-	        }      
-	       
-	       dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
-	      
+       
+       if(nowPage==null && cntPerPage == null) {
+          nowPage="1";
+          cntPerPage="10";
+       }
+       else if(nowPage==null) {
+          nowPage="1";
+       }
+       else if(cntPerPage==null) {
+          cntPerPage="10";
+       }      
+      dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+
+      if(sort == null || sort.equals("latest")) {
+     	 mo.addAttribute("list", ss.searchout(stype,dto.getStart(),dto.getEnd()));
+     	 mo.addAttribute("sort", "latest");
+      }
+      else if(sort.equals("highest")){
+     	 mo.addAttribute("list", ss.searchoutlowest(stype,dto.getStart(),dto.getEnd()));
+     	 mo.addAttribute("sort", "highest");
+      }
+      else if(sort.equals("lowest")){
+     	 mo.addAttribute("list", ss.searchouthighest(stype,dto.getStart(),dto.getEnd()));
+     	 mo.addAttribute("sort", "lowest");
+      }
+      
 	      mo.addAttribute("paging",dto);
-	      mo.addAttribute("list", ss.searchout(stype,dto.getStart(),dto.getEnd()));
 	      mo.addAttribute("stype",stype);
 	      return "product_list";
-	      
 	   }
 	
 	

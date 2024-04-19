@@ -56,7 +56,6 @@ public interface Service {
 
 	int bnumsearch(String keyword);
 
+	ArrayList<QnaDTO> qnalist(String bid);
 
-	
-	
 }

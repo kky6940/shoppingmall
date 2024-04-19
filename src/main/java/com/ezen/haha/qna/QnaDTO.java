@@ -2,7 +2,7 @@ package com.ezen.haha.qna;
 
 public class QnaDTO {
 	int bnum;
-	String bid, btype, btitle, bcontent, bpicture, bdate, bcode;
+	String bid, btype, btitle, bcontent, bpicture, bdate, bcode, qnastate;
 	int groups,step,indent,secret;
 	
 	public QnaDTO() {}
@@ -101,6 +101,14 @@ public class QnaDTO {
 
 	public void setSecret(int secret) {
 		this.secret = secret;
+	}
+
+	public String getQnastate() {
+		return qnastate;
+	}
+
+	public void setQnastate(String qnastate) {
+		this.qnastate = qnastate;
 	}
 	
 }

@@ -19,7 +19,7 @@
    
    <definition name="guestLayout" template="/WEB-INF/views/layout.jsp">
       <put-attribute name="title" value=""/>
-      <put-attribute name="top" value="/WEB-INF/views/guest_admin.jsp"/>
+      <put-attribute name="top" value="/WEB-INF/views/top_guest.jsp"/>
       <put-attribute name="body" value=""/>
       <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
    </definition>
@@ -79,7 +79,7 @@
       <put-attribute name="title" value="상품내용출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/detailview.jsp"/>
    </definition>
-   <definition name="basketout" extends="baseLayout">
+   <definition name="basketout" extends="guestLayout">
       <put-attribute name="title" value="장바구니출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/basketout.jsp"/>
    </definition>
@@ -115,7 +115,7 @@
       <put-attribute name="body" value="/WEB-INF/views/pay/payout.jsp"/>
    </definition>
    
-   <definition name="paycancel" extends="adminLayout">
+   <definition name="paycancel" extends="guestLayout">
       <put-attribute name="title" value="결제환불화면"/>
       <put-attribute name="body" value="/WEB-INF/views/pay/paycancel.jsp"/>
    </definition>
@@ -145,14 +145,24 @@
       <put-attribute name="body" value="/WEB-INF/views/mypage/myproductreview.jsp"/>
    </definition>
    
-   <definition name="adminpage" extends="adminLayout">
+   <definition name="qnalist" extends="guestLayout">
+      <put-attribute name="title" value="문의내역보기"/>
+      <put-attribute name="body" value="/WEB-INF/views/mypage/qnalist.jsp"/>
+   </definition>
+   
+   <definition name="mypageaddresslist" extends="guestLayout">
+      <put-attribute name="title" value="배송지관리보기"/>
+      <put-attribute name="body" value="/WEB-INF/views/mypage/mypageaddresslist.jsp"/>
+   </definition>
+   
+   
+   <definition name="adminpagemain" extends="baseLayout">
       <put-attribute name="title" value="관리자페이지메인"/>
       <put-attribute name="body" value="/WEB-INF/views/mypage/adminpagemain.jsp"/>
    </definition>
    
    
-   
-   
+
    <definition name="idserch" extends="baseLayout">
       <put-attribute name="title" value="아이디찾기1"/>
       <put-attribute name="body" value="/WEB-INF/views/membership/idserch.jsp"/>

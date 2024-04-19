@@ -65,6 +65,7 @@ form {
   width: 150px;
   margin-right: 10px;
   display: inline-block;
+  padding: 0 5px;
 }
 .search_area button{
   width: auto;
@@ -72,6 +73,7 @@ form {
   padding: 0px 10px;
   color: #fff;
   background-color: #6b6b83;
+  border: none;
 }
 .search_area button:hover {
 	background: #000000;

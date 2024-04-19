@@ -49,7 +49,7 @@ public class PayOrderController {
     	String payment = request.getParameter("payment");
     	String snum = request.getParameter("snum");
     	String email = ss.email(id);
-    	
+    	System.out.println("snum:"+snum);
 
     	String price = request.getParameter("price");
     	price = price.replace(",", "");

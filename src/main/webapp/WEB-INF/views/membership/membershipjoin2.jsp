@@ -29,7 +29,7 @@ a{
 }
 
 .member{
-  	width: 400px;
+  	width: 500px;
 	height: 700px;
   	margin: auto;
   	margin-top: 30px;
@@ -128,7 +128,7 @@ input[type="password"]
 }
 .member input[type=button]{ 
 	border-radius: 5px;
-	background-color: #16222A; 
+	background-color: #333; 
  	color: #fff;
  	border: 1px solid;
  }
@@ -416,8 +416,8 @@ function sample6_execDaumPostcode() {
 	<b>주소</b>
 		<input type="text" name="postcode" class="form-input3" id="sample6_postcode" placeholder="우편번호">
 		<input type="button" class="form-button2" onclick="sample6_execDaumPostcode()" value="우편번호 찾기"><br>
-		<input type="text" name="address1" class="form-input" id="sample6_address" placeholder="주소"><br>
-		<input type="text" name="address2" class="form-input" id="sample6_detailAddress" placeholder="상세주소">
+		<input type="text" name="address1" class="form-input" id="sample6_address" style="width: 305px;" placeholder="주소" ><br>
+		<input type="text" name="address2" class="form-input" id="sample6_detailAddress" style="width: 305px;" placeholder="상세주소">
 	</div>
 	 <button type="submit" class="submitgo" id="go">가입하기</button>
 </div>

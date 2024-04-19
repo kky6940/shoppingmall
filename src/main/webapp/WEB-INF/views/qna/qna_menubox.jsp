@@ -6,7 +6,7 @@
 <style type="text/css">
 
 .gap {
-	margin-bottom: 80px;
+	margin-bottom: 30px;
 }
 
 .menu_box {

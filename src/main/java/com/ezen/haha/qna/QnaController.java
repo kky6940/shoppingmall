@@ -619,4 +619,48 @@ public class QnaController {
 		return "qnapage";
 	}	
 	
+	// 마이페이지 문의내역 보기
+	@RequestMapping(value = "/qnalist")
+	public String qnalist(HttpServletRequest request, Model mo) {
+		HttpSession hs = request.getSession();
+		String bid = (String) hs.getAttribute("id");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<QnaDTO> list = ss.qnalist(bid);
+		mo.addAttribute("list", list);
+		
+		return "qnalist";
+	}
+	
+	// 마이페이지 문의내역 제목 클릭 시 qna 검색 화면으로 
+	@RequestMapping(value = "/qnasearchview")
+	public String qnasearchview(HttpServletRequest request, com.ezen.haha.qna.PageDTO dto , Model mo) {
+		String btitle = request.getParameter("btitle");
+		int bnum = Integer.parseInt(request.getParameter("bnum"));
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		
+		String nowPage=request.getParameter("nowPage");
+		String cntPerPage=request.getParameter("cntPerPage");
+		
+		
+		int total=ss.qnatotalsearch(btitle);
+		if(nowPage==null && cntPerPage == null) {
+			nowPage="1";
+			cntPerPage="7";
+		}
+		else if(nowPage==null) {
+			nowPage="1";
+		}
+		else if(cntPerPage==null) {
+			cntPerPage="7";
+		}
+		
+		dto = new com.ezen.haha.qna.PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		mo.addAttribute("paging",dto);
+		mo.addAttribute("list", ss.qnasearch(btitle,dto.getStart(),dto.getEnd(),bnum));
+		
+		return "qnapage";
+	}	
+	
 }

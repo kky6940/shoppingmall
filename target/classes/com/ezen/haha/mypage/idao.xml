@@ -40,9 +40,13 @@
  		select * from coupon where id=#{param1}
  	</select>
  	
- 	<!-- 마이페이지에서 결재 목록 보기 화면으로 -->
+ 	<!-- 마이페이지에서 주문/배송 보기 화면으로 -->
  	<select id="guestpayoutview" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo where id=#{param1}
+ 		select tid, orderid, sname, paynum, totprice, payendtime, 
+        case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료'
+        end as paystate from payinfo 
+        where id=#{param1} and paystate=1
  	</select>
  	
  	<!-- 관리자페이지에서 결재 목록 보기 화면으로 -->
@@ -57,7 +61,7 @@
  	
  	<!-- 마이페이지에서 한달 기간의 주문목록 보기 -->
  	<select id="payoutviewmonth" resultType="com.ezen.haha.pay.PayDTO">
- 		select orderid, sname, paynum, totprice, payendtime, 
+ 		select tid, orderid, sname, paynum, totprice, payendtime, 
         case when paystate = 1 then '결재완료'
             when paystate = 0 then '환불완료'
         end as paystate
@@ -68,7 +72,10 @@
  	
  	<!-- 마이페이지 환불 목록 보기 -->
  	<select id="refundview" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo where id=#{param1} and paystate=0
+ 		select tid, orderid, sname, paynum, totprice, payendtime, 
+        case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료'
+        end as paystate from payinfo where id=#{param1} and paystate=0
  	</select>
  	
  	<!-- 마이페이지 나의 리뷰 목록 보기 -->
@@ -85,5 +92,12 @@
 	<select id="productreviewout" resultType="com.ezen.haha.product.ProductreviewDTO">
 		select id,btitle,bcontent,bpicture,to_char(bdate,'yyyy-MM-dd')bdate,productrank from productreview where snum=#{param1} and sname=#{param2}
 	</select>
+	<!-- 주소지 목록 입력 -->
+	<insert id="addressInsert">
+		insert into addresslist values(address_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5})	
+	</insert>
+ 	<delete id="addressDelete">
+ 		delete from addresslist where addressnum=#{param1}
+ 	</delete>
 	
 </mapper>

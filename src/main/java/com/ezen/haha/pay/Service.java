@@ -10,13 +10,11 @@ public interface Service {
 
 	ArrayList<PayDTO> payout(int partner_order_id1, String partner_user_id);
 
-	void payinsert(String tid1, int partner_order_id1, String partner_user_id, String payment_method_type, String item_name, int quantity1, int totprice, String approved_at, int snum, String address, String name, String tel, String email, String drequest, int paystate);
+	void payinsert(String tid1, int partner_order_id1, String partner_user_id, String payment_method_type, String item_name, int quantity1, int totprice, String approved_at, int snum, String address, String name, String tel, String email, String drequest, int paystate, String payment);
 
 	void productsuupdate(int snum, int quantity1);
 
 	ArrayList<PayDTO> paysearch(String tid);
-
-	void deletepaylist(String tid1);
 
 	String email(String id);
 
@@ -34,6 +32,8 @@ public interface Service {
 	void pointUpdate(String id, int usePoint, int savePoint);
 
 	void insertorderid(PayDTO paydto);
+
+	void updatepaylist(String tid1);
 
 	
 

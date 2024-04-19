@@ -14,14 +14,14 @@
 
 .container {
   text-align: center;
-  margin-top: 5%;
+  margin-top: 30px;
   margin-left: auto;
   margin-right: auto;
 }
 
 h2 {
   margin-bottom: 30px;
-  margin-top: 5%;
+  margin-top: 10px;
   font-family: 'Noto Sans KR', sans-serif;
 }
 
@@ -105,7 +105,7 @@ h2 {
 </head>
 <body>
 <div class="container">
-<h2>고객센터</h2>
+
 <div class="menu_box">
     <nav class="nav">
         <a href="qnahome" class="item active">Home</a>

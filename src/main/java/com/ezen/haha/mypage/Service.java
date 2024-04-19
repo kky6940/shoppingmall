@@ -6,6 +6,7 @@ import com.ezen.haha.membership.MembershipDTO;
 import com.ezen.haha.pay.PayDTO;
 import com.ezen.haha.product.ProductDTO;
 import com.ezen.haha.product.ProductreviewDTO;
+import com.ezen.haha.qna.QnaDTO;
 
 public interface Service {
 
@@ -29,6 +30,8 @@ public interface Service {
 
 	ArrayList<ProductreviewDTO> productreviewout(int snum, String sname);
 
-	
+	void addressInsert(String id, String addressname, String name, String tel, String address);
+
+	void addressDelete(int addressnum);
 
 }

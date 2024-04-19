@@ -105,4 +105,8 @@ public interface Service {
 	void basketdirectinsert(BasketDTO basketdto);
 
 	ArrayList<BasketDTO> basketout(String id);
+
+	ArrayList<ProductDTO> searchoutlowest(String stype, int start, int end);
+
+	ArrayList<ProductDTO> searchouthighest(String stype, int start, int end);
 }

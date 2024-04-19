@@ -291,13 +291,10 @@ p{
 			<th class="adminth">참여 & 문의</th>
 		</tr>
 		<tr>
-			<td class="admintd">문의내역</td>
+			<td class="admintd"><a href="qnalist">문의 내역</a></td>
 		</tr>
 		<tr>
-			<td class="admintd">Q&A</td>
-		</tr>
-		<tr>
-			<td class="admintd"><a href="myproductreview">나의 상품리뷰</a></td>
+			<td class="admintd"><a href="myproductreview">상품 리뷰</a></td>
 		</tr>
 		<tr>
 			<td class="admintd">이벤트 응모내역</td>
@@ -311,7 +308,7 @@ p{
 			<td class="admintd"><a href="membershipupdateview">회원정보 수정</a></td>
 		</tr>
 		<tr>
-			<td class="admintd">배송지 관리</td>
+			<td class="admintd"><a href="mypageaddresslist">배송지 관리</a></td>
 		</tr>
 		<tr>
 			<td class="admintd"><a href="membershipdeleteview">회원 탈퇴</a></td>

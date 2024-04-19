@@ -39,25 +39,23 @@ h2{
 
 </style>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>문의 내역</title>
 </head>
 <body>
-<h2 style="text-align: center;">상품 리뷰</h2>
+<h2 style="text-align: center;">문의 내역</h2>
 	<table align="center" class="ordertable">
 		<tr>
-			<th>상품이미지</th>
-			<th>상품명</th>
+			<th>문의유형</th>
 			<th>제목</th>
 			<th>작성일</th>
-			<th>평가</th>
+			<th>문의상태</th>
 		</tr>
-	<c:forEach items="${list }" var="bb">	
+	<c:forEach items="${list }" var="aa">	
 		<tr>
-			<td><a href="reviewproductview?snum=${bb.snum }&sname=${bb.sname}">${bb.image }</a></td>
-			<td><a href="reviewproductview?snum=${bb.snum }&sname=${bb.sname}">${bb.sname }</a></td>
-			<td>${bb.btitle }</td>
-			<td>${bb.bdate }</td>
-			<td>${bb.productrank } / 5</td>
+			<td><a href="qnasearchview?btitle=${aa.btitle }&bnum=${aa.bnum}">${aa.btype }</a></td>
+			<td><a href="qnasearchview?btitle=${aa.btitle }&bnum=${aa.bnum}">${aa.btitle }</a></td>
+			<td>${aa.bdate }</td>
+			<td>${aa.qnastate }</td>
 			
 		</tr>
 	</c:forEach>	

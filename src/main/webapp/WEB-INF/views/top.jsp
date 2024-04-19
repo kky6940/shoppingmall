@@ -39,6 +39,7 @@ p{
 	position: relative;
 	float: left;
 	height: 80px;
+	z-index: 500;
 }
 .header_logo:after{
 	display: inline-block;
@@ -194,7 +195,7 @@ p{
 				<span><a href="basketout">장바구니</a></span>
 				<span><a href="qnahome">고객센터</a></span>
 				<c:if test="${id eq 'admin' }">
-					<span><a href="adminpage">관리자페이지</a></span>
+					<span><a href="adminpagemain">관리자페이지</a></span>
 				</c:if>		
 			</c:otherwise>	
 		</c:choose>

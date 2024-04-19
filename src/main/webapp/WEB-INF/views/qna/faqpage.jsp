@@ -59,6 +59,7 @@ form {
   display: inline-block;
   margin-top: 10px;
   margin-left: 100px;
+  padding: 0 5px;
 }
 .search_area input{
   height: 30px;

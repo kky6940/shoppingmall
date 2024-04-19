@@ -121,7 +121,7 @@ input[type="number"]{
 <body>
 <div class="product_list">
 <form id="formselect" method="post"> <!-- 하단 버튼과 자바스크립트로 form 장소 선택 -->
-    <table  class="baskettable" >
+    <table  class="baskettable" align="center">
         <tr>
             <th class="basketth">선택</th>
             <th class="basketth">상품이미지</th>

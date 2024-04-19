@@ -142,5 +142,13 @@
  		 order by bnum desc)A)
  		where rn between #{param2} AND #{param3}
  	</select>
-	
+ 	
+ 	<!-- 마이페이지 문의내역 출력 -->
+	<select id="qnalist" resultType="com.ezen.haha.qna.QnaDTO">
+		select bnum,btype,btitle,bdate,
+		case when qnastate = 1 then '답변완료'
+			when qnastate = 0 then '확인 중' end as qnastate
+		 from qnaboard where bid=#{param1} 
+	</select>
+ 	
 </mapper>

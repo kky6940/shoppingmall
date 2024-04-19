@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
+
+import com.ezen.haha.product.BasketDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,12 +54,19 @@ public class PayController {
 		String name = formData.getOrDefault("name", "");
 		String tel = formData.getOrDefault("tel", "");
 		String drequest = formData.getOrDefault("request", "");
-		
 		String sname = formData.getOrDefault("sname", "");
-		int snum = Integer.parseInt(formData.getOrDefault("snum", ""));
+		String basketnum = formData.getOrDefault("basketnum", "");
+		String usepoint = formData.getOrDefault("usepoint", "");
+		String savepoint = formData.getOrDefault("savepoint", "");
+		String usecoupon = formData.getOrDefault("usecoupon", "");
 		int guestbuysu = Integer.parseInt(formData.getOrDefault("guestbuysu", ""));
 		String email = ss.email(id);
 		
+		
+		String stringSnum =formData.getOrDefault("snum", "");
+		stringSnum = stringSnum.replace(",", "");
+		int snum = Integer.parseInt(stringSnum); 
+	
 		String stringTotprice =formData.getOrDefault("totprice", "");
 		stringTotprice = stringTotprice.replace(",", "");
 		int totprice = Integer.parseInt(stringTotprice); 
@@ -136,7 +145,10 @@ public class PayController {
                 dto.setTel(tel);
                 dto.setEmail(email);
                 dto.setDrequest(drequest);
-                
+                dto.setBasketnum(basketnum);
+                dto.setUsecoupon(usecoupon);
+                dto.setUsepoint(usepoint);
+                dto.setSavepoint(savepoint);
                 return ResponseEntity.ok(nextRedirectPcUrl); // PC에서 결재를 진행할 것이기에 nextRedirectPcUrl 링크 사용
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -165,7 +177,23 @@ public class PayController {
     	String tel = dto.getTel();
     	String email = dto.getEmail();
     	String drequest = dto.getDrequest();
-		
+    	String basketnum = dto.getBasketnum();
+    	String useCoupon = dto.getUsecoupon();
+    	    	
+    	String stringSavePoint = dto.getSavepoint();
+    	stringSavePoint = stringSavePoint.replace(",", "");
+    	int savePoint = Integer.parseInt(stringSavePoint);
+    	
+    	int usePoint;
+    	if(dto.getUsepoint() == null) {
+    		usePoint = 0;
+    	}
+    	else {
+    		String point = dto.getUsepoint();
+    		point = point.replace(",", "");
+    		usePoint = Integer.parseInt(point);     		
+    	}
+
         String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; 
         String auth = "SECRET_KEY " + SECRET_KEY; 
 
@@ -215,7 +243,7 @@ public class PayController {
         	String partner_order_id = root.get("partner_order_id").asText(); // 가맹점 주문번호(String)
         	int partner_order_id1 = Integer.parseInt(partner_order_id); // 주문 번호 String을 int로 변환
         	String partner_user_id = root.get("partner_user_id").asText();
-        	String payment_method_type = root.get("payment_method_type").asText(); // 결재 수단, CARD 혹은 MONEY(테스트 단계에선 CARD 만 가능해 보인다.)  
+        	String payment_method_type = root.get("payment_method_type").asText(); // 결재 수단, CARD 혹은 MONEY(테스트 단계에선 MONEY 만 가능해 보인다. CARD로 하려면 다른 카드사 결재를 따로 등록해야하는 것 같음)  
         	String item_name = root.get("item_name").asText();
         	String quantity = root.get("quantity").asText();
         	int quantity1 = Integer.parseInt(quantity);
@@ -223,17 +251,35 @@ public class PayController {
         	String approved_at = root.get("approved_at").asText(); // 결제 승인 시각
         	
         	int paystate = 1; // 결재 상태 1 = 결재 완료
-        	
+        	String payment = "kakaopay"; //결제 방식 구분
         	// 결재 완료 후 클라이언트에게 보여줄 부분만 가져와서 DB에(payinfo) 저장
         	Service ss = sqlSession.getMapper(Service.class);
-        	 
-        	ss.payinsert(tid1,partner_order_id1,partner_user_id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate);
+        	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment);
         	
         	// 결재 완료 후 출력
         	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);
         	
         	// 결재 완료 후 해당 상품 재고 감소 업데이트
-        	ss.productsuupdate(snum, quantity1);
+        	String[] basketnums = basketnum.split(",");
+            for (String basket : basketnums) {
+            	ArrayList<BasketDTO> basketlist = ss.basketInfo(basket);
+            	for(BasketDTO aa : basketlist) {
+            		ss.productsuupdate(aa);
+            	}
+            	ss.basketDelete(basket);
+            }
+        	if(useCoupon.equals("10000원 할인쿠폰")) {
+        		ss.couponUpdate(id,"mannum");    		
+        	}
+        	else if(useCoupon.equals("10% 할인쿠폰")) {
+        		ss.couponUpdate(id,"tennum");    		
+        	}
+        	else if(useCoupon.equals("20% 할인쿠폰")) {
+        		ss.couponUpdate(id,"twentinum");    		
+        	}
+        	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
+        	mss.couponTotal(id);
+      		ss.pointUpdate(id,usePoint,savePoint);
         	
         	// return "redirect:/이동경로" 을 하면 알 수 없는 이유로 화면이 이동하지 않는 문제가 발생(이동이 안되고 그냥 출력문으로 출력됨)
         	// 부득이하게 ModelAndView 를 사용하여 화면 이동
@@ -256,8 +302,8 @@ public class PayController {
     public ResponseEntity<String> paycancelrequest(HttpServletRequest request, @RequestBody Map<String, String> formData) throws UnsupportedEncodingException {
 		String tid = formData.getOrDefault("tid", "");
 		int totprice = Integer.parseInt(formData.getOrDefault("totprice", ""));
-		
-        String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
+     
+		String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
         String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -329,7 +375,7 @@ public class PayController {
                 String message = "환불이 완료되었습니다.";
                 
                 Service ss = sqlSession.getMapper(Service.class);
-                ss.deletepaylist(tid1);
+                ss.updatepaylist(tid1);
                 
                 return ResponseEntity.ok(message); 
             } catch (JsonProcessingException e) {

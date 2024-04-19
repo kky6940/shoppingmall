@@ -9,6 +9,10 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 <style type="text/css">
+a{
+	text-decoration: none;
+	color: black;
+}
 .product_list{
 	position: relative;
  	margin-top: 3%;
@@ -74,6 +78,10 @@
 .paging ul li b {
     color: red;
 }
+
+.selected {
+    font-weight: bold;
+}
 </style>
 
 </head>
@@ -82,7 +90,11 @@
 <div class="product_list">
 	<div class="box">
 		<h3>${stype}</h3>
-		<p> 최신등록순 | 높은가격순 | 낮은가격순 </p>
+		<p>
+			<a href="product_list?sort=latest&stype=${stype}" class="${sort == 'latest' ? 'selected' : ''}">최신등록순</a> |
+            <a href="product_list?sort=highest&stype=${stype}" class="${sort == 'highest' ? 'selected' : ''}">높은가격순</a> |
+            <a href="product_list?sort=lowest&stype=${stype}" class="${sort == 'lowest' ? 'selected' : ''}">낮은가격순</a> 
+		</p>
 		<div class="clear"></div>
  		<c:forEach items="${list }" var="aa">
 			<ul class="product">
@@ -107,7 +119,7 @@
 		<ul>
 			<li>
 				<c:if test="${paging.startPage!=1 }"> 
-	      		  	<a href="product_list?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}&stype=${stype}">◀</a> 
+	      		  	<a href="product_list?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}&stype=${stype}&sort=${sort}">◀</a> 
 	   			</c:if>  
 	      		<c:forEach begin="${paging.startPage }" end="${paging.endPage}" var="p"> 
 	         	<c:choose>
@@ -115,7 +127,7 @@
 	               <b><span style="color: black;">${p}</span></b>
 	            </c:when>   
 	            <c:when test="${p != paging.nowPage }"> 
-	               <a href="product_list?nowPage=${p}&cntPerPage=${paging.cntPerPage}&stype=${stype}">${p}</a>
+	               <a href="product_list?nowPage=${p}&cntPerPage=${paging.cntPerPage}&stype=${stype}&sort=${sort}">${p}</a>
 	            </c:when>   
 		         </c:choose>
 		      </c:forEach>

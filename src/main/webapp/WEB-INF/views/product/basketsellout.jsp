@@ -181,40 +181,50 @@ input::-webkit-inner-spin-button {
 			<option value="문앞" selected="selected">문앞에 놓아주세요</option>
 		</select>
      </div>
-     
     <div class="input_group">
 	      <label>주문상품</label>
-	      <c:choose>
-      		    <c:when test="${fn:length(list) >= 2}">
-					 <c:set var="guestbuysu" value="0"/>
-       				 <c:set var="sname" value="${list[0].productdto.sname} 외 ${fn:length(list) - 1}건"/>		
-	      		</c:when>
-	      		<c:otherwise>
-	      			 <c:set var="guestbuysu" value="0"/>
-       				 <c:set var="sname" value="${list[0].productdto.sname}"/>
-	      		</c:otherwise>
-	      </c:choose>
-	      
-	      <c:forEach items="${list }" var="aa">
-	      <div class="product_view">
-	     	 	<div>
-		  			<c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
-							<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
-			   					<c:if test="${loop.index == 0}">
-			       					<img alt="" src="./image/${imageName}" width="70px" height="70px">
-			   					</c:if>
-							</c:forEach>
-		  		</div>
-		  		<div>
-		  			<p>${aa.productdto.getSname() }</p>
-		  			<p style="font-size: 14px; color: gray;">색상 : ${aa.color} / 사이즈 : ${aa.psize} / 수량 : ${aa.guestbuysu} </p>
-		  			<c:set var="guestbuysu" value="${guestbuysu + aa.guestbuysu}"/>
-					<c:set var="snum" value="${empty snum ? aa.snum : snum + ',' + aa.snum}"/>
-					<c:set var="basketnum" value="${empty basketnum ? aa.basketnum : basketnum + ',' + aa.basketnum}"/>
-	      		</div>
-	      </div>
-	      </c:forEach>
-	      
+	      <c:set var="guestbuysu" value="0"/>
+		  <c:set var="snum" value=""/>
+          <c:set var="basketnum" value=""/>
+
+		  <c:choose>
+			  <c:when test="${fn:length(list) >= 2}">
+			      <c:set var="sname" value="${list[0].productdto.sname} 외 ${fn:length(list) - 1}건"/>
+			  </c:when>
+			  <c:otherwise>
+			      <c:set var="sname" value="${list[0].productdto.sname}"/>
+			  </c:otherwise>
+		  </c:choose>
+			
+			<c:forEach items="${list}" var="aa">
+			    <div class="product_view">
+			        <div>
+			            <c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
+			            <c:forEach items="${imageArray}" var="imageName" varStatus="loop">
+			                <c:if test="${loop.index == 0}">
+			                    <img alt="" src="./image/${imageName}" width="70px" height="70px">
+			                </c:if>
+			            </c:forEach>
+			        </div>
+			        <div>
+			            <p>${aa.productdto.getSname()}</p>
+			            <p style="font-size: 14px; color: gray;">색상 : ${aa.color} / 사이즈 : ${aa.psize} / 수량 : ${aa.guestbuysu} </p>
+			            <c:set var="guestbuysu" value="${guestbuysu + aa.guestbuysu}"/>
+			        </div>
+			    </div>
+			    <c:choose>
+			        <c:when test="${empty snum}">
+			            <!-- 처음에는 단순히 변수를 설정합니다. -->
+			            <c:set var="snum" value="${aa.snum}"/>
+			            <c:set var="basketnum" value="${aa.basketnum}"/>
+			        </c:when>
+			        <c:otherwise>
+			            <!-- 이후부터는 기존 값에 추가합니다. -->
+			            <c:set var="snum" value="${snum},${aa.snum}"/>
+			            <c:set var="basketnum" value="${basketnum},${aa.basketnum}"/>
+			        </c:otherwise>
+			    </c:choose>
+			</c:forEach>
 	      
       </div>
       <div class="input_group">
@@ -311,7 +321,7 @@ document.getElementById('point').addEventListener('focus', function() {
 });
 
 function rankDiscount(price, rank) {
-    const discounts = {1: 0, 2: 0.02, 3: 0.03, 4: 0.04, 5: 0.05};
+    const discounts = {1: 0, 2: 0.02, 3: 0.03, 4: 0.05};
     return price * discounts[rank];
 }
 
@@ -441,13 +451,17 @@ function kakaopay() {
 	var address1 = document.getElementById('address1').value;
 	var address2 = document.getElementById('address2').value;
 	var address = postcode + ', ' + address1 + ', ' + address2;
+	
 	console.log(address);
 	var formData = {
 	     address: address,
 	     name: $('#name').val(),
 	     tel: $('#tel').val(),
 	     request: $('#request').val(),
-	     
+	     basketnum: $('#basketnum').val(),
+	     usepoint : $('#point').val(),
+	     savepoint : $('#savepoint').val(),
+	     usecoupon : $('#useCoupon').val(),
 	     snum: $('#snum').val(),
 	     sname: $('#sname').val(),
 	     guestbuysu: $('#guestbuysu').val(),
@@ -499,7 +513,11 @@ function submitForm(element) {
         form.action = 'bankAction';
         form.submit();
 
-    } else if (paymentType === '카카오페이') {
+    } 
+    else if (paymentType === '카카오페이' && $('#price').val()===0) {
+    	// 채우기
+    }
+    else if (paymentType === '카카오페이') {
         kakaopay();
         return; // 카카오페이는 별도의 처리가 필요하므로 여기서 함수를 종료
     }

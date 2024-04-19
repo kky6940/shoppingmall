@@ -22,7 +22,7 @@ h2{
     position: absolute;
 }
 .ordertable {
-    width: 100%;
+    width: 80%;
     margin-top:20px;
     border-collapse: collapse;
 }
@@ -44,7 +44,7 @@ h2{
 <body>
 <div class="order_list">
 	<h2>주문 목록</h2>
-<table class="ordertable">
+<table align="center" class="ordertable">
 
 	<tr>
 		<th>주문번호</th>

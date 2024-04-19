@@ -1,6 +1,7 @@
 package com.ezen.haha.mypage;
 
 public class AddressListDTO {
+	String addressnum;
 	String adlistname;
 	String id;
 	String tel;
@@ -20,6 +21,14 @@ public class AddressListDTO {
 	}
 	public void setId(String id) {
 		this.id = id;
+	}
+	
+	
+	public String getAddressnum() {
+		return addressnum;
+	}
+	public void setAddressnum(String addressnum) {
+		this.addressnum = addressnum;
 	}
 	public String getTel() {
 		return tel;

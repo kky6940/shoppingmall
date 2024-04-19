@@ -123,7 +123,7 @@
 	
 	<!-- 주문 결제 창 정보 출력 -->
 	<select id="productsell" resultMap="basket">
-		select p.sname, b.color, b.psize, b.guestbuysu, p.image, p.price
+		select b.*, p.sname, p.image, p.price
 			   from basket b join product p
 			   on b.snum = p.snum
 			   where basketnum = #{param1}
@@ -203,10 +203,22 @@
 	</select>
 	
 	
-	<!-- 관리자 상품 정보(목록) 출력 -->
+	<!-- 관리자, 상품 정보(목록) 출력 -->
 	<select id="searchout" resultType="com.ezen.haha.product.ProductDTO">      
       select * from (
-       select row_number() over (order by snum) as rn, A.* from (
+       select row_number() over (order by snum desc) as rn, A.* from (
+        select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
+   </select>
+   <!-- 상품 정보(목록) 가격 오름순(낮은가격순) 출력 -->
+   <select id="searchouthighest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price) as rn, A.* from (
+        select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
+   </select>
+   <!-- 상품 정보(목록) 가격 내림순(높은가격순) 출력 -->
+   <select id="searchoutlowest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price desc) as rn, A.* from (
         select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
    </select>
 	<select id="totalSearch" resultType="int">

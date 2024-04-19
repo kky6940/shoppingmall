@@ -26,9 +26,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ezen.haha.membership.MembershipDTO;
 import com.ezen.haha.pay.PayDTO;
-import com.ezen.haha.pay.Service;
 import com.ezen.haha.product.ProductDTO;
 import com.ezen.haha.product.ProductreviewDTO;
+import com.ezen.haha.qna.QnaDTO;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -51,9 +51,10 @@ public class MypageController {
 		}
 
 		boolean loginstate = (boolean) hs.getAttribute("loginstate");
-
+		
 		if (loginstate) {
-			com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+			System.out.println("111");
+			Service ss = sqlSession.getMapper( Service.class);
 			ArrayList<MembershipDTO> list = ss.mypageview(id);
 			ArrayList<PayDTO> list2 = ss.payoutviewmonth(id); 
 			mo.addAttribute("list", list);
@@ -74,7 +75,7 @@ public class MypageController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<CouponDTO> list = ss.couponview(id);
 		mo.addAttribute("list", list);
 
@@ -89,7 +90,7 @@ public class MypageController {
 		
 		if(id.equals("admin"))
 		{
-			com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+			 Service ss = sqlSession.getMapper( Service.class);
 			ArrayList<PayDTO> list = ss.payoutviewall();
 			mo.addAttribute("list", list);
 
@@ -115,7 +116,7 @@ public class MypageController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		 Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<PayDTO> list = ss.guestpayoutview(id);
 		mo.addAttribute("list", list);
 
@@ -123,7 +124,7 @@ public class MypageController {
 	}
 	
 	// 관리자 페이지로 가기
-	@RequestMapping(value = "/adminpage")
+	@RequestMapping(value = "/adminpagemain")
 	public String adminpage(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
@@ -146,7 +147,7 @@ public class MypageController {
 	// 관리자 페이지에서 회원 목록 보기 화면으로
 	@RequestMapping(value = "/memberviewall")
 	public String memberviewall(HttpServletRequest request, Model mo) {
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		 Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<MembershipDTO> list = ss.memberviewall();
 		mo.addAttribute("list", list);
 
@@ -159,7 +160,7 @@ public class MypageController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 		
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		 Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<MembershipDTO> list = ss.refundview(id);
 		mo.addAttribute("list", list);
 
@@ -172,7 +173,7 @@ public class MypageController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 		
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		 Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<ProductreviewDTO> list = ss.myproductreview(id);
 		mo.addAttribute("list", list);
 		
@@ -186,7 +187,7 @@ public class MypageController {
 		int snum = Integer.parseInt(request.getParameter("snum"));
 		String sname = request.getParameter("sname");
 		
-		com.ezen.haha.mypage.Service ss = sqlSession.getMapper(com.ezen.haha.mypage.Service.class);
+		 Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<ProductDTO> list = ss.detailview(snum,sname);
 		mo.addAttribute("list", list);
 		
@@ -210,5 +211,70 @@ public class MypageController {
 		
 	}
 	
+	// 마이페이지 주소지 목록 가져오기
+	@RequestMapping(value = "/mypageaddresslist",method = RequestMethod.GET)
+	public String mypageaddresslist(HttpServletRequest request, Model mo) {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		com.ezen.haha.product.Service ss = sqlSession.getMapper(com.ezen.haha.product.Service.class);
+		ArrayList<AddressListDTO> list = ss.addresslistout(id);
+		
+		mo.addAttribute("list", list);
+		
+		return "mypageaddresslist";
+	}	
+	
+	// 주소 목록 추가 페이지
+		@RequestMapping(value = "/addressinput")
+		public String addressInput(HttpServletRequest request) {
 
+			return "addressInput";
+		}
+		// 주소 목록 추가 
+		@RequestMapping(value = "/addressSave")
+		public String addressSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			HttpSession hs = request.getSession();
+			String id = (String) hs.getAttribute("id");
+			String addressname = request.getParameter("addressname");
+			String name = request.getParameter("name");
+			String tel = "010-"+ request.getParameter("tel1") + "-" + request.getParameter("tel2");
+			String address = request.getParameter("postcode")+","+request.getParameter("address1")+","+ 
+							request.getParameter("address2");
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			System.out.println(id);
+			System.out.println(addressname);
+			System.out.println(name);
+			System.out.println(tel);
+			System.out.println(address);
+			
+			ss.addressInsert(id,addressname,name,tel,address);
+			
+
+			  String script = "<script>";
+			    script += "window.opener.location.reload();"; // 부모 창 리로드
+			    script += "window.close();"; // 팝업 창 닫기
+			    script += "window.opener.location.href='./mypageaddresslist';"; // 부모 창 리다이렉트
+			    script += "</script>";
+
+			    response.setContentType("text/html;charset=utf-8");
+			    PrintWriter printw = response.getWriter();
+			    printw.print(script);
+			    printw.close();
+			    return null;
+	}	
+		// 주소 목록 삭제 페이지
+		@ResponseBody
+		@RequestMapping(value = "/adderessDelete")
+		public String adderessDelete(HttpServletRequest request) {
+			Service ss = sqlSession.getMapper(Service.class);
+			int addressnum = Integer.parseInt(request.getParameter("addressnum"));
+			ss.addressDelete(addressnum);
+			
+			
+			return "mypageaddresslist";
+		}
+		
+		
 }

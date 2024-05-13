@@ -11,6 +11,7 @@ import java.net.URL;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -43,6 +44,8 @@ import org.xml.sax.InputSource;
 import com.ezen.haha.membership.MembershipDTO;
 import com.ezen.haha.mypage.AddressListDTO;
 import com.ezen.haha.mypage.CouponDTO;
+import com.ezen.haha.pay.PayDTO;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -61,9 +64,24 @@ public class ProductController {
 	
 	// 상품 입력 화면으로
 	@RequestMapping(value = "/productinput")
-	public String productinput() {
+	public String productinput(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
 		
-		return "productinput";
+//		if(id != null && id.equals("admin")) // 로그인 체크
+//		{
+			return "productinput";
+//		}
+//		else
+//		{
+//			response.setContentType("text/html;charset=utf-8");
+//			PrintWriter printw = response.getWriter();
+//			printw.print("<script> alert('잘못된 접근입니다.'); window.location.href='./login'; </script>");
+//			printw.close();
+//			return "redirect:./login";
+//		}
+		
+		
 	}
 	
 	// 상품 입력 후 DB에 저장
@@ -72,7 +90,6 @@ public class ProductController {
 		int snum = Integer.parseInt(mul.getParameter("snum"));
 		String stype = mul.getParameter("stype");
 		String stype_sub = mul.getParameter("stype_sub");
-		String color = mul.getParameter("color");
 		String sname = mul.getParameter("sname");
 		int price = Integer.parseInt(mul.getParameter("price"));
 		int ssize = Integer.parseInt(mul.getParameter("ssize"));
@@ -82,12 +99,15 @@ public class ProductController {
 		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
 		int recommend = Integer.parseInt(mul.getParameter("recommend"));
+		MultipartFile info = mul.getFile("info");
+		String infoname = info.getOriginalFilename();
+		info.transferTo(new File(imagepath + infoname));
+		System.out.println();
 		String fname = "";
-
 		List<MultipartFile> fileList = mul.getFiles("image");
 		boolean firstfile = true;
         for (MultipartFile mf : fileList) {
-             String originFileName = mf.getOriginalFilename(); // 占쏙옙癰�占� 占쏙옙占쏙옙 筌�占�
+             String originFileName = mf.getOriginalFilename(); // 곤옙 占 嶺 占썲 占
              
              if(firstfile) {
             	 fname = originFileName;
@@ -100,53 +120,138 @@ public class ProductController {
              String safeFile = imagepath + originFileName;
              mf.transferTo(new File(safeFile));
          }
-        System.out.println("fname : " + fname);
+        
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,color,fname,intro,best,recommend);
+		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,fname,intro,best,recommend,infoname,0);
 		
 		return "redirect:/main";
 	}
-
 	// DB 데이터 가져온 후 출력 화면으로 가기
 	@RequestMapping(value = "/productout")
-	public String productout(HttpServletRequest request, PageDTO dto, Model mo) {
-		String nowPage=request.getParameter("nowPage");
-        String cntPerPage=request.getParameter("cntPerPage");
-        Service ss = sqlSession.getMapper(Service.class);
-        
-        int total=ss.total();
-    
-        if(nowPage==null && cntPerPage == null) {
-           nowPage="1";
-           cntPerPage="5";
-        }
-        else if(nowPage==null) {
-           nowPage="1";
-        }
-        else if(cntPerPage==null) {
-           cntPerPage="5";
-        }      
-       
-	    dto = new PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+	public String productout(HttpServletRequest request, PageDTO dto, Model mo, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
 		
-		mo.addAttribute("paging",dto);
-		mo.addAttribute("list", ss.productout(dto));
+//		if(id != null && id.equals("admin")) // 로그인 체크
+//		{
+			String nowPage=request.getParameter("nowPage");
+	        String cntPerPage=request.getParameter("cntPerPage");
+	        Service ss = sqlSession.getMapper(Service.class);
+	        
+	        int total=ss.total();
+	    
+	        if(nowPage==null && cntPerPage == null) {
+	           nowPage="1";
+	           cntPerPage="5";
+	        }
+	        else if(nowPage==null) {
+	           nowPage="1";
+	        }
+	        else if(cntPerPage==null) {
+	           cntPerPage="5";
+	        }      
+	       
+		    dto = new PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+			
+			mo.addAttribute("paging",dto);
+			mo.addAttribute("list", ss.productout(dto));
+			
+			
+			return "productout";
+//		}
+//		else
+//		{
+//			response.setContentType("text/html;charset=utf-8");
+//			PrintWriter printw = response.getWriter();
+//			printw.print("<script> alert('잘못된 접근입니다.'); window.location.href='./login'; </script>");
+//			printw.close();
+//			return "redirect:./login";
+//		}
 		
-		
-		return "productout";
 	}
 	
 	// 상품 클릭 시 상품 내용 화면으로 가기
 	@RequestMapping(value = "/detailview")
 	public String detailview(HttpServletRequest request, Model mo) {
+		String stringSnum = request.getParameter("snum");
 		int snum = Integer.parseInt(request.getParameter("snum"));
 		Service ss = sqlSession.getMapper(Service.class);
+		
+		ss.updateViewNum(snum);
 		ArrayList<ProductDTO> list = ss.detailview(snum);
 		mo.addAttribute("list", list);
 		
 		// 상품 리뷰 출력 추가
 		ArrayList<ProductreviewDTO> list1 = ss.productreviewout(snum);
 		mo.addAttribute("list1", list1);
+		
+		// 시각화 과정
+		// 시각화 전에 필요한 데이터(상품을 결재한 유저 id의 주민번호) DB에서 가져오기
+		ArrayList<MembershipDTO> list2 = ss.payinfodata(stringSnum);
+		
+		List<String> ageList = new ArrayList<>();
+
+		for (MembershipDTO dto : list2) { 
+		    String pid = dto.getPid();
+
+		    // 나이 구분
+		    char genderData = pid.charAt(7);
+		    int birthdayData = Integer.parseInt(pid.substring(0,2));
+		    
+		    if(genderData == '1' || genderData == '2') {
+		        birthdayData += 1900;
+		    } else {
+		        birthdayData += 2000;
+		    }
+		    LocalDate ld = LocalDate.now();
+		    int nowyear = ld.getYear(); 
+		    int age = nowyear - birthdayData;
+		    
+		    // 나이를 리스트에 추가
+		    ageList.add(String.valueOf(age));
+		}
+
+		Map<String, Object> requestData = new HashMap<>();
+		requestData.put("ages", ageList);
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		String jsonData;
+		
+		// 상품 설명 시각화 그래프 추가
+		
+		try {
+			    jsonData = objectMapper.writeValueAsString(requestData);
+	
+			    // 파이썬 스크립트에 JSON 데이터 전달
+			    String pythonDirectoryPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\";
+			    String pythonProgramname= "product_visual.py";
+			    String pythonRealname = pythonDirectoryPath + "\\" + pythonProgramname;
+			    ProcessBuilder processBuilder = new ProcessBuilder("python", pythonRealname);
+			    processBuilder.redirectErrorStream(true);
+			    Process process = processBuilder.start();
+	
+			    PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
+			    writer.println(jsonData);
+			    writer.flush();
+			    writer.close();
+	         
+	        try {
+				int result = process.waitFor();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+	        String image = "/resources/python_image/product_visual_image.png";
+	        
+	        // 모델에 그래프 이미지 경로 추가
+	        mo.addAttribute("visual_image", image);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        // 시각화 과정 종료
+		
 		return "detailview";
 	}
 	// 상품 내용 창에서 장바구니 DB 저장
@@ -536,9 +641,9 @@ public class ProductController {
 			
 			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크			
 			Service ss = sqlSession.getMapper(Service.class);
-			Integer buysnum = ss.productbuysearch(id,snum);
+			ArrayList<PayDTO> buysnum = ss.productbuysearch(id,snum);
 			
-			if(buysnum == null)
+			if(buysnum.isEmpty())
 			{
 				response.setContentType("text/html;charset=utf-8");
 				PrintWriter printw = response.getWriter();
@@ -602,12 +707,71 @@ public class ProductController {
 	
 	// 베스트 상품 화면 출력
 	@RequestMapping(value = "/bestproductout")
-	public String bestproductout(HttpServletRequest request, Model mo) {
+	public String bestproductout(HttpServletRequest request, Model mo, PageDTO dto) {
+		String nowPage=request.getParameter("nowPage");
+	    String cntPerPage=request.getParameter("cntPerPage");
 		Service ss = sqlSession.getMapper(Service.class);
-		ArrayList<ProductDTO> list = ss.bestproductout();
-		mo.addAttribute("list", list);
+		
+		int besttotalSearch=ss.besttotalSearch();
+	    
+        if(nowPage==null && cntPerPage == null) {
+           nowPage="1";
+           cntPerPage="10";
+        }
+        else if(nowPage==null) {
+           nowPage="1";
+        }
+        else if(cntPerPage==null) {
+           cntPerPage="10";
+        }      
+       
+	    dto = new PageDTO(besttotalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		
+		mo.addAttribute("paging",dto);
+		mo.addAttribute("list", ss.bestsearchout(dto.getStart(),dto.getEnd()));
 		
 		return "bestproductout";
+	}
+	
+	// 베스트 상품 화면 동작(검색 및 페이징)
+	@RequestMapping(value = "/best_product_list")
+	public String best_product_list(HttpServletRequest request, Model mo, PageDTO dto) {
+	    String nowPage=request.getParameter("nowPage");
+	    String cntPerPage=request.getParameter("cntPerPage");
+	    String best =  request.getParameter("best");
+	    
+	    Service ss = sqlSession.getMapper(Service.class);
+	    int besttotalSearch=ss.besttotalSearch();  
+    
+ 
+		 if(nowPage==null && cntPerPage == null) {
+		    nowPage="1";
+		    cntPerPage="10";
+		 }
+		 else if(nowPage==null) {
+		    nowPage="1";
+		 }
+		 else if(cntPerPage==null) {
+		    cntPerPage="10";
+		 }      
+		dto = new PageDTO(besttotalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		
+		if(best == null || best.equals("latest")) {
+			 mo.addAttribute("list", ss.bestsearchout(dto.getStart(),dto.getEnd()));
+			 mo.addAttribute("best", "latest");
+		}
+		else if(best.equals("highest")){
+			 mo.addAttribute("list", ss.bestsearchoutlowest(dto.getStart(),dto.getEnd()));
+			 mo.addAttribute("best", "highest");
+		}
+		else if(best.equals("lowest")){
+			 mo.addAttribute("list", ss.bestsearchouthighest(dto.getStart(),dto.getEnd()));
+			 mo.addAttribute("best", "lowest");
+		}
+	
+	    mo.addAttribute("paging",dto);
+	   
+	    return "bestproductout";
 	}
 	
 	// 추천 상품 화면으로 가기
@@ -942,5 +1106,66 @@ public class ProductController {
 		      mo.addAttribute("sname",sname);
 		      return "gnb_search";
 		   }
+		@RequestMapping(value = "/productReviewList")
+		   public String productReviewList(HttpServletRequest request, PageDTO dto, Model mo) {
+		      String nowPage=request.getParameter("nowPage");
+		      String cntPerPage=request.getParameter("cntPerPage");
+		      Service ss = sqlSession.getMapper(Service.class);
+		        
+		      int total=ss.totalReview();
+		     
+		      if(nowPage==null && cntPerPage == null) {
+		         nowPage="1";
+		         cntPerPage="10";
+		      }
+		      else if(nowPage==null) {
+		         nowPage="1";
+		      }
+		      else if(cntPerPage==null) {
+		         cntPerPage="10";
+		      }      
+		       
+		      dto = new PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+		      
+		      mo.addAttribute("paging",dto);
+		      mo.addAttribute("list", ss.productReviewOut(dto));
+ 
+		      return "reviewList";
+		   }
+		
+		
+		@RequestMapping(value = "/detailReview")
+		public String detailReview(HttpServletRequest request,Model model){
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			Service ss = sqlSession.getMapper(Service.class);
+			
+			ArrayList<ProductreviewDTO> list =  ss.detailReview(bnum);
+			model.addAttribute("list", list);
+			return "detailReview";
+		}
+
+		
+		@ResponseBody
+		@RequestMapping(value = "/bestreview", method = RequestMethod.POST)
+		public String bestreview(HttpServletRequest request) {
+			int bnum =  Integer.parseInt(request.getParameter("bnum"));
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			ss.bestreview(bnum);
+
+			return "1";
+		}
+		
+		@ResponseBody
+		@RequestMapping(value = "/bestreviewout", method = RequestMethod.POST)
+		public String bestreviewout(HttpServletRequest request) {
+			int bnum =  Integer.parseInt(request.getParameter("bnum"));
+			
+			Service ss = sqlSession.getMapper(Service.class);
+			ss.bestreviewout(bnum);
+
+			return "1";
+		}
+		
 }
 	

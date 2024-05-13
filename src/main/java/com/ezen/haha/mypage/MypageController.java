@@ -53,13 +53,15 @@ public class MypageController {
 		boolean loginstate = (boolean) hs.getAttribute("loginstate");
 		
 		if (loginstate) {
-			System.out.println("111");
 			Service ss = sqlSession.getMapper( Service.class);
 			ArrayList<MembershipDTO> list = ss.mypageview(id);
 			ArrayList<PayDTO> list2 = ss.payoutviewmonth(id); 
+			ArrayList<ProductDTO> list3 = ss.bestproductout();
 			mo.addAttribute("list", list);
 			mo.addAttribute("list2", list2);
+			mo.addAttribute("list3", list3);
 			return "mypagemain";
+			
 		} else {
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter printw = response.getWriter();
@@ -94,7 +96,7 @@ public class MypageController {
 			ArrayList<PayDTO> list = ss.payoutviewall();
 			mo.addAttribute("list", list);
 
-			return "payout";
+			return "adminpayoutview";
 		}
 		else
 		{
@@ -164,7 +166,19 @@ public class MypageController {
 		ArrayList<MembershipDTO> list = ss.refundview(id);
 		mo.addAttribute("list", list);
 
-		return "payout";
+		return "refundout";
+	}
+	// 관리자페이지 환불 내역 보기
+	@RequestMapping(value = "/adminrefundview")
+	public String adminrefundview(HttpServletRequest request, Model mo) {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		 Service ss = sqlSession.getMapper( Service.class);
+		ArrayList<MembershipDTO> list = ss.adminrefundview(id);
+		mo.addAttribute("list", list);
+
+		return "adminpayoutview";
 	}
 	
 	// 마이페이지 나의 상품 리뷰 보기
@@ -226,55 +240,83 @@ public class MypageController {
 	}	
 	
 	// 주소 목록 추가 페이지
-		@RequestMapping(value = "/addressinput")
-		public String addressInput(HttpServletRequest request) {
+	@RequestMapping(value = "/addressinput")
+	public String addressInput(HttpServletRequest request) {
 
-			return "addressInput";
-		}
-		// 주소 목록 추가 
-		@RequestMapping(value = "/addressSave")
-		public String addressSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			HttpSession hs = request.getSession();
-			String id = (String) hs.getAttribute("id");
-			String addressname = request.getParameter("addressname");
-			String name = request.getParameter("name");
-			String tel = "010-"+ request.getParameter("tel1") + "-" + request.getParameter("tel2");
-			String address = request.getParameter("postcode")+","+request.getParameter("address1")+","+ 
-							request.getParameter("address2");
-			Service ss = sqlSession.getMapper(Service.class);
-			
-			System.out.println(id);
-			System.out.println(addressname);
-			System.out.println(name);
-			System.out.println(tel);
-			System.out.println(address);
-			
-			ss.addressInsert(id,addressname,name,tel,address);
+		return "addressInput";
+	}
+	// 주소 목록 추가 
+	@RequestMapping(value = "/addressSave")
+	public String addressSave(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		String addressname = request.getParameter("addressname");
+		String name = request.getParameter("name");
+		String tel = "010-"+ request.getParameter("tel1") + "-" + request.getParameter("tel2");
+		String address = request.getParameter("postcode")+","+request.getParameter("address1")+","+ 
+						request.getParameter("address2");
+		Service ss = sqlSession.getMapper(Service.class);
+		
+		System.out.println(id);
+		System.out.println(addressname);
+		System.out.println(name);
+		System.out.println(tel);
+		System.out.println(address);
+		
+		ss.addressInsert(id,addressname,name,tel,address);
 			
 
-			  String script = "<script>";
-			    script += "window.opener.location.reload();"; // 부모 창 리로드
-			    script += "window.close();"; // 팝업 창 닫기
-			    script += "window.opener.location.href='./mypageaddresslist';"; // 부모 창 리다이렉트
-			    script += "</script>";
+		String script = "<script>";
+	    script += "window.opener.location.reload();"; // 부모 창 리로드
+	    script += "window.close();"; // 팝업 창 닫기
+	    script += "window.opener.location.href='./mypageaddresslist';"; // 부모 창 리다이렉트
+	    script += "</script>";
 
-			    response.setContentType("text/html;charset=utf-8");
-			    PrintWriter printw = response.getWriter();
-			    printw.print(script);
-			    printw.close();
-			    return null;
+	    response.setContentType("text/html;charset=utf-8");
+	    PrintWriter printw = response.getWriter();
+	    printw.print(script);
+	    printw.close();
+	    return null;
 	}	
-		// 주소 목록 삭제 페이지
-		@ResponseBody
-		@RequestMapping(value = "/adderessDelete")
-		public String adderessDelete(HttpServletRequest request) {
-			Service ss = sqlSession.getMapper(Service.class);
-			int addressnum = Integer.parseInt(request.getParameter("addressnum"));
-			ss.addressDelete(addressnum);
-			
-			
-			return "mypageaddresslist";
-		}
+	// 주소 목록 삭제 페이지
+	@ResponseBody
+	@RequestMapping(value = "/adderessDelete")
+	public String adderessDelete(HttpServletRequest request) {
+		Service ss = sqlSession.getMapper(Service.class);
+		int addressnum = Integer.parseInt(request.getParameter("addressnum"));
+		ss.addressDelete(addressnum);
+		
+		
+		return "mypageaddresslist";
+	}
+		
+	// 마이페이지 마일리지 화면 보기
+	@RequestMapping(value = "/mileageview")
+	public String mileageview(HttpServletRequest request, Model mo) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+
+		Service ss = sqlSession.getMapper( Service.class);
+		ArrayList<CouponDTO> list = ss.mileageview(id);
+		
+		mo.addAttribute("list", list);
+
+		return "mileageview";
+	}
+	
+	// 마이페이지 등급별 혜택 화면 보기
+	@RequestMapping(value = "/rankgift")
+	public String rankgift(HttpServletRequest request, Model mo) throws IOException {
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		Service ss = sqlSession.getMapper( Service.class);
+		ArrayList<MembershipDTO> list = ss.mypageview(id);
+		mo.addAttribute("list", list);
+		
+		return "rankgift";
+	}
+	
 		
 		
 }

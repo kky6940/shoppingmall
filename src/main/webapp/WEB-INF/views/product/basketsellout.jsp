@@ -19,8 +19,8 @@ body{
 h3{
 	text-align: center;
 }
-input[type="text"],
-input[type="number"]{
+.product_sellform input[type="text"],
+.product_sellform input[type="number"]{
     width: 330px;
     padding: 4px;
     font-size: 16px;
@@ -70,7 +70,7 @@ input::-webkit-inner-spin-button {
 .product_sellform{
   	background-color: #fff;
 	border-radius: 9px;
-  	width: 706px;
+  	width: 600px;
   	height: auto;
 	border:1px solid #808080;
 	position: relative;
@@ -160,17 +160,17 @@ input::-webkit-inner-spin-button {
       <h3>주문 / 결제</h3>
       <div class="input_group">
           	  <button type="button" class="btn1" onclick="openAddressPopup()">배송지 목록</button>
+	      <label for="">배송지</label>
+	      <input type="text" name="postcode" class="form-input3" id="postcode" placeholder="우편번호" required="required">
+		  <input type="button" class="btn1" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
+		  <input type="text" name="address1" class="form-input" id="address1" placeholder="주소" required="required"><br>
+		  <input type="text" name="address2" class="form-input" id="address2" placeholder="상세주소" required="required">
       
       	  <input type="hidden" value="${rank }" id="rank">
       	  <label for="name">이름</label> 
       	  <input type="text" name="name" id="name" required="required">
       	  <label for="tel">연락처</label>
       	  <input type="text" name="tel" id="tel" required="required">
-	      <label for="">배송지</label>
-	      <input type="text" name="postcode" class="form-input3" id="postcode" placeholder="우편번호" required="required">
-		  <input type="button" class="btn1" onclick="sample6_execDaumPostcode()" value="우편번호 찾기">
-		  <input type="text" name="address1" class="form-input" id="address1" placeholder="주소" required="required"><br>
-		  <input type="text" name="address2" class="form-input" id="address2" placeholder="상세주소" required="required">
       </div>
      
      <div class="input_group">
@@ -321,7 +321,7 @@ document.getElementById('point').addEventListener('focus', function() {
 });
 
 function rankDiscount(price, rank) {
-    const discounts = {1: 0, 2: 0.02, 3: 0.03, 4: 0.05};
+    const discounts = {1: 0.01, 2: 0.02, 3: 0.03, 4: 0.05};
     return price * discounts[rank];
 }
 
@@ -451,8 +451,7 @@ function kakaopay() {
 	var address1 = document.getElementById('address1').value;
 	var address2 = document.getElementById('address2').value;
 	var address = postcode + ', ' + address1 + ', ' + address2;
-	
-	console.log(address);
+
 	var formData = {
 	     address: address,
 	     name: $('#name').val(),
@@ -467,7 +466,20 @@ function kakaopay() {
 	     guestbuysu: $('#guestbuysu').val(),
 	     totprice: $('#price').val()
 	    };
-	
+
+	console.log("address:", formData.address);
+	console.log("name:", formData.name);
+	console.log("tel:", formData.tel);
+	console.log("request:", formData.request);
+	console.log("basketnum:", formData.basketnum);
+	console.log("usepoint:", formData.usepoint);
+	console.log("savepoint:", formData.savepoint);
+	console.log("usecoupon:", formData.usecoupon);
+	console.log("snum:", formData.snum);
+	console.log("sname:", formData.sname);
+	console.log("guestbuysu:", formData.guestbuysu);
+	console.log("totprice:", formData.totprice);
+
     $.ajax({
         type: 'POST',
         url: 'payready',
@@ -509,13 +521,15 @@ function submitForm(element) {
         alert('결제 방식을 선택해주세요.');
         return; // 함수를 여기서 종료
     }
+    
     if (paymentType === '무통장입금') {
         form.action = 'bankAction';
         form.submit();
 
     } 
-    else if (paymentType === '카카오페이' && $('#price').val()===0) {
-    	// 채우기
+    else if (paymentType === '카카오페이' && $('#price').val()==0) {
+    	form.action = 'bankAction';
+        form.submit();
     }
     else if (paymentType === '카카오페이') {
         kakaopay();
@@ -554,13 +568,11 @@ function sample6_execDaumPostcode() {
                 addr = data.jibunAddress;
             }
 
-        
-
             // 우편번호와 주소 정보를 해당 필드에 넣는다.
-            document.getElementById('sample6_postcode').value = data.zonecode;
-            document.getElementById("sample6_address").value = addr;
+            document.getElementById('postcode').value = data.zonecode;
+            document.getElementById("address1").value = addr;
             // 커서를 상세주소 필드로 이동한다.
-            document.getElementById("sample6_detailAddress").focus();
+            document.getElementById("address2").focus();
         }
     }).open();
 }

@@ -31,14 +31,16 @@ h2{
     padding: 8px;
     border: 1px solid #dddddd;
     background-color: #ffffff;
+    text-align: center;
 }
 
 .ordertable th {
     background-color: #333;
     color: #ffffff;
 }
-
-
+th{
+	text-align: center;
+}
 </style>
 </head>
 <body>
@@ -60,7 +62,7 @@ h2{
 		<td>${aa.orderid }</td>
 		<td>${aa.sname }</td>
 		<td>${aa.paynum }</td>
-		<td>${aa.totprice }</td>
+		<td><f:formatNumber pattern="#,###" value="${aa.totprice }"></f:formatNumber></td>
 		<td>${aa.payendtime }</td>
 		<td>${aa.paystate }</td>
 		<td style="width: 180px; text-align: center;">

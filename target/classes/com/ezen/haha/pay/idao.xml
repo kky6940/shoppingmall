@@ -14,8 +14,9 @@
     </update> 	
  	
  	<insert id="bankinsert">
-		insert into payinfo(orderid,id,name,address,tel,email,payment,snum,sname,paynum,totprice) 
-			values(orderid_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10}) 	
+		insert into payinfo(orderid,id,name,address,tel,email,payment,snum,sname,paynum,totprice,payendtime,paystate) 
+values(orderid_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{param6},#{param7},#{param8},#{param9},#{param10},TO_DATE(#{param11}, 'YYYY-MM-DD HH24:MI:SS'),#{param12})
+
  	</insert>
  	
  	
@@ -41,7 +42,9 @@
  	<update id="productsuupdate">
  		update product set ${psize}size = ${psize}size -${guestbuysu} where snum = #{snum} 
  	</update>
- 	
+ 	<update id="payinfoupdate">
+ 		update payinfo set guestbuysu = #{param1} where orderid =  #{param2}
+ 	</update> 
  	<!-- 이메일 가져오기 -->
  	<select id="email" resultType="String">
  		select email from member where id = #{param1}

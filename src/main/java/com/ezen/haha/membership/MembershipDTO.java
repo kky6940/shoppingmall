@@ -3,6 +3,7 @@ package com.ezen.haha.membership;
 public class MembershipDTO {
 	String id, pw, name, tel, email, pid, address, stringrank;
 	int rank;
+	int point; // 마일리지 포인트
 	
 	public MembershipDTO() {}
 
@@ -77,5 +78,15 @@ public class MembershipDTO {
 	public void setStringrank(String stringrank) {
 		this.stringrank = stringrank;
 	}
+
+	public int getPoint() {
+		return point;
+	}
+
+	public void setPoint(int point) {
+		this.point = point;
+	}
+
+	
 
 }

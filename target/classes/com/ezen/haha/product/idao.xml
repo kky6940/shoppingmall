@@ -36,7 +36,7 @@
 	<insert id="productinsert">
 		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},
 								   #{param6},#{param7},#{param8},#{param9},#{param10},
-								   #{param11},#{param12},#{param13},#{param14})
+								   #{param11},#{param12},#{param13},#{param14},#{param15},0)
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
@@ -144,7 +144,9 @@
 	<select id="totalbasket" resultType="int">
 	   select count(*) from basket where id=#{param1}
 	</select>
-	
+	<select id="totalReview" resultType="int">
+	   select count(*) from productreview 
+	</select>
 	<!-- 장바구니 목록 삭제 -->
 	<delete id="deletebasket">
 		delete from basket where basketnum=#{param1}
@@ -179,13 +181,13 @@
 	<!-- 리뷰 쓰기 전 해당 상품을 구입했는지 체크 -->
 	<!-- 상품 구입 후 상품 구입 목록을 저장하는 DB를 후에 따로 만들어 체크해야함 -->
 	<!-- 지금은 상품 리뷰 DB(productreview)에서 자체 체크 -->
-	<select id="productbuysearch" resultType="java.lang.Integer">
-		select snum from payinfo where id=#{param1} and snum=#{param2}
+	<select id="productbuysearch" resultType="com.ezen.haha.pay.PayDTO">
+		select * from payinfo where id=#{param1} and snum like '%'|| #{param2} ||'%'
 	</select>
 	
 	<!-- 상품 리뷰 입력 후 DB에 저장 -->
 	<insert id="productreviewsave">
-		insert into productreview values(review_seq.nextval,#{param1},#{param2},#{param3},1,#{param4},#{param5},#{param6},sysdate,#{param7},#{param8})
+		insert into productreview values(review_seq.nextval,#{param1},#{param2},#{param3},1,#{param4},#{param5},#{param6},sysdate,#{param7},#{param8},0)
 	</insert>
 	
 	<!-- 상품 리뷰 출력(detailview.jsp) -->
@@ -197,11 +199,25 @@
 		select ${param2}size from product where snum = #{param1}
 	</select>
 	
-	<!-- 베스트 상품 화면 출력 -->
-	<select id="bestproductout" resultType="com.ezen.haha.product.ProductDTO">
-		select * from product where best=1
-	</select>
 	
+	<!-- 베스트 상품 정보(목록) 출력 -->
+	<select id="bestsearchout" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by snum desc) as rn, A.* from (
+        select * from product where best=1) A) where rn between #{param1} and #{param2}
+   </select>
+   <!-- 베스트 상품 정보(목록) 가격 오름순(낮은가격순) 출력 -->
+   <select id="bestsearchouthighest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price) as rn, A.* from (
+        select * from product where best=1) A) where rn between #{param1} and #{param2}
+   </select>
+   <!-- 베스트 상품 정보(목록) 가격 내림순(높은가격순) 출력 -->
+   <select id="bestsearchoutlowest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price desc) as rn, A.* from (
+        select * from product where best=1) A) where rn between #{param1} and #{param2}
+   </select>
 	
 	<!-- 관리자, 상품 정보(목록) 출력 -->
 	<select id="searchout" resultType="com.ezen.haha.product.ProductDTO">      
@@ -224,10 +240,20 @@
 	<select id="totalSearch" resultType="int">
 	   select count(*) from product where stype=#{param1}
 	</select>
+	<!-- 베스트상품 페이징처리 -->
+	<select id="besttotalSearch" resultType="int">
+	   select count(*) from product where best=1
+	</select>
 	
-	<!-- 추천 상품 찾기 -->
+	
+	<!-- 추천 상품 찾기(조건에 맞는 상품 랜덤 10개 출력) -->
 	<select id="recommendsearch" resultType="com.ezen.haha.product.ProductDTO">
-		select * from product where recommend=#{param1}
+	 <![CDATA[
+        select * from (
+        select * from product where recommend=#{param1}
+        order by dbms_random.random )
+        where rownum <= 10
+     ]]> 
 	</select>
 	
 	<select id="searchOutValue" resultType="com.ezen.haha.product.ProductDTO">      
@@ -272,5 +298,51 @@
 	<!-- 쿠폰 목록 불러오기-->
 	<select id="couponlistout" resultType="com.ezen.haha.mypage.CouponDTO">
 		select * from coupon where id = #{param1}
+	</select>
+
+	<update id="updateViewNum">
+		update product set viewnum = viewnum+1  where snum = #{param1} 
+	</update>
+	<!-- 시각화 전에 필요한 데이터(상품 결재한 유저 id의 주민번호) 가져오기 -->
+	<select id="payinfodata" resultType="com.ezen.haha.membership.MembershipDTO">
+		select pid from member where id IN (
+    		select id from payinfo where snum = #{param1} )
+	</select>
+	
+	<select id="productReviewOut" resultType="com.ezen.haha.product.ProductreviewDTO">		
+		select * from (
+        select 
+            row_number() over (order by bnum) as rn, A.* 
+        from (
+            select * from productreview) A
+    	) where rn between #{start} AND #{end}
+	</select>
+	<select id="detailReview" resultType="com.ezen.haha.product.ProductreviewDTO">		
+		select * from productreview where bnum = #{param1}
+	</select>
+	
+	<update id="bestreview">
+		update productreview set bestreview = 1 where bnum = #{param1}
+	</update>
+	<update id="bestreviewout">
+		update productreview set bestreview = 0 where bnum = #{param1}
+	</update>
+	
+	<select id="bestViewNum" resultType="com.ezen.haha.product.ProductDTO">
+	  <![CDATA[
+	    SELECT * FROM (
+	        SELECT * FROM product
+	        ORDER BY viewnum DESC
+	    ) WHERE ROWNUM <= 5
+    ]]>
+	</select>
+	<select id="bestReview" resultType="com.ezen.haha.product.ProductreviewDTO">
+	  <![CDATA[
+	   SELECT * FROM (
+	    SELECT * FROM productreview
+	    WHERE bestreview = 1
+	    ORDER BY dbms_random.value
+	    ) WHERE ROWNUM <= 5
+    ]]>
 	</select>
 </mapper>

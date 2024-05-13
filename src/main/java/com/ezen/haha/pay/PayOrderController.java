@@ -1,6 +1,8 @@
 package com.ezen.haha.pay;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,11 +32,8 @@ public class PayOrderController {
     	
 		return "paycancel";
 	}
-    
-    
-    
+
     //무통장입금
-    
     @RequestMapping(value = "/bankAction")
 	public String bankDepositAction(HttpServletRequest request,Model mo) {
     	HttpSession hs = request.getSession();
@@ -49,7 +48,11 @@ public class PayOrderController {
     	String payment = request.getParameter("payment");
     	String snum = request.getParameter("snum");
     	String email = ss.email(id);
-    	System.out.println("snum:"+snum);
+
+    	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    	Date now = new Date();         
+    	String payEndTime = sdf.format(now);
+    	String paystate = "1";
 
     	String price = request.getParameter("price");
     	price = price.replace(",", "");
@@ -70,15 +73,16 @@ public class PayOrderController {
     		usePoint = Integer.parseInt(point);     		
     	}
     	String useCoupon = request.getParameter("useCoupon");
-
-    	ss.bankinsert(id,name,address,tel,email,payment,snum,sname,paynum,totprice);
+    	PayDTO dto = new PayDTO();
+    	ss.bankinsert(id,name,address,tel,email,payment,snum,sname,paynum,totprice,payEndTime,paystate,dto);
     	
     	String basketnum = request.getParameter("basketnum");
-    	System.out.println(basketnum);
+
+    	// 결재 완료 후 해당 상품 재고 감소 업데이트
     	String[] basketnums = basketnum.split(",");
         for (String basket : basketnums) {
-        	ArrayList<BasketDTO> list = ss.basketInfo(basket);
-        	for(BasketDTO aa : list) {
+        	ArrayList<BasketDTO> basketlist = ss.basketInfo(basket);
+        	for(BasketDTO aa : basketlist) {
         		ss.productsuupdate(aa);
         	}
         	ss.basketDelete(basket);
@@ -95,7 +99,10 @@ public class PayOrderController {
     	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
     	mss.couponTotal(id);
   		ss.pointUpdate(id,usePoint,savePoint);
-    	
+  		System.out.println(payment);
+  		if(payment.equals("카카오페이")) {
+        	return "zeroKakao";
+        }
     	
     	Random random = new Random();
         StringBuilder accountNumber = new StringBuilder();
@@ -111,6 +118,6 @@ public class PayOrderController {
         mo.addAttribute("account", account);
         mo.addAttribute("bankChoice", bankChoice);
     	
-		return "bankaction";
+        return "bankaction";
 	}
 }

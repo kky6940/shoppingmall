@@ -186,7 +186,7 @@ p{
 				<span><a href="basketout">장바구니</a></span>
 				<span><a href="qnahome">고객센터</a></span>
 				<c:if test="${id eq 'admin' }">
-					<span><a href="adminpage">관리자페이지</a></span>
+					<span><a href="adminpagemain">관리자페이지</a></span>
 				</c:if>		
 			</c:otherwise>	
 		</c:choose>
@@ -247,7 +247,7 @@ p{
 				<a href="productinput" class="depth2_list" >입력</a>
 				<a href="productout" class="depth2_list">출력</a>
 				<a href="bestproductout" class="depth2_list">베스트상품</a>
-				<a href="" class="depth2_list">페도라</a>
+				<a href="recommendout" class="depth2_list">추천상품</a>
 			</div>
 		</div>
 	</div>
@@ -283,7 +283,7 @@ p{
 			<td class="admintd"><a href="couponview">쿠폰</a></td>
 		</tr>
 		<tr>
-			<td class="admintd">마일리지</td>
+			<td class="admintd"><a href="mileageview">마일리지</a></td>
 		</tr>
 		
 		

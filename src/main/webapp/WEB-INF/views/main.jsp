@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -396,65 +399,30 @@ H2{
 <div class="best_wrap">
 	<div class="best_box">
     	<div class="best_list clearfix2">
+      	<c:forEach items="${list }" var="aa" varStatus="loop">
       		<div class="best_content">
       			<div class="best_img">
-      				<a href="">
-      				<img alt="" src="resources/image/img_best1.jpg">
+      				<a href="detailview?snum=${aa.snum}"> 
+      				<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+						<c:forEach items="${imageArray}" var="imageName" varStatus="loop2">
+		   					<c:if test="${loop2.index == 0}">
+		       					<img alt="" src="./image/${imageName}">
+		   					</c:if>
+						</c:forEach>
       				</a>
       			</div>
       			<div class="best_str">
-      				<a href="">
-      				<span class="best_rank">1</span>
-      				<span class="best_info">헤비트윌 스니커즈 블랙<br></span> 
-      				<span class="best_info">150,000<br></span>
-      				<span class="best_info">구매 954</span>
+      				<a href="detailview?snum=${aa.snum}">
+      	
+      				<span class="best_rank">${loop.index+1 }</span>
+      				<span class="best_info">${aa.sname }<br></span> 
+      				<span class="best_info"><f:formatNumber value="${aa.price }" pattern="#,###"/><br></span>
+      				<span class="best_info">${aa.viewnum }</span>
       				</a>
       			</div>
       		</div>
-      		<div class="best_content">
-      			<div class="best_img">
-      				<img alt="" src="resources/image/img_best2.jpg">
-      			</div>
-      			<div class="best_str">
-      				<span class="best_rank">2</span>
-      				<span class="best_info">스프링코트 스니커즈 베이지<br></span>
-      				<span class="best_info">150,000<br></span>
-      				<span class="best_info">리뷰 4.5/5<br></span>
-      			</div>
-      		</div>
-      		<div class="best_content">
-      			<div class="best_img">
-      				<img alt="" src="resources/image/img_best3.jpg">
-      			</div>
-      			<div class="best_str">
-      				<span class="best_rank">3<br></span>
-      				<span class="best_info">스니커즈 화이트<br></span>
-      				<span class="best_info">133,000<br></span>
-      				<span class="best_info">좋아요 500<br></span>
-      			</div>
-      		</div>
-      		<div class="best_content">
-      			<div class="best_img">
-      				<img alt="" src="resources/image/img_best4.jpg">
-      			</div>
-      			<div class="best_str">
-      				<span class="best_rank">4</span>
-      				<span class="best_info">헤비트윌 스니커즈 오프화이트<br></span>
-      				<span class="best_info">150,000<br></span>
-      				
-      			</div>
-      		</div>
-      		<div class="best_content">
-      			<div class="best_img">
-      				<img alt="" src="resources/image/img_best5.jpg">
-      			</div>
-      			<div class="best_str">
-      				<span class="best_rank">5</span>
-      				<span class="best_info">스니커즈 블랙<br></span>
-      				<span class="best_info">133,000</span>
-      				
-      			</div>
-      		</div>
+      		
+      		</c:forEach>
       		
 		</div>
 	</div>
@@ -465,78 +433,22 @@ H2{
 <section class="best_review">
 <h2>BEST REVIEW</h2>
 <div class="review_wrap">
-
+		<c:forEach items="${list2 }" var="aa" >
       		<div class="review_content">
       			<div class="review_img">
       				<a href="">
-      				<img alt="" src="resources/image/img_review1.jpg">
+      				<img alt="" src="./image/${aa.bpicture }">
       				</a>
       			</div>
       			<div class="review_str">
-      				<div class="review_tit"><a><span>제목</span> </a> </div>
+      				<div class="review_tit"><a><span>${aa.btitle}</span> </a> </div>
       				<div class="review_sub">
       					<div><a><span>작성자 </span></a></div>  
       					<div><a><span>작성일</span> </a> </div>
       				</div>
       			</div>
       		</div>
-      		<div class="review_content">
-      			<div class="review_img">
-      				<a href="">
-      				<img alt="" src="resources/image/img_review2.jpg">
-      				</a>
-      			</div>
-      			<div class="review_str">
-      				<div class="review_tit"><a><span>제목</span> </a> </div>
-      				<div class="review_sub">
-      					<div><a><span>작성자 </span></a></div>  
-      					<div><a><span>작성일</span> </a> </div>
-      				</div>
-      			</div>
-      		</div>
-      		<div class="review_content">
-      			<div class="review_img">
-      				<a href="">
-      				<img alt="" src="resources/image/img_review3.jpg">
-      				</a>
-      			</div>
-      			<div class="review_str">
-      				<div class="review_tit"><a><span>제목</span> </a> </div>
-      				<div class="review_sub">
-      					<div><a><span>작성자 </span></a></div>  
-      					<div><a><span>작성일</span> </a> </div>
-      				</div>
-      			</div>
-      		</div>
-      		<div class="review_content">
-      			<div class="review_img">
-      				<a href="">
-      				<img alt="" src="resources/image/img_review4.jpg">
-      				</a>
-      			</div>
-      			<div class="review_str">
-      				<div class="review_tit"><a><span>제목</span> </a> </div>
-      				<div class="review_sub">
-      					<div><a><span>작성자 </span></a></div>  
-      					<div><a><span>작성일</span> </a> </div>
-      				</div>
-      			</div>
-      		</div>
-      		<div class="review_content">
-      			<div class="review_img">
-      				<a href="">
-      				<img alt="" src="resources/image/img_review5.jpg">
-      				</a>
-      			</div>
-      			<div class="review_str">
-      				<div class="review_tit"><a><span>제목</span> </a> </div>
-      				<div class="review_sub">
-      					<div><a><span>작성자 </span></a></div>  
-      					<div><a><span>작성일</span> </a> </div>
-      				</div>
-      			</div>
-      		</div>
-      		
+      		</c:forEach>
       		
 		</div>
 	

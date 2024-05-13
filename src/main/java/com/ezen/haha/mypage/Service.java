@@ -34,4 +34,10 @@ public interface Service {
 
 	void addressDelete(int addressnum);
 
+	ArrayList<MembershipDTO> adminrefundview(String id);
+
+	ArrayList<CouponDTO> mileageview(String id);
+
+	ArrayList<ProductDTO> bestproductout();
+
 }

@@ -6,7 +6,8 @@ public class ProductreviewDTO {
 	String sname;
 	int snum;
 	String image;
-	
+	int bestreview;
+	int bnum;
 	public ProductreviewDTO() {}
 
 	public String getId() {
@@ -79,6 +80,22 @@ public class ProductreviewDTO {
 
 	public void setImage(String image) {
 		this.image = image;
+	}
+
+	public int getBestreview() {
+		return bestreview;
+	}
+
+	public void setBestreview(int bestreview) {
+		this.bestreview = bestreview;
+	}
+
+	public int getBnum() {
+		return bnum;
+	}
+
+	public void setBnum(int bnum) {
+		this.bnum = bnum;
 	}
 	
 }

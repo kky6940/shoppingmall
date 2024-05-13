@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 <style type="text/css">
 body{  
-  
+ 
   padding: 0;
   margin: 0;
   width: 100%;
@@ -33,7 +33,7 @@ label{
     margin: 2px 0 2px 0;
     font-weight: 700;	
     vertical-align: middle;
-    
+   
 }
 textarea{
 	width:600px;
@@ -65,7 +65,7 @@ input[type="checkbox"]{
 
 .product_input{
  	margin-top: 24px;
-	width: 100%; 
+	width: 100%;
 	min-width:1360px;
 	position:absolute;
 	display:flex;
@@ -143,7 +143,7 @@ input[type="checkbox"]{
 	      <input type="text" id="snum" name="snum" required="required">
 	      <select name="best" id="best">
 			<option value="0">일반상품지정</option>
-			<option value="1">베스트상품지정</option>
+			<option value="1">인기상품지정</option>
  		 </select>
 		  <select name="recommend">
 		  <option value="1">추천상품지정(온도구별)</option>
@@ -186,15 +186,8 @@ input[type="checkbox"]{
 	      <input type="number" min="0" value="0" name="xlsize" id="xlsize" style="width: 50px; margin: 0 5px;">
 	  </div>
       <div class="input_group">
-			<label for="color">색상</label>
-				<select name="color" id="color">
-					<option value="red">red</option>
-					<option value="blue">blue</option>
-					<option value="green">green</option>
-				</select>
-	  </div>
-      <div class="input_group">
 	      <label for="intro">상품설명</label>
+	      <input type="file" name="info">
 	      <textarea name="intro"></textarea>
       </div>
       <div class="input_group">
@@ -202,14 +195,14 @@ input[type="checkbox"]{
 		  <input type='file' id='btnAtt' multiple='multiple' name="image" />
 		  <div id='att_zone' class="att_zone" data-placeholder='파일을 첨부 하려면 파일 선택 버튼을 클릭하거나 파일을 드래그앤드롭 하세요'></div>
       </div>
-      
+     
       <div class="input_group" style="text-align: center;">
       <input type="submit" value="상품등록" class="btn1">
       </div>
     </div>
-    
-      
-</div> 
+   
+     
+</div>
 
 
 <script type="text/javascript">

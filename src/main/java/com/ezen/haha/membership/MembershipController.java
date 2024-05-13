@@ -119,142 +119,142 @@ public class MembershipController {
 			return null;
 		}
 		//ReqeustParam으로 code값 받기
-				@RequestMapping(value = "/kakaologin", method = RequestMethod.GET)
-				public String kakaoLogin(@RequestParam(value = "code", required = false) String code,HttpServletRequest request, HttpServletResponse response) throws Throwable {
-					KakaoService service = new KakaoService();
-					
-					//code를 보내서 토큰 얻기  
-					String access_Token = service.getAccessToken(code);
-					//토큰보내서 회원정보 가져오기                          
-					HashMap<String, Object> userInfo = service.getUserInfo(access_Token);
-					String email = (String)userInfo.get("email");
-					System.out.println("이메일 : " + email);
-					//회원의 이름과 이메일이 일치하면 로그인    
-					Service ss = sqlSession.getMapper(Service.class);
-					MembershipDTO dto = ss.kakaologin(email);
-					if(dto!=null)
-					{
-						HttpSession hs = request.getSession();
-						hs.setAttribute("membership", dto);
-						hs.setAttribute("loginstate", true);
-						hs.setMaxInactiveInterval(3000);
-						return "redirect:/main";
-					}
-					else {
-						response.setContentType("text/html;charset=utf-8");
-						PrintWriter printw = response.getWriter();
-						printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='memershipjoin2'; </script>");
-						printw.close();
-					}
-					return null;
-				}
+		@RequestMapping(value = "/kakaologin", method = RequestMethod.GET)
+		public String kakaoLogin(@RequestParam(value = "code", required = false) String code,HttpServletRequest request, HttpServletResponse response) throws Throwable {
+			KakaoService service = new KakaoService();
+			
+			//code를 보내서 토큰 얻기  
+			String access_Token = service.getAccessToken(code);
+			//토큰보내서 회원정보 가져오기                          
+			HashMap<String, Object> userInfo = service.getUserInfo(access_Token);
+			String email = (String)userInfo.get("email");
+			System.out.println("이메일 : " + email);
+			//회원의 이름과 이메일이 일치하면 로그인    
+			Service ss = sqlSession.getMapper(Service.class);
+			MembershipDTO dto = ss.kakaologin(email);
+			if(dto!=null)
+			{
+				HttpSession hs = request.getSession();
+				hs.setAttribute("membership", dto);
+				hs.setAttribute("loginstate", true);
+				hs.setMaxInactiveInterval(3000);
+				return "redirect:/main";
+			}
+			else {
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='memershipjoin2'; </script>");
+				printw.close();
+			}
+			return null;
+		}
+		
+		//idsersh Page
+		@RequestMapping(value = "/idforget")
+		public String membership9() {
+			
+			return "idserch";
+		}
+		
+		//idsersh doing
+		@RequestMapping(value = "/idserchgogo")
+		public String membership10(HttpServletRequest request, HttpServletResponse response, Model mo) throws IOException {
+			request.setCharacterEncoding("utf-8");
+			String name = request.getParameter("name");
+			String email = request.getParameter("email");
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<MembershipDTO> list = ss.memberidserch(name,email);
+			if(list!=null)
+			{
+				mo.addAttribute("list", list);
+				return "idfind";
 				
-				//idsersh Page
-				@RequestMapping(value = "/idforget")
-				public String membership9() {
-					
-					return "idserch";
-				}
-				
-				//idsersh doing
-				@RequestMapping(value = "/idserchgogo")
-				public String membership10(HttpServletRequest request, HttpServletResponse response, Model mo) throws IOException {
-					request.setCharacterEncoding("utf-8");
-					String name = request.getParameter("name");
-					String email = request.getParameter("email");
-					Service ss = sqlSession.getMapper(Service.class);
-					ArrayList<MembershipDTO> list = ss.memberidserch(name,email);
-					if(list!=null)
-					{
-						mo.addAttribute("list", list);
-						return "idfind";
-						
-					}
-					else {
-						response.setContentType("text/html;charset=utf-8");
-						PrintWriter printw = response.getWriter();
-						printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
-						printw.close();
-					}
-					return null;
-				}
-				
-				//pwsersh Page
-				@RequestMapping(value = "/pwforget")
-				public String membership11() {
-					
-					return "pwserch";
-				}
-				
-				//pwsersh doing
-				@RequestMapping(value = "/pwserchgogo")
-				public String membership11(HttpServletRequest request, HttpServletResponse response, Model mo) throws IOException {
-				    request.setCharacterEncoding("utf-8");
-				    String id = request.getParameter("id");
-				    String name = request.getParameter("name");
-				    String email = request.getParameter("email");
-				    Service ss = sqlSession.getMapper(Service.class);
-				    MembershipDTO dto = ss.kakaologin(email);
-				    if(dto!=null) //id,pw가 있으면
-				    {
-				        // 임시 비밀번호 생성 
-				        String pw = Randompw.randompw(12);
-				        dto.setPw(pw);
-				        
-				        // 임시 비밀번호로 변경 
-				        ss.updatepw(pw,id);
-				        ArrayList<MembershipDTO> list = ss.memberpwserch(id);
-				        mo.addAttribute("list", list);
-				        return "pwfind";
-				        
-				    }
-				    //id가 없을경우
-				    else if(ss.id_check(id) == null) {
-				        response.setContentType("text/html;charset=utf-8");
-				        PrintWriter printw = response.getWriter();
-				        printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
-				        printw.close();
-				    }
-				    //email이 없을경우
-				    else if(ss.email_check(email) == null) {
-				        response.setContentType("text/html;charset=utf-8");
-				        PrintWriter printw = response.getWriter();
-				        printw.print("<script> alert('입력하신 정보로 가입 된 회원 이메일은 존재하지 않습니다.'); window.location.href='idforget'; </script>");
-				        printw.close();
-				    }
-				    return null;
-				}
-				
-				//naverlogin
-				@RequestMapping(value = "/naverlogin")
-				public String naverlogin(@RequestParam(value = "code", required = false) String code,HttpServletRequest request, HttpServletResponse response) throws Throwable {
-					NaverService service = new NaverService();
-					System.out.println("code##:"+code);
-					String access_Token = service.getAccessToken(code);
-					HashMap<String, Object> userInfo = service.getUserInfo(access_Token);
-					String name = (String)userInfo.get("name");
-					String email = (String)userInfo.get("email");
-					System.out.println("네이버 이름" + name);
-					System.out.println("네이버 이메일" + email);
-					Service ss = sqlSession.getMapper(Service.class);
-					MembershipDTO dto = ss.naverlogin(name);
-					//MembershipDTO dto = ss.naverlogin(name,email);
-					if(dto!=null)
-					{
-						HttpSession hs = request.getSession();
-						hs.setAttribute("membership", dto);
-						hs.setAttribute("loginstate", true);
-						hs.setMaxInactiveInterval(3000);
-						return "redirect:/main";
-					}
-					else {
-						response.setContentType("text/html;charset=utf-8");
-						PrintWriter printw = response.getWriter();
-						printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='.memershipjoin2'; </script>");
-						printw.close();
-					}
-					return null;
-				}
+			}
+			else {
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+				printw.close();
+			}
+			return null;
+		}
+		
+		//pwsersh Page
+		@RequestMapping(value = "/pwforget")
+		public String membership11() {
+			
+			return "pwserch";
+		}
+		
+		//pwsersh doing
+		@RequestMapping(value = "/pwserchgogo")
+		public String membership11(HttpServletRequest request, HttpServletResponse response, Model mo) throws IOException {
+		    request.setCharacterEncoding("utf-8");
+		    String id = request.getParameter("id");
+		    String name = request.getParameter("name");
+		    String email = request.getParameter("email");
+		    Service ss = sqlSession.getMapper(Service.class);
+		    MembershipDTO dto = ss.kakaologin(email);
+		    if(dto!=null) //id,pw가 있으면
+		    {
+		        // 임시 비밀번호 생성 
+		        String pw = Randompw.randompw(12);
+		        dto.setPw(pw);
+		        
+		        // 임시 비밀번호로 변경 
+		        ss.updatepw(pw,id);
+		        ArrayList<MembershipDTO> list = ss.memberpwserch(id);
+		        mo.addAttribute("list", list);
+		        return "pwfind";
+		        
+		    }
+		    //id가 없을경우
+		    else if(ss.id_check(id) == null) {
+		        response.setContentType("text/html;charset=utf-8");
+		        PrintWriter printw = response.getWriter();
+		        printw.print("<script> alert('입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+		        printw.close();
+		    }
+		    //email이 없을경우
+		    else if(ss.email_check(email) == null) {
+		        response.setContentType("text/html;charset=utf-8");
+		        PrintWriter printw = response.getWriter();
+		        printw.print("<script> alert('입력하신 정보로 가입 된 회원 이메일은 존재하지 않습니다.'); window.location.href='idforget'; </script>");
+		        printw.close();
+		    }
+		    return null;
+		}
+		
+		//naverlogin
+		@RequestMapping(value = "/naverlogin")
+		public String naverlogin(@RequestParam(value = "code", required = false) String code,HttpServletRequest request, HttpServletResponse response) throws Throwable {
+			NaverService service = new NaverService();
+			System.out.println("code##:"+code);
+			String access_Token = service.getAccessToken(code);
+			HashMap<String, Object> userInfo = service.getUserInfo(access_Token);
+			String name = (String)userInfo.get("name");
+			String email = (String)userInfo.get("email");
+			System.out.println("네이버 이름" + name);
+			System.out.println("네이버 이메일" + email);
+			Service ss = sqlSession.getMapper(Service.class);
+			MembershipDTO dto = ss.naverlogin(name);
+			//MembershipDTO dto = ss.naverlogin(name,email);
+			if(dto!=null)
+			{
+				HttpSession hs = request.getSession();
+				hs.setAttribute("membership", dto);
+				hs.setAttribute("loginstate", true);
+				hs.setMaxInactiveInterval(3000);
+				return "redirect:/main";
+			}
+			else {
+				response.setContentType("text/html;charset=utf-8");
+				PrintWriter printw = response.getWriter();
+				printw.print("<script> alert('회원가입 먼저 진행 부탁드립니다.'); window.location.href='.memershipjoin2'; </script>");
+				printw.close();
+			}
+			return null;
+		}
 				
 	// 마이페이지 메뉴의 회원정보 수정 화면 보기
 	@RequestMapping(value = "/membershipupdateview")
@@ -266,7 +266,42 @@ public class MembershipController {
 		mo.addAttribute("list", list);
 		
 		return "membershipupdateview";
-	}				
+	}			
+	
+	// 관리자 페이지 회원목록 화면 수정 기능
+	@RequestMapping(value = "/adminmembershipupdateview")
+	public String adminmembershipupdateview(HttpServletRequest request, Model mo) {
+		String id = request.getParameter("id");
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<MembershipDTO> list = ss.membershipsearch(id);
+		mo.addAttribute("list", list);
+		
+		return "adminmembershipupdateview";
+	}
+	// 관리자 페이지 회원 목록 수정
+	@RequestMapping(value = "/adminmembershipupdate")
+	public String adminmembershipupdate(HttpServletRequest request, HttpServletResponse response) throws IOException {	
+		String beforeid = request.getParameter("beforeid");		
+		String newid = request.getParameter("id");
+		String pw = request.getParameter("pw");
+		String name = request.getParameter("name");
+		String tel = request.getParameter("tel");
+		String email = request.getParameter("email");
+		String pid = request.getParameter("pid");
+		String address = request.getParameter("address");
+		
+		Service ss = sqlSession.getMapper(Service.class);
+		ss.membershipupdate(newid,pw,name,tel,email,pid,address,beforeid);
+		
+		response.setContentType("text/html;charset=utf-8");
+		PrintWriter printw = response.getWriter();
+		printw.print("<script> alert('회원정보 수정이 완료되었습니다.'); window.location.href='./adminpagemain'; </script>");
+		printw.close();
+		
+		return "./adminpagemain";
+	}
+	
+	
 	
 	// 마이페이지 메뉴의 회원정보 수정, id 수정 화면
 	@RequestMapping(value = "/updateid")
@@ -319,11 +354,26 @@ public class MembershipController {
 	public String membershipdeleteview(HttpServletRequest request, Model mo) {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
-		Service ss = sqlSession.getMapper(Service.class);
-		ArrayList<MembershipDTO> list = ss.membershipsearch(id); // 쿼리문 재활용
-		mo.addAttribute("list", list);
 		
-		return "membershipdeleteview";
+		if(id.equals("admin"))
+		{
+			String userid = request.getParameter("id");
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<MembershipDTO> list = ss.membershipsearch(userid); // 쿼리문 재활용
+			mo.addAttribute("list", list);
+			
+			return "membershipdeleteview";
+		}
+		else 
+		{
+			Service ss = sqlSession.getMapper(Service.class);
+			ArrayList<MembershipDTO> list = ss.membershipsearch(id); // 쿼리문 재활용
+			mo.addAttribute("list", list);
+			
+			return "membershipdeleteview";
+		}
+		
+		
 	}
 	
 	// 마이페이지 메뉴의 회원 탈퇴 기능
@@ -335,15 +385,31 @@ public class MembershipController {
 		ss.membershipdelete(id);
 		
 		HttpSession hs = request.getSession();
-		hs.removeAttribute("membership");
-		hs.removeAttribute("id");
-		hs.setAttribute("loginstate", false);
+		String adminid = (String) hs.getAttribute("id");
 		
-		response.setContentType("text/html;charset=utf-8");
-		PrintWriter printw = response.getWriter();
-		printw.print("<script> alert('회원탈퇴가 완료되었습니다.'); window.location.href='./main'; </script>");
-		printw.close();
-		return "./main";
+		if(adminid.equals("admin"))
+		{
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('회원탈퇴가 완료되었습니다.'); window.location.href='./adminpagemain'; </script>");
+			printw.close();
+			
+			return "./adminpagemain";
+		}
+		else 
+		{
+			hs.removeAttribute("membership");
+			hs.removeAttribute("id");
+			hs.setAttribute("loginstate", false);
+			
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter printw = response.getWriter();
+			printw.print("<script> alert('회원탈퇴가 완료되었습니다.'); window.location.href='./main'; </script>");
+			printw.close();
+			
+			return "./main";
+		}
+		
 	}
 	
 	@RequestMapping(value = "/roulette")

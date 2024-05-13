@@ -22,8 +22,10 @@ public class PayDTO {
 	int orderid;
 	// 결재 출력용 변수
 	String id,paytype,sname,payendtime,address,name,tel,email,drequest;
-	int snum,paynum,totprice;
+	int paynum,totprice;
+	String snum;
 	String paystate; // 결재 상태, 1 = 결재완료 / 0 = 환불완료
+	String payment;
 	
 	public PayDTO() {
 		super();
@@ -157,10 +159,10 @@ public class PayDTO {
 	public void setTotprice(int totprice) {
 		this.totprice = totprice;
 	}
-	public int getSnum() {
+	public String getSnum() {
 		return snum;
 	}
-	public void setSnum(int snum) {
+	public void setSnum(String snum) {
 		this.snum = snum;
 	}
 	public String getAddress() {
@@ -217,6 +219,13 @@ public class PayDTO {
 	public void setSavepoint(String savepoint) {
 		this.savepoint = savepoint;
 	}
+	public String getPayment() {
+		return payment;
+	}
+	public void setPayment(String payment) {
+		this.payment = payment;
+	}
+	
 	
 }
 

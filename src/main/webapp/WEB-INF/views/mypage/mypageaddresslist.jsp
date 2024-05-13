@@ -90,11 +90,13 @@ a{
 	</div>
 </div>
 </c:forEach>
+<c:if test="${fn:length(list) < 6}">
 <div class="addresslist2">
 	<div class="btn_addressInput">
 		<button class="btn_input" type="button" onclick="addressInput()">+ 추가</button>
 	</div>
 </div>
+</c:if>
 </div>
 
 <script type="text/javascript">

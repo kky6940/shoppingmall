@@ -208,7 +208,7 @@ input[type="number"]{
                     </tr>
 	 </table>    
 	 <div class="cart_mainbtns">
-            <button class="cart_btn left" onclick="history.back()">계속 쇼핑하기</button>
+			<button type="button" class="cart_btn left" onclick="history.back()">계속 쇼핑하기</button>
             <button class="cart_btn right" onclick="submitbasketsellAndcheckboxclick()">주문하기</button>
       </div>
          
@@ -330,6 +330,7 @@ function checkNumber(element) {
 	  
 	}
 }
+
 </script>
 </body>
 </html>

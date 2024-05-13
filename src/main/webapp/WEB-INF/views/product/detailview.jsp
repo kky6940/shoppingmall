@@ -282,7 +282,7 @@ input[type="number"] {
 </div>
 <c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
 <c:if test="${not empty imageArray}">
-    <div class="slide_content">
+    <div >
     <!-- 이미지 첫번째만 가져가기 -->
         <a href="productreviewinput?snum=${aa.snum }&sname=${aa.sname}&image=${imageArray[0]}"><button type="button">리뷰쓰기</button></a>
     </div>
@@ -298,6 +298,9 @@ input[type="number"] {
 <section class="info">
 	<div>
 		<h2 style="text-align: center;">상품설명</h2>
+		<img src="${pageContext.request.contextPath}${visual_image}" width="600px" height="600px" 
+	     style="max-width:100%; height:auto;">
+
 	</div>
 </section>
 <section class="reivew">

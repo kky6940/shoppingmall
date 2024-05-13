@@ -1,10 +1,12 @@
 package com.ezen.haha.product;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import com.ezen.haha.membership.MembershipDTO;
 import com.ezen.haha.mypage.AddressListDTO;
 import com.ezen.haha.mypage.CouponDTO;
+import com.ezen.haha.pay.PayDTO;
 
 public interface Service {
 	ArrayList<ProductDTO> productout(PageDTO dto);
@@ -57,15 +59,13 @@ public interface Service {
 
 	ArrayList<ProductreviewDTO> productreviewout(int snum);
 
-	Integer productbuysearch(String id, int snum);
+	ArrayList<PayDTO> productbuysearch(String id, int snum);
 
 	String stockcheck(int snum, String ssize);
 
 	int totalSearch(String stype);
 
 	ArrayList<ProductDTO> searchout(String stype, int start, int end);
-
-	ArrayList<ProductDTO> bestproductout();
 
 	ArrayList<ProductDTO> recommendsearch(int avgTemp);
 
@@ -84,7 +84,7 @@ public interface Service {
 	String selectFile(int snum);
 
 	void productinsert(int snum, String sname, String stype, String stype_sub, int price, int ssize, int msize,
-			int lsize, int xlsize, String color, String fname, String intro, int best, int recommend);
+			int lsize, int xlsize, String color, String fname, int best2, int best, String infoname, int i);
 
 	int duplicateCheck(String id, int snum, String size);
 
@@ -109,4 +109,32 @@ public interface Service {
 	ArrayList<ProductDTO> searchoutlowest(String stype, int start, int end);
 
 	ArrayList<ProductDTO> searchouthighest(String stype, int start, int end);
+
+	void updateViewNum(int snum);
+
+	int besttotalSearch();
+
+	ArrayList<ProductDTO> bestsearchout(int start, int end);
+
+	ArrayList<ProductDTO> bestsearchoutlowest(int start, int end);
+
+	ArrayList<ProductDTO> bestsearchouthighest(int start, int end);
+
+	ArrayList<MembershipDTO> payinfodata(String stringSnum);
+
+	int totalReview();
+
+	ArrayList<ProductreviewDTO> productReviewOut(PageDTO dto);
+
+	ArrayList<ProductreviewDTO> detailReview(int bnum);
+
+	void bestreview(int bnum);
+
+	void bestreviewout(int bnum);
+
+	ArrayList<ProductDTO> bestViewNum();
+
+	ArrayList<ProductreviewDTO> bestReview();
+
+
 }

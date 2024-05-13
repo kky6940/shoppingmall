@@ -82,26 +82,6 @@ a{
 <body>
 <div class="gray"></div>
 <div class="amdinline"></div>
-<table width="300px" align="left" class="admintable">
-	<tr>
-		<th class="adminth">상품 주문 현황</th>
-	</tr>
-	<tr>
-		<td class="admintd"><a href="payoutview">현재 주문 목록 보기</a></td>
-	</tr>
-	<tr>
-		<td class="admintd">환불 목록 보기</td>
-	</tr>
-	<tr>
-		<td class="admintd">교환 목록 보기</td>
-	</tr>
-	
-	<tr>
-		<th class="adminth">회원 가입 현황</th>
-	</tr>
-	<tr>
-		<td class="admintd"><a href="memberviewall">회원 목록</a></td>
-	</tr>
-</table>
+
 </body>
 </html>

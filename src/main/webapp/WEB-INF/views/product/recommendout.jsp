@@ -7,42 +7,115 @@
 <html>
 <head>
 <style type="text/css">
-	/* 화면 새로고침 하였을 때 alert창이 떴을 시 HTML 글들이 보이는 문제(FOUC(Flash Of Unstyled Content)현상) 수정 */
-	body{
+body{
 		visibility: hidden;
 	}
-	body.visible{
-		visibility: visible;
-	}
-	/* */
-	
-	#tempertext{
-		margin-top: 50px;
-		text-align: center;
-		font-size: 20px;
-	}
-	#recommendlist{
-		margin-top: 50px;
-		text-align: center;
-		
-	}
-	#tempertextrefuse {
+body.visible{
+	visibility: visible;
+}
+#tempertext{
 	margin-top: 50px;
 	text-align: center;
 	font-size: 20px;
-	}
-	hr{
-		height: 2px;
-		background: #000000;
-	}
-	/* 0도 이상이면 빨간색, 0도 아래면 파란색 표기 */
-	.positive {
-    color: red;
-	}
+}
+#recommendlist{
+	margin-top: 50px;
+	text-align: center;
 	
-	.negative {
-	    color: blue;
-	}
+}
+#tempertextrefuse {
+	margin-top: 50px;
+	text-align: center;
+	font-size: 20px;
+}
+hr{
+	height: 2px;
+	background: #000000;
+}
+/* 0도 이상이면 빨간색, 0도 아래면 파란색 표기 */
+.positive {
+   color: red;
+}
+
+.negative {
+    color: blue;
+}
+a{
+	text-decoration: none;
+	color: black;
+}
+h2{
+	text-align: center;
+}
+.product_list{
+	position: relative;
+ 	margin-top: 3%;
+	width: 1920px; 
+	padding-left: 5%;
+	padding-right: 5%;	
+}
+.product_list h3{
+	float: left;
+	margin-left: 47%;
+	margin-top:0;
+	margin-bottom: 30px;
+}
+.product_list p{
+	float: right;
+	margin-bottom: 10px;
+	margin-top: 15px;
+}
+.box{
+	overflow: auto;
+}
+.clear{ 
+	clear: both;
+}
+.product{ 
+	list-style:none;
+	width: 340px;
+	float: left;
+	margin-bottom: 30px;
+	
+}
+.product img{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.product .name{
+	font-weight: bold;
+	font-size: 18px;
+}
+.product .price{
+	font-size: 14px;
+}
+
+.paging {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.paging ul {
+    list-style: none;
+    padding: 0;
+}
+
+.paging ul li {
+    display: inline;
+    margin-right: 5px;
+}
+
+.paging ul li a {
+    text-decoration: none;
+}
+
+.paging ul li b {
+    color: red;
+}
+
+.selected {
+    font-weight: bold;
+}
 </style>
 
 
@@ -125,26 +198,19 @@ function dfs_xy_conv(code, v1, v2) {
 // 사용자에게 위치 정보 제공 요청하기
 function getLocation() {
     if (navigator.geolocation) {
-        var permission = confirm("이 웹사이트에서는 현재 위치 정보를 사용합니다. 위치 정보를 허용하시겠습니까?");
+   
         
-        if (permission) { // 위치 정보 제공 요청 승인하면
+        if (true) { // 위치 정보 제공 요청 승인하면
         	// geolocation GPS API 실행(geolocation GPS API는 HTTP에 내장된 API이기 때문에 이 자바스크립트 선언 하나로 처리가 끝난다.)
         	navigator.geolocation.getCurrentPosition(function(position) {
 //                 showPosition(position); // 위치 정보를 표시하는 함수 호출
                 sendLocation(position); // 날씨 API에 위치 정보 전달 함수 호출
             }, showError);
-        } else {
+        } 
             
-            var tempertextElement = document.getElementById("tempertext");
-            tempertextElement.style.display = "none";
+           
             
-            var recommendlist = document.getElementById("recommendlist");
-            recommendlist.style.display = "none";
-            
-            var tempertextrefuse = document.getElementById("tempertextrefuse");
-            tempertextrefuse.style.display = "block";
-            
-        }
+   
     } else {
         console.log("Geolocation is not supported by this browser.");
     }
@@ -165,7 +231,16 @@ function getLocation() {
 function showError(error) {
 	// 화면
     var locationElement = document.getElementById("location");
-    locationElement.innerHTML = "사용자가 위치 정보 제공을 거부했습니다.";
+    locationElement.innerHTML = "사용자가 위치 정보 제공을 거부했습니다.<br><br>";
+    
+    var tempertextElement = document.getElementById("tempertext");
+    tempertextElement.style.display = "none";
+    
+    var recommendlist = document.getElementById("recommendlist");
+    recommendlist.style.display = "none";
+    
+    var tempertextrefuse = document.getElementById("tempertextrefuse");
+    tempertextrefuse.style.display = "block";
     
     // 콘솔 
     switch(error.code) {
@@ -249,16 +324,16 @@ function displayWeather(weatherData) {
     
     // 평균 온도에 따라 출력문 조절
     if (avgTemp < 5) {
-    	$("#tempertextdetail").text("추운 겨울 날씨네요. 아래 상품을 추천드립니다.");
+    	$("#tempertextdetail").text("날씨가 매우 춥습니다! 추위를 막아줄 두꺼운 코트와 목도리, 장갑을 착용해주세요.");
     }
     else if (avgTemp >= 5 && avgTemp < 15 ) {
-    	$("#tempertextdetail").text("쓸쓸한 날씨네요. 아래 상품을 추천드립니다.");
+    	$("#tempertextdetail").text("쌀쌀한 날씨입니다. 따뜻한 니트와 자켓을 입어보세요. 스카프도 함께하면 따뜻함을 느낄 수 있습니다.");
     }
     else if (avgTemp >= 15 && avgTemp < 20) {
-    	$("#tempertextdetail").text("더운 날씨네요. 아래 상품을 추천드립니다.");
+    	$("#tempertextdetail").text("적당한 날씨입니다! 가볍고 스타일리시한 셔츠나 스웨터를 선택해보세요. 가벼운 재킷을 준비해두면 좋습니다.");
     }
     else if(avgTemp >= 20) {
-    	$("#tempertextdetail").text("무더운 여름 날씨네요. 아래 상품을 추천드립니다.");
+    	$("#tempertextdetail").text("더운 날씨입니다! 시원하고 편안한 반팔 티셔츠를 선택하세요. 가벼운 반바지도 좋습니다.");
     }
     
     // 온도 기준에 따른 추천 상품 출력
@@ -269,39 +344,32 @@ function displayWeather(weatherData) {
         data: JSON.stringify({ "avgTemp": avgTemp }),
         success: function(response) {
         	var html = '';
+        	html += '<div class="product_list">';
+        	html +=	'<div class="box">';
+        	
+            html += '<div class="clear"></div>';
             for (var i = 0; i < response.length; i++) {
                 var aa = response[i];
-                html += '<a href="detailview?snum=' + aa.snum + '">';
-                html += '<div>';
-                html += '<table width="200px" align="center">';
-                html += '<tr>';
-                html += '<td>';
-                if (aa.best == 1) {
-                    html += '베스트 상품';
-                }
-                html += '</td>';
-                html += '</tr>';
-                html += '<tr>';
-                html += '<td>';
+                
+                html += '<ul class="product">';
+                html += '<li><a href="detailview?snum=' + aa.snum + '">';
                 var imageArray = aa.image.split(', ');
                 for (var j = 0; j < imageArray.length; j++) {
                     if (j == 0) {
-                        html += '<img alt="" src="./image/' + imageArray[j] + '" width="100px" height="100px">';
+                        html += '<img alt="" src="./image/' + imageArray[j] + '" width="300px" height="300px">';
                     }
                 }
-                html += '<input type="hidden" name="snum" value="' + aa.snum + '">';
-                html += '</td>';
-                html += '</tr>';
-                html += '<tr>';
-                html += '<td>' + aa.sname + '</td>';
-                html += '</tr>';
-                html += '<tr>';
-                html += '<td>' + formatPrice(aa.price) + '원</td>'; // 가격 포맷 변환
-                html += '</tr>';
-                html += '</table>';
-                html += '</div>';
-                html += '</a>';
+                html += '</a></li>';
+                html += '<li class="name"><a href="detailview?snum=${aa.snum}">' + aa.sname + '</a></li>';
+                html += '<li class="price"><a href="detailview?snum=${aa.snum}">' + formatPrice(aa.price) + '</a></li>';
+                html += '<li class="intro"><a href="detailview?snum=${aa.snum}">' + aa.intro + '</a></li>';
+                html += '<li class="review"><a href="detailview?snum=${aa.snum}">.리뷰갯수</a></li>';
+                html += '</ul>';
+                
             }
+            html += '</div></div>'
+            
+            
             document.getElementById('recommendout').innerHTML = html; // 반복문 종료 후에 결과 출력
         },
         error: function(xhr, status, error) {
@@ -363,6 +431,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- 추천 상품 내용 출력 부분-->
 <div id="recommendout">
 
-</div>	
+
+</div>
+
 </body>
 </html>

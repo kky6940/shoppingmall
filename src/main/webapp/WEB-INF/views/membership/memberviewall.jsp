@@ -44,6 +44,9 @@ h5{
 .searchDiv{
 	float: right;
 }
+th{
+	text-align: center;
+}
 </style>
 </head>
 <body>
@@ -71,6 +74,7 @@ h5{
 			<th>주민번호</th>
 			<th>주소</th>
 			<th>회원등급</th>
+			<th>비고</th>
 		</tr>
 		
 	<c:forEach items="${list }" var="aa">	
@@ -83,12 +87,15 @@ h5{
 			<td>${aa.pid }</td>
 			<td>${aa.address }</td>
 			<td>${aa.rank }</td>
-			
+			<td>
+				<a href="adminmembershipupdateview?id=${aa.id }"><input type="button" value="수정하기"></a>
+				<a href="membershipdeleteview?id=${aa.id }"><input type="button" value="삭제하기"></a>
+			</td>
 		</tr>
 	</c:forEach>
 	
 		<tr>
-			<td colspan="8" align="center">
+			<td colspan="9" align="center">
 				<input type="button" value="이전 화면으로" onclick="history.back()">
 			</td>
 		</tr>

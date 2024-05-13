@@ -13,6 +13,8 @@
 		<result property="address" column="address"/>
 		<result property="stringrank" column="stringrank"/>
 		<result property="rank" column="rank"/>
+		<result property="point" column="point"/>
+		
 	</resultMap>
 	<resultMap type="com.ezen.haha.mypage.CouponDTO" id="coupon">
 		<result property="id" column="id"/>
@@ -26,7 +28,7 @@
 
 	<!-- 마이페이지 화면으로 가기 -->
  	<select id="mypageview" resultMap="coupon">
- 		select m.id, m.name,
+ 		select m.id, m.name,m.point,
        	case when m.rank = 1 then '패밀리'
             when m.rank = 2 then '실버'
             when m.rank = 3 then '골드'
@@ -51,7 +53,11 @@
  	
  	<!-- 관리자페이지에서 결재 목록 보기 화면으로 -->
  	<select id="payoutviewall" resultType="com.ezen.haha.pay.PayDTO">
- 		select * from payinfo
+ 		select tid, orderid, sname, paynum, totprice, payendtime, payment,
+        case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료'
+        end as paystate
+        from payinfo
  	</select>
  	
  	<!-- 관리자페이지에서 회원 목록 보기 화면으로 -->
@@ -77,6 +83,13 @@
             when paystate = 0 then '환불완료'
         end as paystate from payinfo where id=#{param1} and paystate=0
  	</select>
+ 	<!-- 관리자페이지 환불 목록 보기 -->
+ 	<select id="adminrefundview" resultType="com.ezen.haha.pay.PayDTO">
+ 		select tid, orderid, sname, paynum, totprice, payendtime, 
+        case when paystate = 1 then '결재완료'
+            when paystate = 0 then '환불완료'
+        end as paystate from payinfo where paystate=0
+ 	</select>
  	
  	<!-- 마이페이지 나의 리뷰 목록 보기 -->
  	<select id="myproductreview" resultType="com.ezen.haha.product.ProductreviewDTO">
@@ -99,5 +112,17 @@
  	<delete id="addressDelete">
  		delete from addresslist where addressnum=#{param1}
  	</delete>
+	<select id="mileageview" resultType="com.ezen.haha.membership.MembershipDTO">
+ 		select * from member where id=#{param1}
+ 	</select>
 	
+	<!-- 마이페이지 베스트 상품 화면 출력(랜덤 5개 출력) -->
+	<select id="bestproductout" resultType="com.ezen.haha.product.ProductDTO">
+		<![CDATA[
+		select * from (
+	    select * from product where best=1
+	    order by dbms_random.random )
+	    where rownum <= 5
+	    ]]>
+	</select>
 </mapper>

@@ -185,7 +185,7 @@ p{
 				<span><a href="basketout">장바구니</a></span>
 				<span><a href="qnahome">고객센터</a></span>
 				<c:if test="${id eq 'admin' }">
-					<span><a href="adminpage">관리자페이지</a></span>
+					<span><a href="adminpagemain">관리자페이지</a></span>
 				</c:if>		
 			</c:otherwise>	
 		</c:choose>
@@ -246,7 +246,7 @@ p{
 				<a href="productinput" class="depth2_list" >입력</a>
 				<a href="productout" class="depth2_list">출력</a>
 				<a href="bestproductout" class="depth2_list">베스트상품</a>
-				<a href="" class="depth2_list">페도라</a>
+				<a href="recommendout" class="depth2_list">추천상품</a>
 			</div>
 		</div>
 	</div>
@@ -259,10 +259,10 @@ p{
 		<th class="adminth">상품 주문 현황</th>
 	</tr>
 	<tr>
-		<td class="admintd"><a href="payoutviewall">현재 주문 목록 보기</a></td>
+		<td class="admintd"><a href="payoutview">전체 주문 목록 보기</a></td>
 	</tr>
 	<tr>
-		<td class="admintd">환불 목록 보기</td>
+		<td class="admintd"><a href="adminrefundview">환불 목록 보기</a></td>
 	</tr>
 	<tr>
 		<td class="admintd">교환 목록 보기</td>
@@ -275,6 +275,9 @@ p{
 	</tr>
 	<tr>
 		<td class="admintd"><a href="productout">상품 목록</a></td>
+	</tr>
+	<tr>
+		<td class="admintd"><a href="productReviewList">리뷰 목록</a></td>
 	</tr>
 	<tr>
 		<th class="adminth">회원 가입 현황</th>

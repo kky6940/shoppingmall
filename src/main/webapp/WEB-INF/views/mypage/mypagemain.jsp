@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -73,7 +74,7 @@ a{
 }
 a{
 	text-decoration:none;
-	color: gray;
+	
 }
 .bottomline{
 	padding-bottom: 3px;
@@ -111,7 +112,75 @@ h2{
     background-color: #333;
     color: #ffffff;
 }
+.product_list{
+	position: relative;
+ 	margin-top: 3%;
+	width: 1920px; 
+	padding-left: 5%;
+	padding-right: 5%;	
+}
+.product_list h3{
+	float: left;
+	margin-left: 47%;
+	margin-top:0;
+	margin-bottom: 30px;
+}
+.product_list p{
+	float: right;
+	margin-bottom: 10px;
+	margin-top: 15px;
+}
+.box{
+	overflow: auto;
+}
+.clear{ 
+	clear: both;
+}
+.product{ 
+	list-style:none;
+	width: 280px;
+	float: left;
+	margin-bottom: 30px;
+	
+}
+.product img{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.product .name{
+	font-weight: bold;
+	font-size: 18px;
+}
+.product .price{
+	font-size: 14px;
+}
 
+.paging {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.paging ul {
+    list-style: none;
+    padding: 0;
+}
+
+.paging ul li {
+    display: inline;
+    margin-right: 5px;
+}
+
+.paging ul li a {
+    text-decoration: none;
+}
+
+.paging ul li b {
+    color: red;
+}
+
+.selected {
+    font-weight: bold;
+}
 </style>
 <meta charset="UTF-8">
 <title>마이 페이지 메인</title>
@@ -150,7 +219,7 @@ h2{
 				<td class="admintd"><a href="couponview">쿠폰</a></td>
 			</tr>
 			<tr>
-				<td class="admintd">마일리지</td>
+				<td class="admintd"><a href="mileageview">마일리지</a></td>
 			</tr>
 			
 			
@@ -186,7 +255,7 @@ h2{
 			<table width="700px" align="center">
 				<tr>
 					<th>${aa.id}(${aa.membershipdto.name})님의 현재 회원 등급은 ${aa.membershipdto.stringrank } 입니다.</th>
-					<th><a href="#">등급별 혜택</a></th>
+					<th><a href="rankgift">등급별 혜택</a></th>
 				</tr>
 				
 			</table>
@@ -198,7 +267,7 @@ h2{
 				</tr>
 				<tr>
 					<td><a href="couponview">${aa.couponnum }</a></td>
-					<td><a href="#">0M</a></td>
+					<td><a href="mileageview">${aa.membershipdto.point }M</a></td>
 				</tr>
 			</table>
 			
@@ -260,7 +329,28 @@ h2{
 		
 			<table width="400px" align="center">
 				<tr>
-					<th>베스트 상품</th>
+					<div class="product_list">
+					<div class="box">
+						<h3>베스트 상품</h3>
+					<div class="clear"></div>
+				 		<c:forEach items="${list3 }" var="cc">
+							<ul class="product">
+								<li><a href="detailview?snum=${cc.snum}"> 
+									<c:set var="imageArray" value="${fn:split(cc.image, ', ')}" />
+										<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
+						   					<c:if test="${loop.index == 0}">
+						       					<img alt="" src="./image/${imageName}" width="300px" height="360px">
+						   					</c:if>
+										</c:forEach>
+								</a></li>
+								<li class="name"><a href="detailview?snum=${cc.snum}">${cc.sname}</a></li>
+								<li class="price"><a href="detailview?snum=${cc.snum}"><f:formatNumber value="${cc.price }" pattern="#,###"/></a></li>
+								<li class="intro"><a href="detailview?snum=${cc.snum}">${cc.intro }</a></li>
+								<li class="review"><a href="detailview?snum=${cc.snum}">.리뷰갯수</a></li>
+							</ul>
+						</c:forEach>
+					</div>
+					</div>
 				</tr>
 			</table>
 		</div>

@@ -61,20 +61,18 @@ public class PayController {
 		String usecoupon = formData.getOrDefault("usecoupon", "");
 		int guestbuysu = Integer.parseInt(formData.getOrDefault("guestbuysu", ""));
 		String email = ss.email(id);
+		System.out.println("111");
 		
+		String snum =formData.getOrDefault("snum", "");
 		
-		String stringSnum =formData.getOrDefault("snum", "");
-		stringSnum = stringSnum.replace(",", "");
-		int snum = Integer.parseInt(stringSnum); 
-	
 		String stringTotprice =formData.getOrDefault("totprice", "");
 		stringTotprice = stringTotprice.replace(",", "");
 		int totprice = Integer.parseInt(stringTotprice); 
 		PayDTO paydto = new PayDTO();
-		
+		System.out.println("111");
 		paydto.setId(id);
 		ss.insertorderid(paydto);
-		
+		System.out.println("222");
 		String orderid = String.valueOf(paydto.orderid);
 		
         String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
@@ -87,7 +85,7 @@ public class PayController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type","application/json"); // 본문 형식을 JSON 으로 변경, 안하면 카카오 서버가 인식을 못한다.(API 문서에도 명시되어 있음)
         headers.set("Authorization", auth); // 카카오 서버 시크릿 키 인증 틀
-
+        System.out.println("333");
         Map<String, Object> requestBodyMap = new LinkedHashMap<>();
         // 아래는 카카오 결재 API 가 결재 요청에 요구하는 필수 데이터들, 아래 이외의 데이터도 추가해서 넣을 수 있다.(API 문서 참조)
         requestBodyMap.put("cid", "TC0ONETIME"); // 가맹점 id(String), 테스트 아이디 "TC0ONETIME" 입력
@@ -170,7 +168,7 @@ public class PayController {
     	String tid = dto.getTid(); 
     	String id = dto.getPartner_user_id();
     	String orderid = String.valueOf(dto.getOrderid());
-    	int snum = dto.getSnum();
+    	String snum = dto.getSnum();
     	int totprice = dto.getTotal_amount();
     	String address = dto.getAddress();
     	String name = dto.getName();
@@ -179,7 +177,6 @@ public class PayController {
     	String drequest = dto.getDrequest();
     	String basketnum = dto.getBasketnum();
     	String useCoupon = dto.getUsecoupon();
-    	    	
     	String stringSavePoint = dto.getSavepoint();
     	stringSavePoint = stringSavePoint.replace(",", "");
     	int savePoint = Integer.parseInt(stringSavePoint);
@@ -251,14 +248,15 @@ public class PayController {
         	String approved_at = root.get("approved_at").asText(); // 결제 승인 시각
         	
         	int paystate = 1; // 결재 상태 1 = 결재 완료
-        	String payment = "kakaopay"; //결제 방식 구분
+        	String payment = "카카오페이"; //결제 방식 구분
+    
+        	
         	// 결재 완료 후 클라이언트에게 보여줄 부분만 가져와서 DB에(payinfo) 저장
         	Service ss = sqlSession.getMapper(Service.class);
         	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment);
         	
         	// 결재 완료 후 출력
         	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);
-        	
         	// 결재 완료 후 해당 상품 재고 감소 업데이트
         	String[] basketnums = basketnum.split(",");
             for (String basket : basketnums) {

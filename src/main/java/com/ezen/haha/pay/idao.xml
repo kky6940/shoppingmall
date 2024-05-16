@@ -68,23 +68,5 @@ values(orderid_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},#{p
  	<insert id="insertorderid" parameterType="com.ezen.haha.pay.PayDTO" useGeneratedKeys="true" keyProperty="orderid" keyColumn="orderid">
  		insert into payinfo(orderid) values(orderid_seq.nextval)
  	</insert>
- 	<update id="pointRefund">
- 		update member set point = point - #{param1}
- 	</update>
  	
- 	<update id="rankUpdate">
-		update member
-		set rank = 
-		    case 
-		        when #{param2} >= 1500000 then 4
-		        when #{param2} >= 1000000 then 3
-		        when #{param2} >= 500000 then 2
-		        when #{param2} >= 200000 then 1
-		        else 0
-		    end
-		 where id = #{param1}
- 	</update>
- 	<select id="totalPrice" resultType="Integer">
-		select sum(totprice) from payinfo where id = #{param1} 	
-	</select>
 </mapper>

@@ -34,6 +34,4 @@ public interface Service {
 	void couponUpdate(String string, String id);
 
 	void couponTotal(String id);
-	
-	void couponinsert(String id);
 }

@@ -25,7 +25,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.ibatis.session.SqlSession;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +51,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
 
 @Controller
 public class ProductController {
@@ -123,9 +123,6 @@ public class ProductController {
         
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,fname,intro,best,recommend,infoname,0);
-		
-		// 시각화 DB 상품 추가
-		ss.visualinsert(snum);
 		
 		return "redirect:/main";
 	}
@@ -216,7 +213,6 @@ public class ProductController {
 
 		Map<String, Object> requestData = new HashMap<>();
 		requestData.put("ages", ageList);
-		requestData.put("snum", snum);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonData;
@@ -245,9 +241,8 @@ public class ProductController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-	        
-	        // 파이썬에서 만들어진 이미지 불러오기
-	        String image = "/resources/python_image/product_visual_" + snum + ".png";
+
+	        String image = "/resources/python_image/product_visual_image.png";
 	        
 	        // 모델에 그래프 이미지 경로 추가
 	        mo.addAttribute("visual_image", image);
@@ -1170,28 +1165,6 @@ public class ProductController {
 			ss.bestreviewout(bnum);
 
 			return "1";
-		}
-		
-		@ResponseBody
-		@RequestMapping(value = "/takeReview",method = RequestMethod.POST)
-		public void takeDate(HttpServletRequest request, HttpServletResponse response) throws IOException {
-			int bnum = Integer.parseInt(request.getParameter("bnum"));
-			System.out.println(bnum);
-			Service ss = sqlSession.getMapper(Service.class);
-			ProductreviewDTO dto = ss.takeReview(bnum);
-			JSONObject data = new JSONObject();
-			
-			    data.put("id", dto.id);
-			    data.put("sname", dto.sname);
-			    data.put("productrank", dto.productrank);
-			    data.put("bpicture", dto.bpicture);
-			    data.put("bdate", dto.bdate.substring(0,10));
-			    data.put("btitle", dto.btitle);
-			    data.put("bcontent", dto.bcontent);
-			    response.setContentType("application/json");
-			    response.setCharacterEncoding("UTF-8");
-			    response.getWriter().write(data.toString());
-			
 		}
 		
 }

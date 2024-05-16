@@ -296,7 +296,7 @@ input[type="number"] {
 
 
 <section class="info">
-	<div style="text-align: center;">
+	<div>
 		<h2 style="text-align: center;">상품설명</h2>
 		<img src="${pageContext.request.contextPath}${visual_image}" width="600px" height="600px" 
 	     style="max-width:100%; height:auto;">

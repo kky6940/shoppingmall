@@ -345,8 +345,4 @@
 	    ) WHERE ROWNUM <= 5
     ]]>
 	</select>
-	<select id="takeReview" resultType="com.ezen.haha.product.ProductreviewDTO">
-		select * from productreview where bnum = #{param1}
-	</select>
-	
 </mapper>

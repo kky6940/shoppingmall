@@ -64,14 +64,13 @@ pre {
          <td>
          	
          	<input type="text" name="btitle" style="width: 98%;">
+         	
          	<input type="hidden" name="bnum" value="${aa.bnum}">
          	<input type="hidden" name="btype" value="문의답변글">
-         	<input type="hidden" name="user" value="${aa.bid}">
          	<input type="hidden" name="bid" value="관리자">
 	        <input type="hidden" name="groups" value="${aa.groups}">
 	        <input type="hidden" name="step" value="${aa.step}">
-	        <input type="hidden" name="indent" value="${aa.indent}">
-	        <input type="hidden" name="qnastate" value="${aa.qnastate}">
+	        <input type="hidden" name="indent" value="${aa.indent}"> 
          </td>
         </tr>
         

@@ -136,9 +136,5 @@ public interface Service {
 
 	ArrayList<ProductreviewDTO> bestReview();
 
-	ProductreviewDTO takeReview(int bnum);
-
-	void visualinsert(int snum);
-
 
 }

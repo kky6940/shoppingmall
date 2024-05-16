@@ -99,8 +99,7 @@ public class PayOrderController {
     	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
     	mss.couponTotal(id);
   		ss.pointUpdate(id,usePoint,savePoint);
-  		int totalPrice = ss.totalPrice(id);
-  		ss.rankUpdate(id,totalPrice);
+  		System.out.println(payment);
   		if(payment.equals("카카오페이")) {
         	return "zeroKakao";
         }

@@ -147,7 +147,6 @@ input[type="password"]
   background: #000000;
 }
 .buttonmove{
-	padding-top : 30px;
 	padding-left: 70px;
 }
 </style>
@@ -362,10 +361,7 @@ function openPidUpdateWindow() {
 	<div class="member">
 	<c:forEach items="${list }" var="aa">	
     <!-- 필드 id, 비밀번호, 비밀번호 재확인 -->
-   	<h2 style="text-align: center;">회원정보수정</h2>
-   
     <div class="field">
-   
     <b>아이디</b>
     <input type="text" name="id" id="id" class="placehold-text" value=${aa.id } readonly>
     <input type="button" value="ID 수정하기" onclick="openIdUpdateWindow()">

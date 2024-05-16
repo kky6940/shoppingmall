@@ -487,6 +487,7 @@ function kakaopay() {
         data: JSON.stringify(formData),
         success: function (response) {
             // Ajax 요청이 성공하면 다음 페이지로 리디렉션
+           	console.log(response);
         	window.location.href = response;
             
         },

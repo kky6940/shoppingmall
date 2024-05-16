@@ -62,7 +62,7 @@ pre {
         </tr>
         <tr>
 	    <td colspan="4" class="text-left" valign="top" height="300">
-	        <img alt="" id="bpicture" src="./image/${aa.bpicture}" style="max-width: 100%; height: auto;">
+	        <img id="bpicture" src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" alt="" style="max-width: 100%; height: auto;">
 	        
 	        <div>
 	            <pre style="white-space: pre-wrap;border:none;background-color: white;">${aa.bcontent}</pre>    
@@ -72,11 +72,11 @@ pre {
         <tr>
           <td colspan="4" class="text-right">
           <c:choose>
-			<c:when test="${id eq 'admin' }">
+			<c:when test="${id eq 'admin'}">
           	<a href="qnacomment?bnum=${aa.bnum}&step=${aa.step}" class="btn btn-xs btn-info">답글쓰기</a>
           	</c:when>
        	  </c:choose>
-            <a href="qnamodify?bnum=${aa.bnum}&bid=${aa.bid}&step=${aa.step}" class="btn btn-xs btn-info">수정</a>
+            <a href="qnamodify?bnum=${aa.bnum}&bid=${aa.bid}&step=${aa.step}&secret=${secret}" class="btn btn-xs btn-info">수정</a>
             <a href="#" class="btn btn-xs btn-warning" id="delbnt">삭제</a>
             <a href="qna" class="btn btn-xs btn-success">목록</a>
           </td>
@@ -95,7 +95,7 @@ $(document).ready(function(){
 		
 		var bnum = $("input[name='bnum']").val();
 		var bid = $("input[name='bid']").val();
-		var originalbimg = $("#bpicture").attr('src');  //이미지파일 넘길떄는 src로 넘겨야함
+		var originalbimg = $("#bpicture").attr('src');//이미지파일 넘길떄는 src로 넘겨야함
 		
 		var check = confirm("정말로 삭제하시겠습니까?");
 		if (check) {

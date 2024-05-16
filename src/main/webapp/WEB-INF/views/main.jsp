@@ -285,6 +285,13 @@ H2{
 .review_sub span {
     flex: 1;
 }
+
+        .modal-bg {display:none;width:100%;height:100%;position:fixed;top:0;left:0;right:0;background: rgba(0, 0, 0, 0.6);z-index:1000;}
+        .modal-wrap {display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:1000px;height:600px;background:#fff;z-index:1001;    }
+		.modal-close{background: white; border:none; position: absolute; top: 0; right: 0; font-size: 20px; color: gray;}
+	 	.a{width: 360px; padding: 10px 30px; border-bottom: 1px solid #eeeeee;}
+	 	p{margin: 0;}
+		.review-wrap{flex: 1; }
 </style>
 </head>
 <body>
@@ -436,15 +443,15 @@ H2{
 		<c:forEach items="${list2 }" var="aa" >
       		<div class="review_content">
       			<div class="review_img">
-      				<a href="">
+      				<a onclick="popOpen(${aa.bnum})">
       				<img alt="" src="./image/${aa.bpicture }">
       				</a>
       			</div>
       			<div class="review_str">
-      				<div class="review_tit"><a><span>${aa.btitle}</span> </a> </div>
+      				<div class="review_tit"><a onclick="popOpen(${aa.bnum})"><span>${aa.btitle}</span> </a> </div>
       				<div class="review_sub">
-      					<div><a><span>작성자 </span></a></div>  
-      					<div><a><span>작성일</span> </a> </div>
+      					<div><a onclick="popOpen(${aa.bnum})"><span>작성자 </span></a></div>  
+      					<div><a onclick="popOpen(${aa.bnum})"><span>작성일</span> </a> </div>
       				</div>
       			</div>
       		</div>
@@ -453,6 +460,39 @@ H2{
 		</div>
 	
 </section>
+<div class="modal-bg" onClick="javascript:popClose();"></div>
+  <div class="modal-wrap">
+    <div>
+    	<img alt="" src=""> </div>
+  	<div>
+   		<button class="modal-close" onClick="javascript:popClose();">X</button>
+   		<div class="review-wrap">
+   			<div class="a">
+   				<p>상품명</p>	
+   				<p></p>	
+   			</div>
+   			<div class="a">
+   				<p>닉네임</p>
+   				<p></p>
+   			</div>
+   			<div class="a" style="display: flex; justify-content: space-between;">
+    <div>
+        <p>평점</p>
+        <p></p>
+    </div>
+    <div>
+        <p>작성일</p>
+        <p></p>
+    </div>
+</div>
+   			<div class="a">
+   				<p>리뷰내용</p>
+   				<p></p>
+   				<p></p>
+   			</div>
+   		</div>
+   	</div> 
+  </div>
 
 
 
@@ -588,6 +628,55 @@ H2{
     });    
 
   })();
+  
+  
+
+function fetchData(bnum) {
+    $.ajax({
+        url: 'takeReview',
+        type: 'POST',
+        data: {"bnum" : bnum},
+        success: function(data) {
+            // 받아온 데이터를 처리하고 모달에 표시하는 함수 호출
+            displayDataInModal(data);
+        },
+        error: function(xhr, status, error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+}
+
+function displayDataInModal(data) {
+    // 받아온 데이터를 이용하여 모달 내부의 요소들을 채웁니다.
+    console.log(data.sname);
+    console.log(data.id);
+    $('.modal-wrap img').attr('src', './image/' + data.bpicture);
+    $('.modal-wrap .a:nth-child(1) p:nth-child(2)').text(data.sname);
+    $('.modal-wrap .a:nth-child(2) p:nth-child(2)').text(data.id);
+    $('.modal-wrap .a:nth-child(3) div:nth-child(1) p:nth-child(2)').text(data.productrank);
+    $('.modal-wrap .a:nth-child(3) div:nth-child(2) p:nth-child(2)').text(data.bdate);
+    $('.modal-wrap .a:nth-child(4) p:nth-child(2)').text(data.btitle);
+    $('.modal-wrap .a:nth-child(4) p:nth-child(3)').text(data.bcontent);
+}
+
+function popOpen(bnum) {
+
+    var modalPop = $('.modal-wrap');
+    var modalBg = $('.modal-bg'); 
+    fetchData(bnum);
+    $(modalPop).css('display', 'flex');
+    $(modalBg).show();
+
+}
+
+ function popClose() {
+   var modalPop = $('.modal-wrap');
+   var modalBg = $('.modal-bg');
+
+   $(modalPop).hide();
+   $(modalBg).hide();
+
+}
   </script>
 
 </body>

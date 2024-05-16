@@ -58,7 +58,7 @@ public class ProductController {
 	@Autowired
 	SqlSession sqlSession;
 	
-	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\image\\";
+	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\image\\";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
@@ -99,10 +99,7 @@ public class ProductController {
 		String intro = mul.getParameter("intro");
 		int best = Integer.parseInt(mul.getParameter("best"));
 		int recommend = Integer.parseInt(mul.getParameter("recommend"));
-		MultipartFile info = mul.getFile("info");
-		String infoname = info.getOriginalFilename();
-		info.transferTo(new File(imagepath + infoname));
-		System.out.println();
+		
 		String fname = "";
 		List<MultipartFile> fileList = mul.getFiles("image");
 		boolean firstfile = true;
@@ -122,7 +119,7 @@ public class ProductController {
          }
         
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,fname,intro,best,recommend,infoname,0);
+		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,fname,intro,best,recommend,0);
 		
 		return "redirect:/main";
 	}

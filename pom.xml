@@ -90,6 +90,13 @@
 			<version>1</version>
 		</dependency>
 				
+		<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20210307</version> <!-- 라이브러리의 버전을 적절하게 지정 -->
+</dependency>
+				
+				
 		<!-- Servlet -->
 		<dependency>
 			<groupId>javax.servlet</groupId>

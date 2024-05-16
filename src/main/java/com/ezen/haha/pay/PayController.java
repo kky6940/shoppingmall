@@ -61,7 +61,7 @@ public class PayController {
 		String usecoupon = formData.getOrDefault("usecoupon", "");
 		int guestbuysu = Integer.parseInt(formData.getOrDefault("guestbuysu", ""));
 		String email = ss.email(id);
-		System.out.println("111");
+		
 		
 		String snum =formData.getOrDefault("snum", "");
 		
@@ -69,13 +69,13 @@ public class PayController {
 		stringTotprice = stringTotprice.replace(",", "");
 		int totprice = Integer.parseInt(stringTotprice); 
 		PayDTO paydto = new PayDTO();
-		System.out.println("111");
+		
 		paydto.setId(id);
 		ss.insertorderid(paydto);
-		System.out.println("222");
+		
 		String orderid = String.valueOf(paydto.orderid);
 		
-        String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
+        String SECRET_KEY = "DEVEFDEE8BC156E700548072473187B892DAC623"; // 시크릿(secret_key(dev)) 키(테스트용 키)
         String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
         
         ObjectMapper objectMapper = new ObjectMapper();
@@ -85,7 +85,7 @@ public class PayController {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Content-Type","application/json"); // 본문 형식을 JSON 으로 변경, 안하면 카카오 서버가 인식을 못한다.(API 문서에도 명시되어 있음)
         headers.set("Authorization", auth); // 카카오 서버 시크릿 키 인증 틀
-        System.out.println("333");
+        
         Map<String, Object> requestBodyMap = new LinkedHashMap<>();
         // 아래는 카카오 결재 API 가 결재 요청에 요구하는 필수 데이터들, 아래 이외의 데이터도 추가해서 넣을 수 있다.(API 문서 참조)
         requestBodyMap.put("cid", "TC0ONETIME"); // 가맹점 id(String), 테스트 아이디 "TC0ONETIME" 입력
@@ -95,10 +95,11 @@ public class PayController {
         requestBodyMap.put("quantity", guestbuysu); // 상품 개수(int)
         requestBodyMap.put("total_amount", totprice); // 상품 총 금액(int)
         requestBodyMap.put("tax_free_amount", 0); // 상품 비과세 금액(int)
-        requestBodyMap.put("approval_url", "http://localhost:8668/success"); // 결재 성공 시 리다이렉트 링크(String)
-        requestBodyMap.put("fail_url", "http://localhost:8668/fail"); // 결재 실패 시 리다이렉트 링크(String)
-        requestBodyMap.put("cancel_url", "http://localhost:8668/cancel"); // 결재 취소 시 리다이렉트 링크(String)
-
+        requestBodyMap.put("approval_url", "http://localhost:8669/haha/success"); // 결재 성공 시 리다이렉트 링크(String)
+        requestBodyMap.put("fail_url", "http://localhost:8669/haha/fail"); // 결재 실패 시 리다이렉트 링크(String)
+        requestBodyMap.put("cancel_url", "http://localhost:8669/haha/cancel"); // 결재 취소 시 리다이렉트 링크(String)
+        
+        
         String requestBody;
         try {
             requestBody = objectMapper.writeValueAsString(requestBodyMap); // 카카오 서버에 json 형식으로 보내줘야 하기에 타입을 변경
@@ -117,6 +118,8 @@ public class PayController {
         messageConverters.add(stringHttpMessageConverter);
         restTemplate.setMessageConverters(messageConverters);
         // 한글 인코딩 end
+        
+     // 이 중간에 QR 코드가 뜨고 클라이언트가 결재 과정을 진행한다.(카카오 서버에서 직접 처리하는 과정이라 관여할 부분은 없음)
         
         ResponseEntity<String> response = restTemplate.postForEntity(apiUrl, requestEntity, String.class); // 받은 자료들을 response에 저장
 
@@ -147,6 +150,8 @@ public class PayController {
                 dto.setUsecoupon(usecoupon);
                 dto.setUsepoint(usepoint);
                 dto.setSavepoint(savepoint);
+                
+                
                 return ResponseEntity.ok(nextRedirectPcUrl); // PC에서 결재를 진행할 것이기에 nextRedirectPcUrl 링크 사용
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
@@ -157,14 +162,16 @@ public class PayController {
         }
     }
     
-    // 이 중간에 QR 코드가 뜨고 클라이언트가 결재 과정을 진행한다.(카카오 서버에서 직접 처리하는 과정이라 관여할 부분은 없음)
+    
     
     // 결재 승인 요청
     @GetMapping("/success")
-    public ModelAndView payapprove(@RequestParam("pg_token") String pgToken, ModelAndView mv) throws IOException {
+    public ModelAndView payapprove(@RequestParam("pg_token") String pgToken) throws IOException {
     	// 결재 요청 이후 클라이언트가 결재를 진행하고 성공하면 카카오 서버에서 /success?pg_token= 형식의 pg_token 을 리다이렉트로 보내준다.
     	// 그 /success?pg_token= 리다이렉트를 맵핑(/success)으로 받고 @RequestParam("pg_token") 을 사용하여 토큰 정보를 따로 받아준다.
-    	// 이후 pg_token과 tid 및 요구 필수 데이터들을 카카오 서버에 보내어 최종적으로 결재 승인 요청을 진행하고 결재 완료 결과물을 받는다. 
+    	// 이후 pg_token과 tid 및 요구 필수 데이터	들을 카카오 서버에 보내어 최종적으로 결재 승인 요청을 진행하고 결재 완료 결과물을 받는다. 
+    	ModelAndView mv = new ModelAndView();
+    	
     	String tid = dto.getTid(); 
     	String id = dto.getPartner_user_id();
     	String orderid = String.valueOf(dto.getOrderid());
@@ -191,7 +198,7 @@ public class PayController {
     		usePoint = Integer.parseInt(point);     		
     	}
 
-        String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; 
+        String SECRET_KEY = "DEVEFDEE8BC156E700548072473187B892DAC623"; 
         String auth = "SECRET_KEY " + SECRET_KEY; 
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -278,7 +285,8 @@ public class PayController {
         	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
         	mss.couponTotal(id);
       		ss.pointUpdate(id,usePoint,savePoint);
-        	
+        	int totalPrice = ss.totalPrice(id);
+      		ss.rankUpdate(id,totalPrice);
         	// return "redirect:/이동경로" 을 하면 알 수 없는 이유로 화면이 이동하지 않는 문제가 발생(이동이 안되고 그냥 출력문으로 출력됨)
         	// 부득이하게 ModelAndView 를 사용하여 화면 이동
         	mv.addObject("list", list);
@@ -300,8 +308,10 @@ public class PayController {
     public ResponseEntity<String> paycancelrequest(HttpServletRequest request, @RequestBody Map<String, String> formData) throws UnsupportedEncodingException {
 		String tid = formData.getOrDefault("tid", "");
 		int totprice = Integer.parseInt(formData.getOrDefault("totprice", ""));
-     
-		String SECRET_KEY = "DEV226A8224918D673C8A5B24C0065F61B2FAD97"; // 시크릿(secret_key(dev)) 키(테스트용 키)
+		HttpSession hs = request.getSession();
+		String id = (String) hs.getAttribute("id");
+		
+		String SECRET_KEY = "DEVEFDEE8BC156E700548072473187B892DAC623"; // 시크릿(secret_key(dev)) 키(테스트용 키)
         String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -374,7 +384,9 @@ public class PayController {
                 
                 Service ss = sqlSession.getMapper(Service.class);
                 ss.updatepaylist(tid1);
+                int pointRefund = (int)((int)totalAmount * 0.01);
                 
+                ss.pointRefund(id);
                 return ResponseEntity.ok(message); 
             } catch (JsonProcessingException e) {
                 e.printStackTrace();

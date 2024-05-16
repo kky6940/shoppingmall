@@ -2,7 +2,7 @@ package com.ezen.haha.product;
 
 public class ProductDTO {
    int snum, price, totprice, best, ssize, msize, lsize, xlsize,viewnum ;
-   String sname, stype, stype_sub, color, image, intro,recommend;
+   String sname, stype, stype_sub, color, image, intro,recommend,info;
    
 
 public ProductDTO() {}
@@ -136,5 +136,14 @@ public int getViewnum() {
 public void setViewnum(int viewnum) {
 	this.viewnum = viewnum;
 }
+
+public String getInfo() {
+	return info;
+}
+
+public void setInfo(String info) {
+	this.info = info;
+}
    
+
 }

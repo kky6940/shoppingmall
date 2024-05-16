@@ -69,6 +69,7 @@ public class MembershipController {
 		
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.membersave(id,pw,name,tel,email,pid,address);
+		ss.couponinsert(id);
 		return "redirect:/main";
 	}
 	

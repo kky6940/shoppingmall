@@ -94,11 +94,6 @@ th{
 		</tr>
 	</c:forEach>
 	
-		<tr>
-			<td colspan="9" align="center">
-				<input type="button" value="이전 화면으로" onclick="history.back()">
-			</td>
-		</tr>
 </table>
 </div>
 </body>

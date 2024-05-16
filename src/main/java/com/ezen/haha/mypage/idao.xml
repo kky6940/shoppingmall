@@ -125,4 +125,10 @@
 	    where rownum <= 5
 	    ]]>
 	</select>
+	
+	<!-- 시각화 전에 필요한 데이터(상품 결재한 유저 id의 주민번호) 가져오기 -->
+	<select id="payinfodata" resultType="com.ezen.haha.membership.MembershipDTO">
+		select pid from member where id IN (
+    		select id from payinfo where snum = #{param1} )
+	</select>
 </mapper>

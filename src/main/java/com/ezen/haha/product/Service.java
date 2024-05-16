@@ -84,7 +84,7 @@ public interface Service {
 	String selectFile(int snum);
 
 	void productinsert(int snum, String sname, String stype, String stype_sub, int price, int ssize, int msize,
-			int lsize, int xlsize, String color, String fname, int best2, int best, String infoname, int i);
+			int lsize, int xlsize, String color, String fname, int best2, int best, int i);
 
 	int duplicateCheck(String id, int snum, String size);
 
@@ -135,6 +135,10 @@ public interface Service {
 	ArrayList<ProductDTO> bestViewNum();
 
 	ArrayList<ProductreviewDTO> bestReview();
+
+	ProductreviewDTO takeReview(int bnum);
+
+	void visualinsert(int snum);
 
 
 }

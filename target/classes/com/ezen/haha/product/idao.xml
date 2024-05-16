@@ -36,7 +36,7 @@
 	<insert id="productinsert">
 		insert into product values(#{param1},#{param2},#{param3},#{param4},#{param5},
 								   #{param6},#{param7},#{param8},#{param9},#{param10},
-								   #{param11},#{param12},#{param13},#{param14},#{param15},0)
+								   #{param11},#{param12},#{param13},0)
 	</insert>
 
 	<!-- 상품 정보(목록) 출력 -->
@@ -345,4 +345,8 @@
 	    ) WHERE ROWNUM <= 5
     ]]>
 	</select>
+	<select id="takeReview" resultType="com.ezen.haha.product.ProductreviewDTO">
+		select * from productreview where bnum = #{param1}
+	</select>
+	
 </mapper>

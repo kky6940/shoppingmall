@@ -37,6 +37,12 @@ public interface Service {
 
 	void payinfoupdate(String guestbuysu, int partner_order_id1);
 
+	void pointRefund(String id);
+
+	void rankUpdate(String id, int totalPrice);
+
+	int totalPrice(String id);
+
 	
 
 }

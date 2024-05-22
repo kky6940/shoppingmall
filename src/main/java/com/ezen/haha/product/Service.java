@@ -59,8 +59,6 @@ public interface Service {
 
 	ArrayList<ProductreviewDTO> productreviewout(int snum);
 
-	ArrayList<PayDTO> productbuysearch(String id, int snum);
-
 	String stockcheck(int snum, String ssize);
 
 	int totalSearch(String stype);
@@ -119,6 +117,8 @@ public interface Service {
 	ArrayList<ProductDTO> bestsearchoutlowest(int start, int end);
 
 	ArrayList<ProductDTO> bestsearchouthighest(int start, int end);
+	
+	
 
 	ArrayList<MembershipDTO> payinfodata(String stringSnum);
 
@@ -139,6 +139,31 @@ public interface Service {
 	ProductreviewDTO takeReview(int bnum);
 
 	void visualinsert(int snum);
+
+	int totalSubSearch(String stype_sub);
+
+	ArrayList<ProductDTO> subsearchout(String stype_sub, int start, int end);
+
+	ArrayList<ProductDTO> subsearchoutlowest(String stype_sub, int start, int end);
+
+	ArrayList<ProductDTO> subsearchouthighest(String stype_sub, int start, int end);
+
+	ProductDTO selectReview(int i);
+
+	String getImage(int snum);
+
+	String getSname(int snum);
+
+	ArrayList<ProductreviewDTO> checkReview(String id, int snum);
+
+	String deleteFile(String id, int snum);
+
+	int selectBnum(String id, int snum);
+
+	void productreviewupdate(int bnum, String btitle, String bcontent, String fname, int productrank);
+
+	void productReviewDelete(int bnum);
+
 
 
 }

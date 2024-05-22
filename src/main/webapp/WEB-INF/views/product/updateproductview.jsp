@@ -176,8 +176,6 @@ input[type="checkbox"]{
 	  </div>
       <div class="input_group">
 	      <label for="intro">상품설명</label>
-	      <input type="file" name="info">
-	      <input type="hidden" id="info" value="${aa.info}">
 	      <textarea name="intro">${aa.intro }</textarea>
       </div>
       <div class="input_group">

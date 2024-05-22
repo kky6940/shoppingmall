@@ -15,10 +15,11 @@ a{
 }
 .product_list{
 	position: relative;
- 	margin-top: 3%;
-	width: 1920px; 
-	padding-left: 5%;
-	padding-right: 5%;	
+    margin-top: 50px;
+    max-width: 1920px;
+    min-width: 1280px;
+    padding-left: 80px;
+    padding-right: 80px;	
 }
 .product_list h3{
 	float: left;
@@ -38,10 +39,11 @@ a{
 	clear: both;
 }
 .product{ 
-	list-style:none;
-	width: 340px;
-	float: left;
-	margin-bottom: 30px;
+	list-style: none;
+    width: 20%;
+    float: left;
+    margin-bottom: 30px;
+    padding: 0 14px 0 0;
 	
 }
 .product img{
@@ -99,10 +101,10 @@ a{
  		<c:forEach items="${list }" var="aa">
 			<ul class="product">
 				<li><a href="detailview?snum=${aa.snum}"> 
-					<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+					<c:set var="imageArray" value="${fn:split(aa.image, ',')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 		   					<c:if test="${loop.index == 0}">
-		       					<img alt="" src="./image/${imageName}" width="300px" height="360px">
+		       					<img alt="" src="./image/${imageName}" >
 		   					</c:if>
 						</c:forEach>
 				</a></li>

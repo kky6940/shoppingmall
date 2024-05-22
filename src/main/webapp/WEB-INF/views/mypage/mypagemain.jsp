@@ -68,13 +68,20 @@ a{
 	text-align: center;
 	color: gray;
 }
-.admintd a{
-	text-decoration:none;
-	color: gray;
+.admintd a {
+    text-decoration: none;
+    color: #3B5249;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
 }
+
+.admintd a:hover {
+    text-decoration: underline;
+    color: #1D2D50;
+}
+
 a{
-	text-decoration:none;
-	
+	text-decoration: none;
+	color: black;
 }
 .bottomline{
 	padding-bottom: 3px;
@@ -95,7 +102,7 @@ h2{
     position: absolute;
 }
 .ordertable {
-    width: 40%;
+    width: 50%;
     margin-top:20px;
     border-collapse: collapse;
     text-align: center;
@@ -255,7 +262,7 @@ h2{
 			<table width="700px" align="center">
 				<tr>
 					<th>${aa.id}(${aa.membershipdto.name})님의 현재 회원 등급은 ${aa.membershipdto.stringrank } 입니다.</th>
-					<th><a href="rankgift">등급별 혜택</a></th>
+					<th class="admintd"><a href="rankgift">등급별 혜택</a></th>
 				</tr>
 				
 			</table>
@@ -266,8 +273,8 @@ h2{
 					<th>마일리지</th>
 				</tr>
 				<tr>
-					<td><a href="couponview">${aa.couponnum }</a></td>
-					<td><a href="mileageview">${aa.membershipdto.point }M</a></td>
+					<td class="admintd"><a href="couponview">${aa.couponnum }</a></td>
+					<td class="admintd"><a href="mileageview">${aa.membershipdto.point }M</a></td>
 				</tr>
 			</table>
 			
@@ -277,7 +284,7 @@ h2{
 				</tr>
 			</table>
 		
-			<table width="800px" align="center" class="ordertable">
+			<table width="1000px" align="center" class="ordertable">
 			
 				<tr>
 				    <c:choose>
@@ -300,7 +307,7 @@ h2{
 				                        <td><f:formatNumber value="${bb.totprice}" pattern="#,###"/></td>
 				                        <td>${bb.payendtime}</td>
 				                        <td>${bb.paystate}</td>
-				                        <td style="width: 180px; text-align: center;">
+				                        <td class="admintd" style="width: 180px; text-align: center;">
 				                            <a href="paycancel?tid=${bb.tid}"><input type="button" value="환불하기"></a>
 				                            <input type="button" value="교환하기">
 				                        </td>
@@ -321,8 +328,8 @@ h2{
 			
 			<table width="400px" align="center">
 				<tr>
-					<th><a href="guestpayoutview">주문 배송 조회</a></th>
-					<th><a href="refundview">환불/교환/취소 조회</a></th>
+					<th class="admintd"><a href="guestpayoutview">주문 배송 조회</a></th>
+					<th class="admintd"><a href="refundview">환불/교환/취소 조회</a></th>
 				</tr>
 			
 			</table>
@@ -336,7 +343,7 @@ h2{
 				 		<c:forEach items="${list3 }" var="cc">
 							<ul class="product">
 								<li><a href="detailview?snum=${cc.snum}"> 
-									<c:set var="imageArray" value="${fn:split(cc.image, ', ')}" />
+									<c:set var="imageArray" value="${fn:split(cc.image, ',')}" />
 										<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 						   					<c:if test="${loop.index == 0}">
 						       					<img alt="" src="./image/${imageName}" width="300px" height="360px">

@@ -10,7 +10,7 @@
 /* Google web font CDN*/
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
 * {
-    margin: 0; 
+    margin: 0;
     padding: 0; 
     box-sizing: border-box;       
     font-family: 'Noto Sans KR', sans-serif;
@@ -161,7 +161,7 @@ th:first-child {
                    <b><span style="color: blue;">${p}</span></b>
                 </c:when>   
                 <c:when test="${p != paging.nowPage }"> <!-- 현재 페이지가 아니면 페이지 정보를 넘김 -->
-                   <a href="page?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
+                   <a href="faq?nowPage=${p}&cntPerPage=${paging.cntPerPage}">${p}</a>
                 </c:when>   
              </c:choose>
           </c:forEach>

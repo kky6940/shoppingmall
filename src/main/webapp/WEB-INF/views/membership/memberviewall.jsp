@@ -86,7 +86,7 @@ th{
 			<td>${aa.email }</td>
 			<td>${aa.pid }</td>
 			<td>${aa.address }</td>
-			<td>${aa.rank }</td>
+			<td>${aa.stringrank }</td>
 			<td>
 				<a href="adminmembershipupdateview?id=${aa.id }"><input type="button" value="수정하기"></a>
 				<a href="membershipdeleteview?id=${aa.id }"><input type="button" value="삭제하기"></a>

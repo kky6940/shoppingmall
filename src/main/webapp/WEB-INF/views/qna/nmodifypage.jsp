@@ -114,7 +114,6 @@ h2 {
 	<form action="noticemodify" method="post" enctype="multipart/form-data" id="form">
 	<input type="hidden" class="form-control" name="bnum" id="bnum" value="${aa.bnum}">
 	<input type="hidden" class="form-control" name="bid" value="${membership.id}">
-	<input type="hidden" class="form-control" name="bcode" value="notice">
 	<div class="inputform">
 	    <label for="selectbtype">공지유형</label>
 	    <select id="selectbtype" name="btype">

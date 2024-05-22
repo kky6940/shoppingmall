@@ -162,9 +162,9 @@ input[type="checkbox"]{
 	      <select name="stype" id="stype" style="width: auto;" onchange="updateSubCategories()">
 	      	  <option value="">선택하세요</option>
 		      <option value="상의">상의</option>
-		      <option value="바지">바지</option>
+		      <option value="하의">하의</option>
 		      <option value="아우터">아우터</option>
-		      <option value="모자">모자</option>
+		      
 	      </select>
 	       <select id="stype_sub" name="stype_sub" style="width: auto;">
             <option value="">선택하세요</option>
@@ -187,7 +187,6 @@ input[type="checkbox"]{
 	  </div>
       <div class="input_group">
 	      <label for="intro">상품설명</label>
-	      <input type="file" name="info">
 	      <textarea name="intro"></textarea>
       </div>
       <div class="input_group">
@@ -345,29 +344,24 @@ input[type="checkbox"]{
             // Add new options based on the selected category
             switch (selectedCategory) {
                 case '상의':
-                    addOption(stype_sub, '맨투맨');
-                    addOption(stype_sub, '후드티');
-                    addOption(stype_sub, '반소매티셔츠');
-                    addOption(stype_sub, '셔츠/블라우스');
+                    addOption(stype_sub, '티셔츠');
+                    addOption(stype_sub, '반팔티셔츠');
+                    addOption(stype_sub, '니트');
+                    addOption(stype_sub, '셔츠');
                     break;
-                case '바지':
-                    addOption(stype_sub, '데님팬츠');
-                    addOption(stype_sub, '쇼트팬츠/슬랙스');
-                    addOption(stype_sub, '트레이닝/조거팬츠');
-                    addOption(stype_sub, '숏팬츠');
+                case '하의':
+                    addOption(stype_sub, '데님');
+                    addOption(stype_sub, '반바지');
+                    addOption(stype_sub, '긴바지');
+                    addOption(stype_sub, '스포츠');
                     break;
                 case '아우터':
-                    addOption(stype_sub, '후드집업');
-                    addOption(stype_sub, '카디건');
+                    addOption(stype_sub, '패딩');
                     addOption(stype_sub, '코트');
-                    addOption(stype_sub, '블루종');
+                    addOption(stype_sub, '재킷');
+                    addOption(stype_sub, '점퍼');
                     break;
-                case '모자':
-                    addOption(stype_sub, '캡/야구모자');
-                    addOption(stype_sub, '비니');
-                    addOption(stype_sub, '헌팅캡/베레모');
-                    addOption(stype_sub, '페도라');
-                    break;
+                
                 default:
                     break;
             }

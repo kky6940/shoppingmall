@@ -108,12 +108,14 @@ h5{
  				<c:forEach items="${list }" var="aa">
  				 <tr class="cart_list_detail"> 
  				    <td class="adminouttd">						    
- 				    	<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+ 				    	<c:set var="imageArray" value="${fn:split(aa.image, ',')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 		   					<c:if test="${loop.index == 0}">
 		       					<img alt="" src="./image/${imageName}" width="100px" height="100px">
+		       					
 		   					</c:if>
 						</c:forEach>
+						
 					</td> 
 					<td class="adminouttd">${aa.stype}</td>
  				    <td class="adminouttd">${aa.sname}</td> 

@@ -178,18 +178,20 @@
 		update product set sideimage3=#{param1} where snum=#{param2}
 	</update>
 	
-	<!-- 리뷰 쓰기 전 해당 상품을 구입했는지 체크 -->
-	<!-- 상품 구입 후 상품 구입 목록을 저장하는 DB를 후에 따로 만들어 체크해야함 -->
-	<!-- 지금은 상품 리뷰 DB(productreview)에서 자체 체크 -->
-	<select id="productbuysearch" resultType="com.ezen.haha.pay.PayDTO">
-		select * from payinfo where id=#{param1} and snum like '%'|| #{param2} ||'%'
-	</select>
-	
 	<!-- 상품 리뷰 입력 후 DB에 저장 -->
 	<insert id="productreviewsave">
 		insert into productreview values(review_seq.nextval,#{param1},#{param2},#{param3},1,#{param4},#{param5},#{param6},sysdate,#{param7},#{param8},0)
 	</insert>
 	
+	<update id="productreviewupdate">
+		update productreview 
+		set btitle = #{param2}, bcontent = #{param3}, fname = #{param4}, productrank = #{param5}, bdate = sysdate
+		where bnum=#{param1} 
+	</update>
+	
+	<delete id="productReviewDelete">
+		delete from productreview where bnum = #{param1}
+	</delete>
 	<!-- 상품 리뷰 출력(detailview.jsp) -->
 	<select id="productreviewout" resultType="com.ezen.haha.product.ProductreviewDTO">
 		select id,btitle,bcontent,bpicture,to_char(bdate,'yyyy-MM-dd')bdate,productrank from productreview where snum=#{param1}
@@ -221,9 +223,28 @@
 	
 	<!-- 관리자, 상품 정보(목록) 출력 -->
 	<select id="searchout" resultType="com.ezen.haha.product.ProductDTO">      
+      SELECT *
+FROM (
+    SELECT ROW_NUMBER() OVER (ORDER BY p.snum DESC) AS rn,
+           p.*,      
+           pr.avg_productrank AS productrank,
+           pr.review_count AS count
+    FROM product p
+    LEFT JOIN (
+        SELECT snum,
+               AVG(productrank) AS avg_productrank,
+               COUNT(*) AS review_count
+        FROM productreview
+        GROUP BY snum
+    ) pr ON p.snum = pr.snum
+    WHERE p.stype = #{param1}
+)
+WHERE rn BETWEEN #{param2} AND #{param3}
+   </select>
+   <select id="subsearchout" resultType="com.ezen.haha.product.ProductDTO">      
       select * from (
        select row_number() over (order by snum desc) as rn, A.* from (
-        select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
+        select * from product where stype_sub=#{param1}) A) where rn between #{param2} and #{param3}
    </select>
    <!-- 상품 정보(목록) 가격 오름순(낮은가격순) 출력 -->
    <select id="searchouthighest" resultType="com.ezen.haha.product.ProductDTO">      
@@ -237,8 +258,23 @@
        select row_number() over (order by price desc) as rn, A.* from (
         select * from product where stype=#{param1}) A) where rn between #{param2} and #{param3}
    </select>
+   <select id="subsearchouthighest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price) as rn, A.* from (
+        select * from product where stype_sub=#{param1}) A) where rn between #{param2} and #{param3}
+   </select>
+   <select id="subsearchoutlowest" resultType="com.ezen.haha.product.ProductDTO">      
+      select * from (
+       select row_number() over (order by price desc) as rn, A.* from (
+        select * from product where stype_sub=#{param1}) A) where rn between #{param2} and #{param3}
+   </select>
+   
+   
 	<select id="totalSearch" resultType="int">
 	   select count(*) from product where stype=#{param1}
+	</select>
+	<select id="totalSubSearch" resultType="int">
+	   select count(*) from product where stype_sub=#{param1}
 	</select>
 	<!-- 베스트상품 페이징처리 -->
 	<select id="besttotalSearch" resultType="int">
@@ -309,6 +345,7 @@
     		select id from payinfo where snum = #{param1} )
 	</select>
 	
+	
 	<select id="productReviewOut" resultType="com.ezen.haha.product.ProductreviewDTO">		
 		select * from (
         select 
@@ -349,4 +386,28 @@
 		select * from productreview where bnum = #{param1}
 	</select>
 	
+	<!-- 상품 리뷰 목록 이미지 불러오기 -->
+	<select id="getImage" resultType="String">
+		select image from product where snum=#{param1}
+	</select>
+	
+	<!-- 상품 리뷰 목록 상품명 불러오기 -->
+	<select id="getSname" resultType="String">
+		select sname from product where snum=#{param1}
+	</select>
+	<select id="selectReview" resultType="com.ezen.haha.product.ProductDTO">
+		select snum,sname,image from product where snum = #{param1} 
+	</select>
+
+	<select id="checkReview" resultType="com.ezen.haha.product.ProductreviewDTO">
+		select * from productreview where id = #{param1} and snum = #{param2}
+	</select>
+	
+	<select id="deleteFile" resultType="String">
+		select bpicture from productreview where id = #{param1} and snum = #{param2}
+	</select>
+	
+	<select id="selectBnum" resultType="Integer" >
+		select bnum from productreview where id = #{param1} and snum = #{param2} 
+	</select>
 </mapper>

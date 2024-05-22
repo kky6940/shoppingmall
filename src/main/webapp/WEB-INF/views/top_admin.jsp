@@ -7,8 +7,6 @@
 <meta charset="UTF-8">
 <title>Insert title here</title>
 
-
-
 <style type="text/css">
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100..900&display=swap');
 .amdinline{ 
@@ -35,10 +33,17 @@
 	text-align: center;
 	color: gray;
 }
-.admintd a{
-	text-decoration:none;
-	color: gray;
+.admintd a {
+    text-decoration: none;
+    color: #3B5249;
+    transition: color 0.3s ease, text-decoration 0.3s ease;
 }
+
+.admintd a:hover {
+    text-decoration: underline;
+    color: #1D2D50;
+}
+
 .bottomline{
 	padding-bottom: 3px;
 	border-bottom: 1px solid black;
@@ -192,63 +197,40 @@ p{
 	</div>
 	<div class="header_gnb">
 		<div class="gnb_category">
-			<a href="">인기</a>
+			<a href="bestproductout">인기</a>
+		</div>
+		<div class="gnb_category">
+			<a href="recommendout">추천</a>
 		</div>
 		<div class="gnb_category">
 			<a href="product_list?stype=상의" class="gnb_categorylist">상의</a>
 			<div class="depth2">
-				<a href="" class="depth2_list">맨투맨</a>
-				<a href="" class="depth2_list">후드티</a>
-				<a href="" class="depth2_list">반소매 티셔츠</a>
-				<a href="" class="depth2_list">셔츠/블라우스</a>
+				<a href="product_subList?stype_sub=티셔츠" class="depth2_list">티셔츠</a>
+				<a href="product_subList?stype_sub=반팔티셔츠" class="depth2_list">반팔 티셔츠</a>
+				<a href="product_subList?stype_sub=니트" class="depth2_list">니트</a>
+				<a href="product_subList?stype_sub=셔츠" class="depth2_list">셔츠</a>
 			</div>
 		</div>
 		<div class="gnb_category">
-			<a href="">바지</a>
+			<a href="product_list?stype=하의">하의</a>
 			<div class="depth2">
-				<a href="" class="depth2_list">데님팬츠</a>
-				<a href="" class="depth2_list">쇼트팬츠/슬랙스</a>
-				<a href="" class="depth2_list">트레이닝/조거팬츠</a>
-				<a href="" class="depth2_list">숏팬츠</a>
+				<a href="product_subList?stype_sub=데님" class="depth2_list">데님</a>
+				<a href="product_subList?stype_sub=반바지" class="depth2_list">반바지</a>
+				<a href="product_subList?stype_sub=긴바지" class="depth2_list">긴바지</a>
+				<a href="product_subList?stype_sub=스포츠" class="depth2_list">스포츠</a>
 			</div>
 		</div>
 		<div class="gnb_category">
-			<a href="">아우터</a>
+			<a href="product_list?stype=아우터">아우터</a>
 			<div class="depth2">
-				<a href="" class="depth2_list">후드집업</a>
-				<a href="" class="depth2_list">카디건</a>
-				<a href="" class="depth2_list">코트</a>
-				<a href="" class="depth2_list">블루종</a>
-			</div>
-		</div>
-		<div class="gnb_category">
-			<a href="">신발</a>
-			<div class="depth2">
-				<a href="" class="depth2_list">구두</a>
-				<a href="" class="depth2_list">스니커즈</a>
-				<a href="" class="depth2_list">슬리퍼</a>
-				<a href="" class="depth2_list">샌들</a>
-			</div>
-		</div>
-		<div class="gnb_category">
-			<a href="">모자</a>
-			<div class="depth2">
-				<a href="" class="depth2_list">캡/야구모자</a>
-				<a href="" class="depth2_list">비니</a>
-				<a href="" class="depth2_list">헌팅캡/베레모</a>
-				<a href="" class="depth2_list">페도라</a>
+				<a href="product_subList?stype_sub=패딩" class="depth2_list">패딩</a>
+				<a href="product_subList?stype_sub=코트" class="depth2_list">코트</a>
+				<a href="product_subList?stype_sub=재킷" class="depth2_list">재킷</a>
+				<a href="product_subList?stype_sub=점퍼" class="depth2_list">점퍼</a>
 			</div>
 		</div>
 		
-		<div class="gnb_category">
-			<a href="">입력</a>
-			<div class="depth2">
-				<a href="productinput" class="depth2_list" >입력</a>
-				<a href="productout" class="depth2_list">출력</a>
-				<a href="bestproductout" class="depth2_list">베스트상품</a>
-				<a href="recommendout" class="depth2_list">추천상품</a>
-			</div>
-		</div>
+		
 	</div>
 </div>
 <div class="gray"></div>
@@ -264,9 +246,7 @@ p{
 	<tr>
 		<td class="admintd"><a href="adminrefundview">환불 목록 보기</a></td>
 	</tr>
-	<tr>
-		<td class="admintd">교환 목록 보기</td>
-	</tr>
+	
 	<tr>
 		<th class="adminth">상품 관리 현황</th>
 	</tr>

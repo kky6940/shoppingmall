@@ -6,8 +6,8 @@
  	
  	<!-- 고객센터 글쓰기(공지사항) -->
  	<insert id="noticeinsert">
- 		insert into qna(bnum,bid,btype,btitle,bcontent,bpicture,bdate,bcode)
- 		values (bnum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6})
+ 		insert into qna(bnum,bid,btype,btitle,bcontent,bpicture,bdate)
+ 		values (bnum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate)
  	</insert>
  	
  	<!-- 고객센터 출력(공지사항) -->
@@ -15,7 +15,7 @@
  		select * from (
  		select rownum rn,A.* from(
  		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate
- 		from qna where bcode = 'notice' order by bnum desc)A)
+ 		from qna order by bnum desc)A)
  		where rn between #{param1} AND #{param2}
  	</select>
  	
@@ -60,20 +60,20 @@
  		select * from (
  		select rownum rn,A.* from(
  		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate
- 		from qna where bcode = 'notice' and btitle like '%'||#{param1}||'%'
+ 		from qna where btitle like '%'||#{param1}||'%'
  		 order by bnum desc)A)
  		where rn between #{param2} AND #{param3}
  	</select>
 	
 	<!-- FAQ 글쓰기 -->
  	<insert id="faqinsert">
- 		insert into qna(bnum,bid,btype,btitle,bcontent,bpicture,bdate,bcode)
- 		values (bnum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6})
+ 		insert into faq(bnum,bid,btype,btitle,bcontent,bpicture,bdate)
+ 		values (bnum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate)
  	</insert>
  	
  	<!-- faq페이징처리에서 전체레코드수 구하기 -->
 	<select id="total_faq" resultType="int">
-	   select count(*) from qna where bcode = 'faq'
+	   select count(*) from faq
 	</select>
  	
  	<!-- faq 출력 -->
@@ -81,14 +81,14 @@
  		select * from (
  		select rownum rn,A.* from(
  		select bnum,bid,btype,btitle,to_char(bdate, 'YY.MM.DD')bdate,bcontent,bpicture
- 		from qna where bcode = 'faq' order by bnum desc)A)
+ 		from faq order by bnum desc)A)
  		where rn between #{param1} AND #{param2}
  	</select>
  	
 	<!-- faq검색시 페이징처리에서 전체레코드수 구하기 -->
 	<select id="faqserchpageing" resultType="int">
 	    select count(*) from qna
-	    where bcode = 'faq' and (
+	    where (
 	        <choose>
 	            <when test="param1 == 'btitle'">
 	                btitle like '%'||#{param2}||'%'
@@ -109,7 +109,7 @@
 	        select rownum rn, A.* from (
 	            select bnum, bid, btype, btitle, to_char(bdate, 'YY.MM.DD') bdate, bcontent, bpicture
 	            from qna
-	            where bcode = 'faq' and (
+	            where (
 	                <choose>
 	                    <when test="param1 == 'btitle'">
 	                        btitle like '%'||#{param2}||'%'
@@ -130,8 +130,8 @@
 	
 	<!-- qna 글쓰기 DB에 저장 -->
 	<insert id="qnainsert">
- 		insert into qnaboard(bnum,bid,btype,btitle,bcontent,bpicture,bdate,secret,qnastate)
- 		values (qnanum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6},#{param7})
+ 		insert into qnaboard(bnum,bid,btype,btitle,bcontent,bpicture,bdate,secret)
+ 		values (qnanum_seq.nextval,#{param1},#{param2},#{param3},#{param4},#{param5},sysdate,#{param6})
  	</insert>
  	
  	<!-- qna 게시판 출력 -->

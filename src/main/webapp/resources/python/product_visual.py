@@ -54,22 +54,16 @@ plt.ylabel('구입 인원 수')
 plt.title('나이에 따른 구매량')
 plt.xticks(index, age_ranges)
 
-
-# 현재 작업 디렉토리 얻기(경로)
-current_dir = os.getcwd()
-
-
 # 이미지 파일명 설정(상품번호(snum) 이름 뒤에 붙이기)
 image_file = f"product_visual_{data_json['snum']}.png"
 
+# 이미지 저장 경로 설정 (절대 경로)
+relative_image_dir = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\resources\\python_image"
+image_path = os.path.join(relative_image_dir, image_file)
 
-# 이미지 저장 경로 설정
-image_path = os.path.join("C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\resources\\python_image", image_file)
-
-# DB에 저장(update)
-update_query = f"update visual set visual_image='{image_file}' where snum={data_json['snum']}"
-c.execute(update_query)
-connect.commit()
+# 디렉토리가 존재하지 않을 경우 생성
+if not os.path.exists(relative_image_dir):
+    os.makedirs(relative_image_dir, exist_ok=True)
 
 # 이미지 파일이 이미 존재하는지 확인하고, 있다면 삭제
 if os.path.exists(image_path):
@@ -78,3 +72,8 @@ if os.path.exists(image_path):
 # 그래프를 이미지로 저장
 plt.savefig(image_path)
 plt.close()
+
+# DB에 저장(update)
+update_query = f"update visual set visual_image='{image_file}' where snum={data_json['snum']}"
+c.execute(update_query)
+connect.commit()

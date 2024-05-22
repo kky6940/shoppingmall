@@ -100,10 +100,7 @@
       <put-attribute name="title" value="상품수정화면출력"/>
       <put-attribute name="body" value="/WEB-INF/views/product/updateproductview.jsp"/>
    </definition>
-   <definition name="productreviewinput" extends="baseLayout">
-      <put-attribute name="title" value="상품리뷰입력화면"/>
-      <put-attribute name="body" value="/WEB-INF/views/product/productreviewinput.jsp"/>
-   </definition>
+
    <definition name="recommendout" extends="baseLayout">
       <put-attribute name="title" value="추천상품화면"/>
       <put-attribute name="body" value="/WEB-INF/views/product/recommendout.jsp"/>
@@ -248,10 +245,14 @@
   </definition>
   
    <definition name="product_list" extends="baseLayout">
-      <put-attribute name="title" value="공지사항 입력"/> 
+      <put-attribute name="title" value="상품 출력" /> 
       <put-attribute name="body" value="/WEB-INF/views/product/product_list.jsp"/>
   </definition>
-  
+  <definition name="product_subList" extends="baseLayout">
+      <put-attribute name="title" value="상품 출력" /> 
+      <put-attribute name="body" value="/WEB-INF/views/product/product_subList.jsp"/>
+      
+  </definition>
   <definition name="bcontentpage" extends="baseLayout">
       <put-attribute name="title" value="공지사항 입력"/> 
       <put-attribute name="body" value="/WEB-INF/views/qna/bcontentpage.jsp"/>
@@ -323,6 +324,17 @@
       <put-attribute name="title" value="리뷰자세히"/> 
       <put-attribute name="body" value="/WEB-INF/views/product/detailReview.jsp"/>
   </definition>
-  
+    <definition name="productSelectReview" extends="baseLayout">				
+      <put-attribute name="title" value="리뷰선택"/> 
+      <put-attribute name="body" value="/WEB-INF/views/product/productSelectReview.jsp"/>
+  </definition>
+      <definition name="productreviewinput" extends="baseLayout">
+      <put-attribute name="title" value="상품리뷰입력화면"/>
+      <put-attribute name="body" value="/WEB-INF/views/product/productreviewinput.jsp"/>
+   </definition>
    
+   <definition name="productReviewModify" extends="baseLayout">				
+      <put-attribute name="title" value="리뷰수정"/> 
+      <put-attribute name="body" value="/WEB-INF/views/product/productReviewModify.jsp"/>
+  </definition>
 </tiles-definitions>

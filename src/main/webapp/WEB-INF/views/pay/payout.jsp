@@ -47,7 +47,6 @@ th{
 <div class="order_list">
 	<h2>주문 목록</h2>
 <table align="center" class="ordertable">
-
 	<tr>
 		<th>주문번호</th>
 		<th>상품명</th>
@@ -66,8 +65,8 @@ th{
 		<td>${aa.payendtime }</td>
 		<td>${aa.paystate }</td>
 		<td style="width: 180px; text-align: center;">
-			<a href="paycancel?tid=${aa.tid }"><input type="button" value="환불하기"></a>
-			<input type="button" value="교환하기">
+			<a href="productreviewinput?snum=${aa.snum }"><button type="button">리뷰쓰기</button></a>
+			<a href="paycancel?orderid=${aa.orderid }"><input type="button" value="환불하기"></a>
 		</td>
 	</tr>
 </c:forEach>

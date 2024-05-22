@@ -107,7 +107,6 @@ h2 {
    <h2>FAQ 글쓰기</h2>
    <form action="faqsave" method="post" enctype="multipart/form-data" id="form">
    <input type="hidden" class="form-control" name="bid" value="${membership.id}">
-   <input type="hidden" class="form-control" name="bcode" value="faq">
    <div class="inputform">
        <label for="selectbtype">FAQ유형</label>
        <select id="selectbtype" name="btype">

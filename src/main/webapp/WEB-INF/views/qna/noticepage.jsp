@@ -108,12 +108,12 @@ form {
                     </tr>
                 </c:forEach>
             </tbody>
-            <!-- 페이징처리 -->
+<!-- 페이징처리 -->
    <tr style="border-left: none;border-right: none;border-bottom: none">
       <td colspan="7" style="text-align: center;">
       
       <c:if test="${paging.startPage!=1 }"> <!-- 현재 페이지가 1페이지가 아니라면 -->
-         <a href="page?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> <!--"page?nowPage=${paging.startPage-1 } = 시작 페이지에서 -1 빼서 넘김 -->
+         <a href="notice?nowPage=${paging.startPage-1 }&cntPerPage=${paging.cntPerPage}">◀</a> <!--"page?nowPage=${paging.startPage-1 } = 시작 페이지에서 -1 빼서 넘김 -->
          
       </c:if>   
       

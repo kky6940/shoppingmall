@@ -115,11 +115,11 @@ public class QnaController {
 	//공지사항 글쓰기 DB에 저장 (로그인한 관리자만 작성할 수 있게 해야함)
 	@RequestMapping(value = "/noticesave", method = RequestMethod.POST)
 	public String qna4(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
-		String bid = mul.getParameter("bid");
+		String bid = "관리자";
 		String btype = mul.getParameter("btype");
 		String btitle = mul.getParameter("btitle");
 		String bcontent = mul.getParameter("bcontent");
-		String bcode = mul.getParameter("bcode");
+		
 		List<String> filename = new ArrayList<>();
 		
 		List<MultipartFile> fileList = mul.getFiles("bpicture");
@@ -138,7 +138,7 @@ public class QnaController {
 		// 파일 이름 리스트를 쉼표로 구분하여 문자열로 변환해줌
 	    String fname = String.join(",", filename);
 	    Service ss = sqlSession.getMapper(Service.class);
-	    ss.noticeinsert(bid, btype, btitle, bcontent, fname, bcode);
+	    ss.noticeinsert(bid, btype, btitle, bcontent, fname);
 	    
 	    return "redirect:/notice";
 	}
@@ -348,7 +348,7 @@ public class QnaController {
 		String btype = mul.getParameter("btype");
 		String btitle = mul.getParameter("btitle");
 		String bcontent = mul.getParameter("bcontent");
-		String bcode = mul.getParameter("bcode");
+		
 		List<String> filename = new ArrayList<>();
 		
 		List<MultipartFile> fileList = mul.getFiles("bpicture");
@@ -369,7 +369,7 @@ public class QnaController {
 		// 파일 이름 리스트를 쉼표로 구분하여 문자열로 변환해줌
 		String fname = String.join(",", filename);
 		Service ss = sqlSession.getMapper(Service.class);
-		ss.faqinsert(bid, btype, btitle, bcontent, fname, bcode);
+		ss.faqinsert(bid, btype, btitle, bcontent, fname);
 		
 		return "redirect:/faq";
 	}
@@ -472,7 +472,7 @@ public class QnaController {
 			String btitle = mul.getParameter("btitle");
 			String bcontent = mul.getParameter("bcontent");
 			int secret = Integer.parseInt(mul.getParameter("secret"));
-			int qnastate = Integer.parseInt(mul.getParameter("qnastate"));
+			
 			
 			List<String> filename = new ArrayList<>();
 			
@@ -489,7 +489,7 @@ public class QnaController {
 		    String fname = String.join(",", filename);
 
 		    Service ss = sqlSession.getMapper(Service.class);
-		    ss.qnainsert(bid, btype, btitle, bcontent, fname, secret, qnastate);
+		    ss.qnainsert(bid, btype, btitle, bcontent, fname, secret);
 		    return "redirect:/qna";
 		}
 		else

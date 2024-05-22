@@ -141,7 +141,7 @@ input[type="number"]{
 						<!-- 이미지 -->
 						<td class="baskettd">
                             <a href="detailview?snum=${aa.snum}">
-							<c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
+							<c:set var="imageArray" value="${fn:split(aa.productdto.image, ',')}" />
 							<c:forEach items="${imageArray}" var="imageName" varStatus="loop_image">
 		   						<c:if test="${loop_image.index == 0}">
 		       						<img alt="" src="./image/${imageName}" width="80px" height="80px">

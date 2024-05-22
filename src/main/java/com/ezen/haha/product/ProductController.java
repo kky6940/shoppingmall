@@ -25,6 +25,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
 import org.apache.ibatis.session.SqlSession;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,7 +59,11 @@ public class ProductController {
 	@Autowired
 	SqlSession sqlSession;
 	
+	// 이미지 파일 저장 경로
 	String imagepath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\image\\";
+	
+	// 파이썬 파일 실행 경로
+    String pythonScriptPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\product_visual.py";
 	
 	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 	
@@ -121,7 +126,7 @@ public class ProductController {
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.productinsert(snum,sname,stype,stype_sub,price,ssize,msize,lsize,xlsize,fname,intro,best,recommend,0);
 		
-		return "redirect:/main";
+		return "redirect:/productinput";
 	}
 	// DB 데이터 가져온 후 출력 화면으로 가기
 	@RequestMapping(value = "/productout")
@@ -149,10 +154,10 @@ public class ProductController {
 	        }      
 	       
 		    dto = new PageDTO(total,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
-			
+			ArrayList<ProductDTO> list = ss.productout(dto);
 			mo.addAttribute("paging",dto);
-			mo.addAttribute("list", ss.productout(dto));
-			
+			mo.addAttribute("list", list);
+			System.out.println(list);
 			
 			return "productout";
 //		}
@@ -210,6 +215,7 @@ public class ProductController {
 
 		Map<String, Object> requestData = new HashMap<>();
 		requestData.put("ages", ageList);
+		requestData.put("snum", snum);
 		
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonData;
@@ -219,12 +225,10 @@ public class ProductController {
 		try {
 			    jsonData = objectMapper.writeValueAsString(requestData);
 	
-			    // 파이썬 스크립트에 JSON 데이터 전달
-			    String pythonDirectoryPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master.zip_expanded\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\";
-			    String pythonProgramname= "product_visual.py";
-			    String pythonRealname = pythonDirectoryPath + "\\" + pythonProgramname;
-			    ProcessBuilder processBuilder = new ProcessBuilder("python", pythonRealname);
+
+			    ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath);
 			    processBuilder.redirectErrorStream(true);
+			    
 			    Process process = processBuilder.start();
 	
 			    PrintWriter writer = new PrintWriter(process.getOutputStream(), true);
@@ -238,8 +242,8 @@ public class ProductController {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
-	        String image = "/resources/python_image/product_visual_image.png";
+	        
+	        String image = "/resources/python_image/product_visual_"+ snum +".png";
 	        
 	        // 모델에 그래프 이미지 경로 추가
 	        mo.addAttribute("visual_image", image);
@@ -629,45 +633,43 @@ public class ProductController {
 	public String productreviewinput(HttpServletRequest request, Model mo, HttpServletResponse response) throws IOException {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
+		Service ss = sqlSession.getMapper(Service.class);
 		
-		if(id != null) // 로그인 유무 체크
-		{
-			int snum = Integer.parseInt(request.getParameter("snum"));
-			String sname = request.getParameter("sname");
-			String image = request.getParameter("image");
-			
-			// 리뷰 쓰기 전 해당 상품을 구입했는지 체크			
-			Service ss = sqlSession.getMapper(Service.class);
-			ArrayList<PayDTO> buysnum = ss.productbuysearch(id,snum);
-			
-			if(buysnum.isEmpty())
-			{
-				response.setContentType("text/html;charset=utf-8");
-				PrintWriter printw = response.getWriter();
-				printw.print("<script> alert('상품 구입 기록이 없습니다.'); window.history.back(); </script>");
-				printw.close();
-				return null;
+		String snumber = request.getParameter("snum");
+		String [] snumbers  = snumber.split(",");
+		int snum = Integer.parseInt(snumbers[0]);
+		
+		ArrayList<ProductDTO> list = new ArrayList<ProductDTO>();
+		if(snumbers.length >= 2) {
+			for(int i = 0; i<snumbers.length; i++) {
+				 list.add(ss.selectReview(Integer.parseInt(snumbers[i])));	
+				 String [] images = list.get(i).image.split(",");
+				 String image = images[0];
+				 list.get(i).setImage(image);
+			}
+			mo.addAttribute("list",list);
+		
+			return "productSelectReview";
+		}
+		else {
+			ArrayList<ProductreviewDTO> reviewList = ss.checkReview(id,snum);
+			if(!reviewList.isEmpty()) {
 				
-			}
-			else
-			{
-				mo.addAttribute("snum", snum);
-				mo.addAttribute("sname", sname);
-				mo.addAttribute("image", image);
-				return "productreviewinput";
+				mo.addAttribute("list", reviewList);
+				return "productReviewModify";
 			}
 			
+				list.add(ss.selectReview(snum));	
+				String [] images = list.get(0).image.split(",");
+				String image = images[0];
+				list.get(0).setImage(image);
+			
+				mo.addAttribute("list",list);
+			
+			return "productreviewinput";
 		}
-		else
-		{
-			response.setContentType("text/html;charset=utf-8");
-			PrintWriter printw = response.getWriter();
-			printw.print("<script> alert('로그인이 필요합니다.'); window.location.href='./login'; </script>");
-			printw.close();
-			return "redirect:./login";
-		}
-		
 	}
+	
 	
 	// 상품 리뷰 입력 후 DB에 저장
 	@RequestMapping(value = "/productreviewsave", method = RequestMethod.POST)
@@ -688,8 +690,52 @@ public class ProductController {
 		Service ss = sqlSession.getMapper(Service.class);
 		ss.productreviewsave(snum,sname,id,btitle,bcontent,fname,productrank,image);
 		
-		return "redirect:/productout";
+		return "redirect:/myproductreview";
 	}
+	
+	// 상품 리뷰 업데이트
+		@RequestMapping(value = "/productreviewupdate", method = RequestMethod.POST)
+		public String productreviewupdate(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
+			Service ss = sqlSession.getMapper(Service.class);
+			HttpSession hs = mul.getSession();
+			String id = (String) hs.getAttribute("id"); 
+			String btitle = mul.getParameter("btitle");
+			int snum = Integer.parseInt(mul.getParameter("snum"));
+			String sname = mul.getParameter("sname");
+			String bcontent = mul.getParameter("bcontent");
+			int productrank = Integer.parseInt(mul.getParameter("productrank"));
+			int bnum = ss.selectBnum(id,snum);
+			String deleteFile = ss.deleteFile(id,snum);
+			File imageFile = new File(imagepath+deleteFile);
+			imageFile.delete();
+			
+			MultipartFile mf = mul.getFile("bpicture");
+			String fname = mf.getOriginalFilename();
+			mf.transferTo(new File(imagepath+"\\"+fname));
+			
+			ss.productreviewupdate(bnum,btitle,bcontent,fname,productrank);
+			
+			return "redirect:/myproductreview";
+		}
+		
+		// 상품 리뷰 삭제
+		@ResponseBody
+		@RequestMapping(value = "/productReviewDelete", method = RequestMethod.GET)
+		public String productReviewDelete(HttpServletRequest request,HttpServletResponse response) throws IOException {
+			Service ss = sqlSession.getMapper(Service.class);
+			HttpSession hs = request.getSession();
+			String id = (String) hs.getAttribute("id"); 
+			int snum = Integer.parseInt(request.getParameter("snum"));
+			int bnum = ss.selectBnum(id,snum);
+
+			String deleteFile = ss.deleteFile(id,snum);
+			File imageFile = new File(imagepath+deleteFile);
+			imageFile.delete();
+			
+			ss.productReviewDelete(bnum);
+			
+			return "삭제완료";
+		}
 	// detailview.jsp ajax 수량 체크
 	@ResponseBody
 	@RequestMapping(value = "/stockcheck", method = RequestMethod.POST)
@@ -961,8 +1007,54 @@ public class ProductController {
       
 	      mo.addAttribute("paging",dto);
 	      mo.addAttribute("stype",stype);
+	      
 	      return "product_list";
 	   }
+	
+	@RequestMapping(value = "/product_subList", method = RequestMethod.GET)
+	public String product_subList(HttpServletRequest request, PageDTO dto, Model mo) {
+		System.out.println("111");
+	      String stype_sub = request.getParameter("stype_sub");
+	      System.out.println("111");
+	      String nowPage=request.getParameter("nowPage");
+	      String cntPerPage=request.getParameter("cntPerPage");
+	      String sort =  request.getParameter("sort");
+	      Service ss = sqlSession.getMapper(Service.class);
+	      int totalSearch=ss.totalSubSearch(stype_sub);  
+	        
+	      System.out.println("222");
+	      System.out.println(sort);
+    if(nowPage==null && cntPerPage == null) {
+       nowPage="1";
+       cntPerPage="10";
+    }
+    else if(nowPage==null) {
+       nowPage="1";
+    }
+    else if(cntPerPage==null) {
+       cntPerPage="10";
+    }      
+   dto = new PageDTO(totalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
+
+   if(sort == null || sort.equals("latest")) {
+  	 mo.addAttribute("list", ss.subsearchout(stype_sub,dto.getStart(),dto.getEnd()));
+  	 mo.addAttribute("sort", "latest");
+   }
+   else if(sort.equals("highest")){
+  	 mo.addAttribute("list", ss.subsearchoutlowest(stype_sub,dto.getStart(),dto.getEnd()));
+  	 mo.addAttribute("sort", "highest");
+   }
+   else if(sort.equals("lowest")){
+  	 mo.addAttribute("list", ss.subsearchouthighest(stype_sub,dto.getStart(),dto.getEnd()));
+  	 mo.addAttribute("sort", "lowest");
+   }
+   
+	      mo.addAttribute("paging",dto);
+	      mo.addAttribute("stype_sub",stype_sub);
+	      return "product_subList";
+	   }
+	
+	
 	
 	
 	@RequestMapping(value = "/product_search", method = RequestMethod.GET)
@@ -1163,6 +1255,27 @@ public class ProductController {
 
 			return "1";
 		}
+		
+		@ResponseBody
+		@RequestMapping(value = "/takeReview")
+		public void takeReview(HttpServletRequest request, HttpServletResponse response) throws IOException {
+			int bnum = Integer.parseInt(request.getParameter("bnum"));
+			Service ss = sqlSession.getMapper(Service.class);
+			ProductreviewDTO dto = ss.takeReview(bnum);
+			JSONObject data = new JSONObject();
+			    
+			data.put("bpicture", dto.bpicture);
+			data.put("sname", dto.sname);
+			data.put("id", dto.id);    
+			data.put("productrank", dto.productrank);    
+			data.put("bdate", dto.bdate);    
+			data.put("btitle", dto.btitle);    
+			data.put("bcontent", dto.bcontent);    
+			    
+		    response.setContentType("application/json");
+		    response.setCharacterEncoding("UTF-8");
+		    response.getWriter().write(data.toString());
+		} 
 		
 }
 	

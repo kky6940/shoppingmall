@@ -199,7 +199,7 @@ input::-webkit-inner-spin-button {
 			<c:forEach items="${list}" var="aa">
 			    <div class="product_view">
 			        <div>
-			            <c:set var="imageArray" value="${fn:split(aa.productdto.image, ', ')}" />
+			            <c:set var="imageArray" value="${fn:split(aa.productdto.image, ',')}" />
 			            <c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 			                <c:if test="${loop.index == 0}">
 			                    <img alt="" src="./image/${imageName}" width="70px" height="70px">
@@ -295,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     var  rankdiscount = rankDiscount(totPrice, rank);
     var  finalPrice = totPrice - rankdiscount;
-
+    
     // 입력 필드에 값을 설정
     document.getElementById('totprice').value = numberWithCommas(totPrice);
     document.getElementById('price').value = numberWithCommas(totPrice);
@@ -321,7 +321,7 @@ document.getElementById('point').addEventListener('focus', function() {
 });
 
 function rankDiscount(price, rank) {
-    const discounts = {1: 0.01, 2: 0.02, 3: 0.03, 4: 0.05};
+    const discounts = {1: 0.00, 2: 0.02, 3: 0.03, 4: 0.05};
     return price * discounts[rank];
 }
 
@@ -403,6 +403,7 @@ function allPointsPrice() {
     // 할인 금액과 최종 금액 업데이트
     document.getElementById('saleprice').value = numberWithCommas(salePrice);
     document.getElementById('price').value = numberWithCommas(finalPrice);
+    
     if(rankdiscount>0){
 	    html += "<p>&nbsp;ㄴ 등급할인 -" + numberWithCommas(rankdiscount) + " </p>";
     }

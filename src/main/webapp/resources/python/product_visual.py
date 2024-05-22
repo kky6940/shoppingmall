@@ -1,4 +1,6 @@
 from matplotlib import pyplot as plt
+from matplotlib.ticker import MaxNLocator
+
 import numpy as np
 import sys
 import json
@@ -48,9 +50,19 @@ index = np.arange(len(age_ranges))
 
 plt.bar(index, age_counts)
 
+# 색상 설정
+colors = ['#ff9999', '#ffcc99', '#ffff99', '#ccff99', '#99ccff', '#c2c2f0']
+
+# 그래프 생성
+plt.bar(index, age_counts, color=colors[:len(age_counts)])
+
+# y축 레이블을 정수로만 표시하도록 설정
+plt.gca().yaxis.set_major_locator(MaxNLocator(integer=True))
+
+
 # 축 및 제목 설정
 plt.xlabel('나이 분포')
-plt.ylabel('구입 인원 수')
+plt.ylabel('구입 인원 수 (명)')
 plt.title('나이에 따른 구매량')
 plt.xticks(index, age_ranges)
 

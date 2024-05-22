@@ -137,8 +137,7 @@ public class MembershipController {
 			{
 				HttpSession hs = request.getSession();
 				hs.setAttribute("membership", dto);
-				hs.setAttribute("loginstate", true);
-				hs.setMaxInactiveInterval(3000);
+				hs.setAttribute("loginstate", true);	
 				return "redirect:/main";
 			}
 			else {
@@ -200,7 +199,6 @@ public class MembershipController {
 		    {
 		        // 임시 비밀번호 생성 
 		        String pw = Randompw.randompw(12);
-		        dto.setPw(pw);
 		        
 		        // 임시 비밀번호로 변경 
 		        ss.updatepw(pw,id);

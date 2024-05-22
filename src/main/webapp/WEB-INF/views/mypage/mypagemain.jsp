@@ -295,7 +295,7 @@ h2{
 				                    <th>상품명</th>
 				                    <th>구입수량</th>
 				                    <th>금액</th>
-				                    <th>결재시간</th>
+				                    <th>구매일</th>
 				                    <th>상태</th>
 				                    <th>비고</th>
 				                </tr>
@@ -305,7 +305,7 @@ h2{
 				                        <td>${bb.sname}</td>
 				                        <td>${bb.paynum}</td>
 				                        <td><f:formatNumber value="${bb.totprice}" pattern="#,###"/></td>
-				                        <td>${bb.payendtime}</td>
+				                        <td>${bb.payendtime.substring(0,10)}</td>
 				                        <td>${bb.paystate}</td>
 				                        <td class="admintd" style="width: 180px; text-align: center;">
 				                            <a href="paycancel?tid=${bb.tid}"><input type="button" value="환불하기"></a>

@@ -303,6 +303,19 @@ H2{
 		width: 14px;
 		
 	}
+.best_item a{
+	   color: #444444; /* 부모 요소의 색상을 상속 */
+       text-decoration: none; /* 링크의 밑줄 제거 */
+}
+.best_info {
+    font-size: 16px;
+}
+
+.best_infofirst{
+    font-size: 18px;
+    font-weight: bold;
+}
+
 </style>
 </head>
 <body>
@@ -433,9 +446,9 @@ H2{
       				<a href="detailview?snum=${aa.snum}">
       	
       				<span class="best_rank">${loop.index+1 }</span>
-      				<span class="best_info">${aa.sname }<br></span> 
+      				<span class="best_infofirst">${aa.sname }<br></span> 
       				<span class="best_info"><f:formatNumber value="${aa.price }" pattern="#,###"/><br></span>
-      				<span class="best_info">${aa.viewnum }</span>
+      				<span class="best_info">조회수 : ${aa.viewnum }</span>
       				</a>
       			</div>
       		</div>
@@ -470,7 +483,7 @@ H2{
       		
 		</div>
 	
-</section>
+	
 <div class="modal-bg" onClick="javascript:popClose();"></div>
   <div class="modal-wrap">
     <div>
@@ -503,6 +516,8 @@ H2{
    		</div>
    	</div> 
   </div>
+	
+</section>
 
 
 

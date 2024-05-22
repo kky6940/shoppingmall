@@ -178,7 +178,6 @@ th:first-child {
             <div class="search_wrap">
                 <div class="search_area">
                 <select id="selectbtype" name="stype">
-                 <option value="" disabled selected>--</option>
                  <option value="btitle">제목</option>
                  <option value="bcontent">내용</option>
                  <option value="all">제목+내용</option>

@@ -87,7 +87,7 @@
  	
 	<!-- faq검색시 페이징처리에서 전체레코드수 구하기 -->
 	<select id="faqserchpageing" resultType="int">
-	    select count(*) from qna
+	    select count(*) from faq
 	    where (
 	        <choose>
 	            <when test="param1 == 'btitle'">
@@ -108,7 +108,7 @@
 	    select * from (
 	        select rownum rn, A.* from (
 	            select bnum, bid, btype, btitle, to_char(bdate, 'YY.MM.DD') bdate, bcontent, bpicture
-	            from qna
+	            from faq
 	            where (
 	                <choose>
 	                    <when test="param1 == 'btitle'">

@@ -32,8 +32,8 @@ public class KakaoService{
 			StringBuilder sb = new StringBuilder();
 			sb.append("grant_type=authorization_code");
 
-			sb.append("&client_id=e3b75c80af4089c257294b73789f4644"); //REST APIÅ° ÀÔ·Â
-			sb.append("&redirect_uri=http://localhost:8667/haha/kakaologin"); //redirect_uri ÀÔ·Â
+			sb.append("&client_id=e3b75c80af4089c257294b73789f4644"); //REST APIÅ° ï¿½Ô·ï¿½
+			sb.append("&redirect_uri=http://localhost:8686/haha/kakaologin"); //redirect_uri ï¿½Ô·ï¿½
 
 			sb.append("&code=" + authorize_code);
 			bw.write(sb.toString());

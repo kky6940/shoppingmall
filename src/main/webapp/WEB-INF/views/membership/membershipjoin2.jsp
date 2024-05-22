@@ -260,6 +260,7 @@ $(document).ready(function(){
             return regex.test(pw);
         }
         
+        
         $('#pw_check').on('input', function() {
             var pw = $('#pw').val();
             var pwCheck = $(this).val();
@@ -437,7 +438,7 @@ function sample6_execDaumPostcode() {
 	
 	<!-- 주민번호 -->
 	<div class="field birth">
-	<b>주민번호</b>
+	<b>주민등록번호</b>
 	<input type="text" name="pid1" maxlength="6" class="textbox1" id="pid1">
 	<span style="font-size: 20px; font-weight: bold; vertical-align: middle;">-</span>
 	<input type="password" name="pid2" maxlength="7" class="textbox1" id="pid2">

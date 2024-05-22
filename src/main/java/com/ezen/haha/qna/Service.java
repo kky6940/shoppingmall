@@ -9,7 +9,7 @@ import com.ezen.haha.mypage.CouponDTO;
 
 public interface Service {
 
-	void noticeinsert(String bid, String btype, String btitle, String bcontent, String fname, String bcode);
+	void noticeinsert(String bid, String btype, String btitle, String bcontent, String fname);
 
 	ArrayList<QnaDTO> noticeout(int start, int end);
 
@@ -29,7 +29,7 @@ public interface Service {
 
 	int totalserch(String keyword);
 	
-	void faqinsert(String bid, String btype, String btitle, String bcontent, String fname, String bcode);
+	void faqinsert(String bid, String btype, String btitle, String bcontent, String fname);
 
 	ArrayList<QnaDTO> faqout(int start, int end);
 
@@ -39,7 +39,7 @@ public interface Service {
 
 	ArrayList<QnaDTO> faqserch(String stype, String keyword, int start, int end);
 
-	void qnainsert(String bid, String btype, String btitle, String bcontent, String fname, int secret, int qnastate);
+	void qnainsert(String bid, String btype, String btitle, String bcontent, String fname, int secret);
 	
 	ArrayList<QnaDTO> qnaout(int start, int end);
 

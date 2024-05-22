@@ -95,9 +95,9 @@ public class PayController {
         requestBodyMap.put("quantity", guestbuysu); // 상품 개수(int)
         requestBodyMap.put("total_amount", totprice); // 상품 총 금액(int)
         requestBodyMap.put("tax_free_amount", 0); // 상품 비과세 금액(int)
-        requestBodyMap.put("approval_url", "http://localhost:8669/haha/success"); // 결재 성공 시 리다이렉트 링크(String)
-        requestBodyMap.put("fail_url", "http://localhost:8669/haha/fail"); // 결재 실패 시 리다이렉트 링크(String)
-        requestBodyMap.put("cancel_url", "http://localhost:8669/haha/cancel"); // 결재 취소 시 리다이렉트 링크(String)
+        requestBodyMap.put("approval_url", "http://localhost:8686/haha/success"); // 결재 성공 시 리다이렉트 링크(String)
+        requestBodyMap.put("fail_url", "http://localhost:8686/haha/fail"); // 결재 실패 시 리다이렉트 링크(String)
+        requestBodyMap.put("cancel_url", "http://localhost:8686/haha/cancel"); // 결재 취소 시 리다이렉트 링크(String)
         
         
         String requestBody;
@@ -260,8 +260,19 @@ public class PayController {
         	
         	// 결재 완료 후 클라이언트에게 보여줄 부분만 가져와서 DB에(payinfo) 저장
         	Service ss = sqlSession.getMapper(Service.class);
-        	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment);
-        	
+        	System.out.println("usecoupon: "+useCoupon);
+        	System.out.println("savepoint: "+savePoint);
+        	String insertCoupon = "";
+        	if(useCoupon.equals("10000원 할인쿠폰")) {
+        		insertCoupon = "mannum";
+        	}
+        	else if(useCoupon.equals("10% 할인쿠폰")) {
+        		insertCoupon = "tennum";
+        	}
+        	else if(useCoupon.equals("20% 할인쿠폰")) {
+        		insertCoupon = "twentinum";
+        	}
+        	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment,insertCoupon,savePoint);
         	// 결재 완료 후 출력
         	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);
         	// 결재 완료 후 해당 상품 재고 감소 업데이트
@@ -269,12 +280,12 @@ public class PayController {
             for (String basket : basketnums) {
             	ArrayList<BasketDTO> basketlist = ss.basketInfo(basket);
             	for(BasketDTO aa : basketlist) {
-            		ss.productsuupdate(aa);
+            		ss.productsuupdate(aa);   // 구매한 만큼 상품 재고 갱신
             	}
-            	ss.basketDelete(basket);
+            	ss.basketDelete(basket);   // 장바구니 삭제
             }
         	if(useCoupon.equals("10000원 할인쿠폰")) {
-        		ss.couponUpdate(id,"mannum");    		
+        		ss.couponUpdate(id,"mannum");    // 쿠폰 업데이트
         	}
         	else if(useCoupon.equals("10% 할인쿠폰")) {
         		ss.couponUpdate(id,"tennum");    		
@@ -283,10 +294,11 @@ public class PayController {
         		ss.couponUpdate(id,"twentinum");    		
         	}
         	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
-        	mss.couponTotal(id);
-      		ss.pointUpdate(id,usePoint,savePoint);
-        	int totalPrice = ss.totalPrice(id);
-      		ss.rankUpdate(id,totalPrice);
+        	mss.couponTotal(id); // 보유쿠폰 수 갱신
+      		ss.pointUpdate(id,usePoint,savePoint); // 포인트 갱신
+        	int totalPrice = ss.totalPrice(id); // 회원 총 주문금액 
+      		ss.rankUpdate(id,totalPrice); // 회원등급 갱신
+      		
         	// return "redirect:/이동경로" 을 하면 알 수 없는 이유로 화면이 이동하지 않는 문제가 발생(이동이 안되고 그냥 출력문으로 출력됨)
         	// 부득이하게 ModelAndView 를 사용하여 화면 이동
         	mv.addObject("list", list);
@@ -310,6 +322,7 @@ public class PayController {
 		int totprice = Integer.parseInt(formData.getOrDefault("totprice", ""));
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
+		int orderid = Integer.parseInt(formData.getOrDefault("orderid", ""));
 		
 		String SECRET_KEY = "DEVEFDEE8BC156E700548072473187B892DAC623"; // 시크릿(secret_key(dev)) 키(테스트용 키)
         String auth = "SECRET_KEY " + SECRET_KEY; // 앞에 "SECRET_KEY " 를 써줘야 카카오 서버가 시크릿 키를 인식함
@@ -372,22 +385,27 @@ public class PayController {
                 
                 System.out.println(tid1);
                 System.out.println(partner_order_id);
-                System.out.println(partner_user_id);
-                System.out.println(totalAmount);
-                System.out.println(totalCanceled_amount);
-                System.out.println(item_name);
-                System.out.println(quantity);
-                System.out.println(approved_at);
-                System.out.println(canceled_at);
                 
                 String message = "환불이 완료되었습니다.";
                 
                 Service ss = sqlSession.getMapper(Service.class);
-                ss.updatepaylist(tid1);
-                int pointRefund = (int)((int)totalAmount * 0.01);
+                String useCoupon = ss.selectUseCoupon(orderid);
+                int savePoint = ss.selectSavePoint(orderid);
                 
-                ss.pointRefund(id);
+                ss.updatepaylist(orderid);
+           
+                if(useCoupon != null) {
+                	ss.couponRefund(id,useCoupon);
+                }
+                ss.savePointRefund(id,savePoint);
+                int totalPrice = ss.totalPrice(id);
+          		ss.rankUpdate(id,totalPrice);
+          		
+            	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
+            	mss.couponTotal(id); // 보유쿠폰 수 갱신
+          		
                 return ResponseEntity.ok(message); 
+                
             } catch (JsonProcessingException e) {
                 e.printStackTrace();
                

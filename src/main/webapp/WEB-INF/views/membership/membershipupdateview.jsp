@@ -11,17 +11,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@100;300;400;500;700&display=swap');
 
 *{
-    box-sizing: border-box; /*전체에 박스사이징*/
-    outline: none; /*focus 했을때 테두리 나오게 */
-}
-
-body{
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size:14px;
-    background-color: #f5f6f7;
-    line-height: 1.5em;
-    color : #222;
-    margin: 0px;
+    box-sizing: border-box; 
+    outline: none;
 }
 
 a{
@@ -31,7 +22,7 @@ a{
 
 .member{
   	width: 400px;
-	height: 700px;
+	height: 650px;
   	margin: auto;
   	margin-top: 30px;
   	margin-bottom: 20px;
@@ -146,8 +137,14 @@ input[type="password"]
 .submitgo:hover {
   background: #000000;
 }
+
 .buttonmove{
 	padding-left: 70px;
+	margin-top: 50px;
+}
+
+.buttonmove button + button {
+    margin-left: 30px;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

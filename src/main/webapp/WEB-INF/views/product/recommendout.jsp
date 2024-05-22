@@ -49,10 +49,11 @@ h2{
 }
 .product_list{
 	position: relative;
- 	margin-top: 3%;
-	width: 1920px; 
-	padding-left: 5%;
-	padding-right: 5%;	
+    margin-top: 50px;
+    max-width: 1920px;
+    min-width: 1280px;
+    padding-left: 80px;
+    padding-right: 80px;	
 }
 .product_list h3{
 	float: left;
@@ -72,10 +73,11 @@ h2{
 	clear: both;
 }
 .product{ 
-	list-style:none;
-	width: 340px;
-	float: left;
-	margin-bottom: 30px;
+	list-style: none;
+    width: 20%;
+    float: left;
+    margin-bottom: 30px;
+    padding: 0 14px 0 0;
 	
 }
 .product img{
@@ -353,10 +355,10 @@ function displayWeather(weatherData) {
                 
                 html += '<ul class="product">';
                 html += '<li><a href="detailview?snum=' + aa.snum + '">';
-                var imageArray = aa.image.split(', ');
+                var imageArray = aa.image.split(',');
                 for (var j = 0; j < imageArray.length; j++) {
                     if (j == 0) {
-                        html += '<img alt="" src="./image/' + imageArray[j] + '" width="300px" height="300px">';
+                        html += '<img alt="" src="./image/' + imageArray[j] + '">';
                     }
                 }
                 html += '</a></li>';

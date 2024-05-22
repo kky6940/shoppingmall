@@ -36,35 +36,14 @@ h2{
 
 
 </style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-<script type="text/javascript">
-function kakaopaycancel() {
-	var formData = {
-			tid: $('#tid').val(),
-			totprice: $('#totprice').val()
-        };
-	
-    $.ajax({
-        type: 'POST',
-        url: 'paycancelrequest',
-        contentType: 'application/json',
-        data: JSON.stringify(formData),
-        success: function (response) {
-            alert('환불이 완료되었습니다.');
-        	window.location.href = 'main';
-            
-        },
-        error: function (xhr, status, error) {
-            console.error(error);
-        }
-    });
-}
-</script>
 <meta charset="UTF-8">
 <title>결제환불</title>
 </head>
 <body>
 <table align="center" class="ordertable">
+<c:forEach items="${list }" var="aa">
 	<tr>
 		<th>주문번호</th>
 		<th>상품명</th>
@@ -73,7 +52,6 @@ function kakaopaycancel() {
 		<th>결재시간</th>
 	</tr>
 	<tr>
-		<c:forEach items="${list }" var="aa">
 			<td>${aa.orderid }</td>
 			<td>${aa.sname }</td>
 			<td>${aa.paynum }</td>
@@ -83,22 +61,63 @@ function kakaopaycancel() {
 			</td>
 			<td>
 				${aa.payendtime }
+				${aa.orderid }
 				<input type="hidden" name="tid" value="${aa.tid }" id="tid">	
+				<input type="hidden" name="orderid" value="${aa.orderid }" id="orderid">					
 			</td>	
-			
-		</c:forEach>
-		
 	</tr>	
 	<tr>
 		<td colspan="5" align="center"><span>정말로 환불하시겠습니까?</span></td>
 	</tr>
 	<tr>
 		<td colspan="5" align="center">
-			<button onclick="kakaopaycancel()">환불하기</button>
+			<button onclick="kakaopaycancel('${aa.payment}')">환불하기</button>
 		</td>
 	</tr>
 	
-	
+</c:forEach>
 </table>
+
+<script type="text/javascript">
+function kakaopaycancel(payment) {
+	if (payment === '카카오페이') {
+        var formData = {
+            tid: $('#tid').val(),
+            totprice: $('#totprice').val(),
+            orderid: $('#orderid').val()
+        };
+        console.log("카카오");
+        $.ajax({
+            type: 'POST',
+            url: 'paycancelrequest',
+            contentType: 'application/json',
+            data: JSON.stringify(formData),
+            success: function (response) {
+                alert(response);
+                window.location.href = 'main';
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    } else {
+   			var orderid = $('#orderid').val();
+   			console.log("무통장");
+   	        $.ajax({
+   	        	type: "post",
+   	            url: 'bankCancel',
+   	            data: {"orderid":orderid},
+   	            success: function (response) {
+   	                alert(response);
+   	                window.location.href = 'main';
+   	            },
+   	            error: function (xhr, status, error) {
+   	                console.error(error);
+   	            }
+   	        });
+    }
+}
+</script>
+
 </body>
 </html>

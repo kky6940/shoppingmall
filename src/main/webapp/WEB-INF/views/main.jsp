@@ -269,15 +269,22 @@ H2{
 }
 .review_tit{
 	font-family: "Noto Sans KR", sans-serif;
-	font-size: 14px;
+	font-size: 15px;
     font-weight: 600;
     padding: 2px ;
+    color: #333333;
 }
+.review_tit a {
+            color: inherit; /* 부모 요소의 색상을 상속 */
+            text-decoration: none; /* 링크의 밑줄 제거 */
+        }
+
+  
 .review_sub{
 	display: flex;
 	justify-content: space-between;
 	font-family: "Noto Sans KR", sans-serif;
-	font-size: 12px;
+	font-size: 14px;
     padding: 2px ;
     font-weight: 200;
 	width: 100%;	
@@ -292,6 +299,10 @@ H2{
 	 	.a{width: 360px; padding: 10px 30px; border-bottom: 1px solid #eeeeee;}
 	 	p{margin: 0;}
 		.review-wrap{flex: 1; }
+	.reviewScore img {
+		width: 14px;
+		
+	}
 </style>
 </head>
 <body>
@@ -410,7 +421,7 @@ H2{
       		<div class="best_content">
       			<div class="best_img">
       				<a href="detailview?snum=${aa.snum}"> 
-      				<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+      				<c:set var="imageArray" value="${fn:split(aa.image, ',')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop2">
 		   					<c:if test="${loop2.index == 0}">
 		       					<img alt="" src="./image/${imageName}">
@@ -450,8 +461,8 @@ H2{
       			<div class="review_str">
       				<div class="review_tit"><a onclick="popOpen(${aa.bnum})"><span>${aa.btitle}</span> </a> </div>
       				<div class="review_sub">
-      					<div><a onclick="popOpen(${aa.bnum})"><span>작성자 </span></a></div>  
-      					<div><a onclick="popOpen(${aa.bnum})"><span>작성일</span> </a> </div>
+      					<div><a onclick="popOpen(${aa.bnum})"><span>${aa.id} </span></a></div>  
+      					<div><a onclick="popOpen(${aa.bnum})"><span>${aa.bdate.substring(0,10)}</span> </a> </div>
       				</div>
       			</div>
       		</div>
@@ -464,7 +475,7 @@ H2{
   <div class="modal-wrap">
     <div>
     	<img alt="" src=""> </div>
-  	<div>
+  	<div style="position: absolute; right: 0">
    		<button class="modal-close" onClick="javascript:popClose();">X</button>
    		<div class="review-wrap">
    			<div class="a">
@@ -476,7 +487,7 @@ H2{
    				<p></p>
    			</div>
    			<div class="a" style="display: flex; justify-content: space-between;">
-    <div>
+    <div class="reviewScore">
         <p>평점</p>
         <p></p>
     </div>
@@ -486,8 +497,7 @@ H2{
     </div>
 </div>
    			<div class="a">
-   				<p>리뷰내용</p>
-   				<p></p>
+   				<p style="font-size: 18px"></p>
    				<p></p>
    			</div>
    		</div>
@@ -648,19 +658,30 @@ function fetchData(bnum) {
 
 function displayDataInModal(data) {
     // 받아온 데이터를 이용하여 모달 내부의 요소들을 채웁니다.
-    console.log(data.sname);
-    console.log(data.id);
-    $('.modal-wrap img').attr('src', './image/' + data.bpicture);
-    $('.modal-wrap .a:nth-child(1) p:nth-child(2)').text(data.sname);
-    $('.modal-wrap .a:nth-child(2) p:nth-child(2)').text(data.id);
-    $('.modal-wrap .a:nth-child(3) div:nth-child(1) p:nth-child(2)').text(data.productrank);
-    $('.modal-wrap .a:nth-child(3) div:nth-child(2) p:nth-child(2)').text(data.bdate);
-    $('.modal-wrap .a:nth-child(4) p:nth-child(2)').text(data.btitle);
-    $('.modal-wrap .a:nth-child(4) p:nth-child(3)').text(data.bcontent);
+	document.querySelector('.modal-wrap img').setAttribute('src', './image/' + data.bpicture);
+	document.querySelector('.modal-wrap .a:nth-child(1) p:nth-child(2)').textContent = data.sname;
+	document.querySelector('.modal-wrap .a:nth-child(2) p:nth-child(2)').textContent = data.id;
+
+	var starsContainer = document.querySelector('.reviewScore');
+	starsContainer.innerHTML = '<p>평점</p>'; // 기존의 내용 삭제
+
+	for (var i = 1; i <= data.productrank; i++) {
+	    var starImg = document.createElement('img');
+	    starImg.setAttribute('src', './image/reviewStar.png');
+	    starImg.setAttribute('alt', '');
+	    starsContainer.appendChild(starImg);
+	}
+
+	document.querySelector('.modal-wrap .a:nth-child(3) div:nth-child(2) p:nth-child(2)').textContent = data.bdate.substring(0, 10);
+	document.querySelector('.modal-wrap .a:nth-child(4) p:nth-child(1)').textContent = data.btitle;
+	document.querySelector('.modal-wrap .a:nth-child(4) p:nth-child(2)').textContent = data.bcontent;
+
+
+    
 }
 
 function popOpen(bnum) {
-
+	console.log(bnum);
     var modalPop = $('.modal-wrap');
     var modalBg = $('.modal-bg'); 
     fetchData(bnum);

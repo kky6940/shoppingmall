@@ -113,7 +113,6 @@ h2 {
    <c:forEach items="${list}" var="aa">
    <form action="faqmodify" method="post" enctype="multipart/form-data" id="form">
    <input type="hidden" class="form-control" name="bnum" id="bnum" value="${aa.bnum}">
-   <input type="hidden" class="form-control" name="bcode" value="faq">
    <div class="inputform">
        <label for="selectbtype">FAQ유형</label>
        <select id="selectbtype" name="btype">

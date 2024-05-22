@@ -122,10 +122,10 @@ public class MypageController {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
 
-		 Service ss = sqlSession.getMapper( Service.class);
+		Service ss = sqlSession.getMapper( Service.class);
 		ArrayList<PayDTO> list = ss.guestpayoutview(id);
 		mo.addAttribute("list", list);
-
+		
 		return "payout";
 	}
 	
@@ -254,11 +254,11 @@ public class MypageController {
 			    jsonData = objectMapper.writeValueAsString(requestData);
 	
 			    // 파이썬 스크립트에 JSON 데이터 전달
-			    String pythonDirectoryPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\";
-			    String pythonProgramname= "product_visual.py";
-			    String pythonRealname = pythonDirectoryPath + "\\" + pythonProgramname;
-			    ProcessBuilder processBuilder = new ProcessBuilder("python", pythonRealname);
+			    String pythonScriptPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\product_visual.py";
+
+			    ProcessBuilder processBuilder = new ProcessBuilder("python", pythonScriptPath);
 			    processBuilder.redirectErrorStream(true);
+			    
 			    Process process = processBuilder.start();
 	
 			    PrintWriter writer = new PrintWriter(process.getOutputStream(), true);

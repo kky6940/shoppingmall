@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
     
 <!DOCTYPE html>
 <html>
@@ -196,7 +197,23 @@ input[type="number"] {
   border: none;
   background-color: #fff;
 }
-
+.reviewDiv{
+    position: relative;
+    width: 900px;
+    margin: 0 auto;
+    padding: 0 100px 20px;
+    margin-top: 30px;
+}
+.reviewInfo img{
+	width: 20px;
+	height: 20px;
+}
+.reviewInfo span{
+	padding: 0 10px;
+}
+.reviewContent p{
+	font-size: 16px;
+}
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
@@ -210,7 +227,7 @@ input[type="number"] {
       <div class="slide_box">
         <div class="slide_list clearfix">
   
-          <c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+          <c:set var="imageArray" value="${fn:split(aa.image, ',')}" />
 			<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 				<div class="slide_content slide${loop.index }">		   					
       				<img alt="" src="./image/${imageName}">
@@ -232,7 +249,7 @@ input[type="number"] {
   </div>
   <!-- // .container -->
 <div class="option">
-<h2>.상품명</h2>
+<h2> ${aa.sname }</h2>
 	<table>
 		<tr>
 			<th>상품코드</th>
@@ -284,7 +301,7 @@ input[type="number"] {
 <c:if test="${not empty imageArray}">
     <div >
     <!-- 이미지 첫번째만 가져가기 -->
-        <a href="productreviewinput?snum=${aa.snum }&sname=${aa.sname}&image=${imageArray[0]}"><button type="button">리뷰쓰기</button></a>
+        
     </div>
 </c:if>
 </c:forEach>
@@ -293,13 +310,12 @@ input[type="number"] {
 
 </form>
 
-
-
 <section class="info">
 	<div style="text-align: center;">
 		<h2 style="text-align: center;">상품설명</h2>
 		<img src="${pageContext.request.contextPath}${visual_image}" width="600px" height="600px" 
-	     style="max-width:100%; height:auto;">
+     	style="max-width:100%; height:auto;">
+
 
 	</div>
 </section>
@@ -307,23 +323,29 @@ input[type="number"] {
 <h2 style="text-align: center;">상품리뷰</h2>
 			
 		<c:forEach items="${list1 }" var="bb">
-			<table border="1" width="400px" align="center">
-				<tr>
-					<td>${bb.productrank } / 5</td>
-					<td>${bb.bdate }</td>
-				</tr>
-				<tr>
-					<th colspan="2" style="text-align: center;">${bb.btitle }</th>
-				</tr>
-				<tr>
-					<td colspan="2">${bb.bcontent }</td>
-				</tr>
-				<tr>
-					<td colspan="2"><img alt="" src="./image/${bb.bpicture }" width="200px" height="200px"> </td>
-				</tr> 
-				
-			</table>
-		
+			<div class="reviewDiv">
+			    <div class="reviewInfo">
+			    	<c:forEach var="i" begin="1" end="5">
+			    		<c:choose>
+			    			<c:when test="${i <= bb.productrank}">
+                                <img src="./image/reviewStar.png" alt="">
+                            </c:when>
+                            <c:otherwise>
+                                <img src="./image/reviewStar2.png" alt="">
+                            </c:otherwise>
+			    		</c:choose>
+			    	</c:forEach>
+			        <span>${bb.id}</span>
+			        <span>${bb.bdate}</span>
+			    </div>
+			    <div class="reviewContent">
+			        <p style="font-weight: bold; font-size: 20px">${bb.btitle}</p>
+			        <p>${bb.bcontent}</p>
+			    </div>
+			    <div class="reviewImage">
+			        <img alt="" src="./image/${bb.bpicture}" width="140px" height="140px">
+			    </div>
+			</div>
 		</c:forEach>
 
 </section>

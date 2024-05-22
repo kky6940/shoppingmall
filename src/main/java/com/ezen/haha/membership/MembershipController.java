@@ -355,20 +355,25 @@ public class MembershipController {
 	public String membershipdeleteview(HttpServletRequest request, Model mo) {
 		HttpSession hs = request.getSession();
 		String id = (String) hs.getAttribute("id");
-		
+		Service ss = sqlSession.getMapper(Service.class);
+		ArrayList<MembershipDTO> list;
 		if(id.equals("admin"))
-		{
-			String userid = request.getParameter("id");
-			Service ss = sqlSession.getMapper(Service.class);
-			ArrayList<MembershipDTO> list = ss.membershipsearch(userid); // 쿼리문 재활용
+		{	
+			if(request.getParameter("id")!=null) {
+				String userid = request.getParameter("id");
+				list = ss.membershipsearch(userid); // 쿼리문 재활용
+			}
+			else {
+				list = ss.membershipsearch(id); // 쿼리문 재활용				
+			}
+			
 			mo.addAttribute("list", list);
 			
 			return "membershipdeleteview";
 		}
 		else 
 		{
-			Service ss = sqlSession.getMapper(Service.class);
-			ArrayList<MembershipDTO> list = ss.membershipsearch(id); // 쿼리문 재활용
+			list = ss.membershipsearch(id); // 쿼리문 재활용
 			mo.addAttribute("list", list);
 			
 			return "membershipdeleteview";

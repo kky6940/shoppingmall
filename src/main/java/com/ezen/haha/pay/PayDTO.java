@@ -225,7 +225,7 @@ public class PayDTO {
 	public void setPayment(String payment) {
 		this.payment = payment;
 	}
-	
+
 	
 }
 

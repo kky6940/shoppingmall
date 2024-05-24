@@ -46,6 +46,9 @@ pre {
     border-color : #FFE000; 
     color: white;
 }
+#footer{
+	margin-top: 120px;
+}
 
 </style>
 <meta charset="UTF-8">

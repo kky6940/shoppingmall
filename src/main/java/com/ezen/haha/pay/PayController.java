@@ -272,7 +272,8 @@ public class PayController {
         	else if(useCoupon.equals("20% 할인쿠폰")) {
         		insertCoupon = "twentinum";
         	}
-        	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment,insertCoupon,savePoint);
+        	
+        	ss.payinsert(tid1,partner_order_id1,id,payment_method_type,item_name,quantity1,totprice,approved_at,snum,address,name,tel,email,drequest,paystate,payment,insertCoupon,savePoint,usePoint);
         	// 결재 완료 후 출력
         	ArrayList<PayDTO> list = ss.payout(partner_order_id1, partner_user_id);
         	// 결재 완료 후 해당 상품 재고 감소 업데이트
@@ -296,6 +297,8 @@ public class PayController {
         	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
         	mss.couponTotal(id); // 보유쿠폰 수 갱신
       		ss.pointUpdate(id,usePoint,savePoint); // 포인트 갱신
+      		int nowpoint = ss.selectnowpoint(id);
+      		ss.nowpointUpdate(nowpoint,id,orderid);
         	int totalPrice = ss.totalPrice(id); // 회원 총 주문금액 
       		ss.rankUpdate(id,totalPrice); // 회원등급 갱신
       		

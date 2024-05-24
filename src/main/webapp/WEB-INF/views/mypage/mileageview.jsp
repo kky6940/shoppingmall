@@ -54,7 +54,9 @@ th{
 		<th>금액</th>
 		<th>결재시간</th>
 		<th>상태</th>
+		<th>사용 마일리지</th>
 		<th>마일리지 획득</th>
+		<th>총 마일리지</th>
 	</tr>
 	<c:forEach items="${list }" var="aa">
 	<tr>
@@ -64,9 +66,16 @@ th{
 		<td><f:formatNumber pattern="#,###" value="${aa.totprice }"></f:formatNumber></td>
 		<td>${aa.payendtime }</td>
 		<td>${aa.paystate }</td>
-		<td style="width: 180px; text-align: center;">
-			<f:formatNumber pattern="#,###" value="${aa.savepoint }"></f:formatNumber>
+		<td>
+			<f:formatNumber pattern="- #,###" value="${aa.usepoint }"></f:formatNumber>
 		</td>
+		<td>
+			<f:formatNumber pattern="+ #,###" value="${aa.savepoint }"></f:formatNumber>
+		</td>
+		<td>
+			<f:formatNumber pattern="#,###" value="${aa.nowpoint }"></f:formatNumber>
+		</td>
+		
 	</tr>
 </c:forEach>
 </table>

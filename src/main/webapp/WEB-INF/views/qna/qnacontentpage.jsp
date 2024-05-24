@@ -33,6 +33,12 @@ pre {
     background-color: white;
     word-wrap: break-word;
 }
+.table{
+	margin-bottom: 40px;
+}
+#footer{
+	margin-top: 70px;
+}
 </style>
 <meta charset="UTF-8">
 <title>Insert title here</title>
@@ -62,7 +68,7 @@ pre {
         </tr>
         <tr>
 	    <td colspan="4" class="text-left" valign="top" height="300">
-	        <img id="bpicture" src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" alt="" style="max-width: 100%; height: auto;">
+	        <img id="bpicture" src="${pageContext.request.contextPath}/resources/qnaimg/${aa.bpicture}" alt="" style="max-width: 20%; height: auto;">
 	        
 	        <div>
 	            <pre style="white-space: pre-wrap;border:none;background-color: white;">${aa.bcontent}</pre>    

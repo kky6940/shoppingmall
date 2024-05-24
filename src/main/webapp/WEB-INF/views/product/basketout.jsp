@@ -121,6 +121,7 @@ input[type="number"]{
 <body>
 <div class="product_list">
 <form id="formselect" method="post"> <!-- 하단 버튼과 자바스크립트로 form 장소 선택 -->
+	<h2>장바구니</h2>
     <table  class="baskettable" align="center">
         <tr>
             <th class="basketth">선택</th>

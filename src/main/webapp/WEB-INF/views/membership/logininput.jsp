@@ -21,10 +21,10 @@ body, html {
 }
 
 .container{
-  margin: 0;
+  margin: 30px 0;
   top: 20%;
   left: 50%;
-  position: absolute;
+  position: relative;
   text-align: center;
   transform: translateX(-50%);
   background-color: #fff;
@@ -35,6 +35,7 @@ body, html {
   height: 600px;
   border-left:1px solid #333;
   border-right:1px solid #333;
+  
 }
 
 .box h4 {
@@ -189,34 +190,6 @@ a:hover {
   color: #7f60eb;
 }
 
-.footer {
-    position: relative;
-    left: -15px;
-    bottom: 0;
-    top: 20%;
-    width: 110%;
-    font-size: 12px;
-    text-align: center;
-}
-
-.footer div a:hover{
-    text-decoration: underline;
-    color:#fff;
-}
-
-.footer div a:after{
-    content:'|';
-    font-size: 10px;
-    color:#bbb;
-    margin-right: 3px;
-    margin-left: 5px;
-    display: inline-block;
-    transform: translateY(-2px);
-}
-
-.footer div a:last-child:after {
-    content: none;
-}
 
 .divider {
   position: relative;
@@ -285,16 +258,6 @@ a:hover {
 			<a href="https://nid.naver.com/oauth2.0/authorize?client_id=bZp1_Dnu3oky5iTcsVsO&response_type=code&redirect_uri=http://localhost:8667/haha/naverlogin&state=test">
 			<img src="${pageContext.request.contextPath}/resources/image/naverlogin2.png" alt="Naver Login"></a>
 	</div>
-		<!-- 푸터 -->
-       <div class="footer">
-      		<div>
-                <a href="#none">이용약관</a>
-                <a href="#none">개인정보처리방침</a>
-                <a href="#none">책임의 한계와 법적고지</a>
-                <a href="#none">회원정보 고객센터</a> 
-            <span><a href="#none">Snack Closet.</a></span>
-				 </div>
-		</div>
-	</div>
+</div>
 </body>
 </html>

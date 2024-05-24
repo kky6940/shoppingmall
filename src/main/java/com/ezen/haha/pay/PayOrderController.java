@@ -103,8 +103,8 @@ public class PayOrderController {
     	else if(useCoupon.equals("20% 할인쿠폰")) {
     		insertCoupon = "twentinum";
     	}
-    	ss.bankinsert(id,name,address,tel,email,payment,snum,sname,paynum,totprice,payEndTime,paystate,insertCoupon,savePoint);
-    	
+    	ss.bankinsert(id,name,address,tel,email,payment,snum,sname,paynum,totprice,payEndTime,paystate,insertCoupon,savePoint,usePoint);
+    	int orderid = ss.selectorderid(id);
     	String basketnum = request.getParameter("basketnum");
 
     	// 결재 완료 후 해당 상품 재고 감소 업데이트
@@ -128,6 +128,8 @@ public class PayOrderController {
     	com.ezen.haha.membership.Service mss = sqlSession.getMapper(com.ezen.haha.membership.Service.class);
     	mss.couponTotal(id);
   		ss.pointUpdate(id,usePoint,savePoint);
+  		int nowpoint = ss.selectnowpoint(id);
+  		ss.banknowpointUpdate(nowpoint,id,orderid);
   		int totalPrice = ss.totalPrice(id);
   		ss.rankUpdate(id,totalPrice);
   		if(payment.equals("카카오페이")) {

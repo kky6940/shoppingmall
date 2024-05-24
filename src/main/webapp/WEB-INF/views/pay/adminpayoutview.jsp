@@ -63,13 +63,13 @@ th{
 		<td>${aa.orderid }</td>
 		<td>${aa.sname }</td>
 		<td>${aa.paynum }</td>
-		<td>${aa.totprice }</td>
+		<td><f:formatNumber value="${aa.totprice }" pattern="#,###"></f:formatNumber></td>
 		<td>${aa.payendtime }</td>
 		<td>${aa.payment }</td>
 		<td>${aa.paystate }</td>
 		<td style="width: 180px; text-align: center;">
 			<a href="paycancel?tid=${aa.tid }"><input type="button" value="환불하기"></a>
-			<input type="button" value="교환하기">
+			
 		</td>
 	</tr>
 </c:forEach>

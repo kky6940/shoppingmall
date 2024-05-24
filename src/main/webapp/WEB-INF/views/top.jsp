@@ -177,6 +177,15 @@ p{
 </style>
 </head>
 <body>
+<%
+	HttpSession hs = request.getSession(); 
+	if(hs.getAttribute("loginstate")==null)
+	{
+		hs.setAttribute("loginstate", false);
+	}
+%>
+
+
 <div class="header_inner">
 	<div class="header_logo">
 		<a href="main"></a>
@@ -251,8 +260,10 @@ p{
 </div>
 <div class="gray"></div>
 
-<div class="fix_btn">
-	<button type="button" onclick="location.href='roulette'" class="rouletteBtn"></button>
+<div class="fix_btn" id="fix_btn">
+    <c:if test="${loginstate == true }">
+		<button type="button" onclick="location.href='roulette'" class="rouletteBtn"></button>    
+    </c:if>
 	<button type="button" onclick="gotop()" class="topBtn"></button>
 </div>
 <script>
@@ -294,6 +305,25 @@ p{
             behavior: 'smooth'
         });
 	}
+    
+    window.addEventListener('scroll', function() {
+        var fixedDiv = document.getElementById('111');
+        var scrollHeight = document.documentElement.scrollHeight;
+        var clientHeight = document.documentElement.clientHeight;
+        var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+        var minHeight = 164; // 고정을 풀 최소 높이
+
+        if (scrollHeight - clientHeight - scrollTop <= minHeight) {
+            fixedDiv.style.position = 'relative';
+            
+        } else {
+            fixedDiv.style.position = 'fixed';
+            fixedDiv.style.bottom = '0px'; // 여기에 원래 설정한 값으로 조정하세요
+            fixedDiv.style.right = '0px'; // 여기에 원래 설정한 값으로 조정하세요
+        }
+    });    
+    
+    
 </script>
 </body>
 </html>

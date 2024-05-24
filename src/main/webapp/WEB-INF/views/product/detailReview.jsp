@@ -57,16 +57,16 @@ th{
 	</tr>
 	<tr>
 		<th>제목</th>
-		<td>${aa.id }</td>
+		<td>${aa.btitle }</td>
 	</tr>
 	<tr>
 		<th>내용</th>
-		<td>${aa.id }</td>
+		<td>${aa.bcontent }</td>
 	</tr>
 	<tr>
 		<th>사진</th>
 		<td>
-			<img alt="" src="./image/${aa.bpicture}">
+			<img alt="" src="./image/${aa.bpicture}" width="400px" height="400px">
 		</td>
 	</tr>
 	<tr>

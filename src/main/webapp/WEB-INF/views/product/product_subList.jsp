@@ -125,7 +125,7 @@ a{
 
 				<c:if test="${aa.count!=0 }">
 					<div class="review">
-						<div><a href="detailview?snum=${aa.snum}"><img alt="" src="./image/reviewStar2.png" style="width: 17px;" > ${aa.productrank }</a></div>
+						<div><a href="detailview?snum=${aa.snum}"><img alt="" src="./image/reviewStar.png" style="width: 17px;" > ${Math.round(aa.productrank*10)/10. }</a></div>
 						<div><a href="detailview?snum=${aa.snum}">리뷰 수 : ${aa.count }</a></div>
 					
 					</div>

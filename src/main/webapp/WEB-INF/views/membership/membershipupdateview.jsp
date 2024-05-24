@@ -69,27 +69,6 @@ a{
 	margin-bottom: 5px;
 }
 
-.member-footer {
-    text-align: center;
-    font-size: 12px;
-    margin-top: 20px;
-}
-
-.member-footer div a:hover{
-    text-decoration: underline;
-    color:#2db400;
-}
-
-.member-footer div a:after{
-    content:'|';
-    font-size: 10px;
-    color:#bbb;
-    margin-right: 5px;
-    margin-left: 7px;
-    display: inline-block;
-    transform: translateY(-1px);
-}
-
 .submitgo{
 	display: inline-block;
 	margin-right: 20px auto; /* 버튼 간격 조절을 위해 추가 */
@@ -409,16 +388,7 @@ function openPidUpdateWindow() {
 	</div>
 </div>
 	
-	<!-- 푸터 -->
-        <div class="member-footer">
-            <div>
-                <a href="#none">이용약관</a>
-                <a href="#none">개인정보처리방침</a>
-                <a href="#none">책임의 한계와 법적고지</a>
-                <a href="#none">회원정보 고객센터</a>
-            </div>
-            <span><a href="#none">Snack Closet.</a></span>
-         </div>
+	
 </form>
 </body>
 </html>

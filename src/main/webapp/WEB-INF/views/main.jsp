@@ -91,7 +91,7 @@ H2{
     font-size: 52px;
     font-weight: 500;
     opacity: 0;
-    transition-duration: .5s;
+    transition-duration: .2s;
     transform: scale(0.7);
     transition-delay: .8s;
     line-height: 54px;
@@ -291,6 +291,7 @@ H2{
 }
 .review_sub span {
     flex: 1;
+    color: gray;
 }
 
         .modal-bg {display:none;width:100%;height:100%;position:fixed;top:0;left:0;right:0;background: rgba(0, 0, 0, 0.6);z-index:1000;}
@@ -319,14 +320,7 @@ H2{
 </style>
 </head>
 <body>
-<%
-	// 새로 실행 시 로그인 잔여물 및 null 값 치우기
-	HttpSession hs = request.getSession(); 
-	if(hs.getAttribute("loginstate")==null)
-	{
-		hs.setAttribute("loginstate", false);
-	}
-%>
+
 
 <section class="main">
 	<div class="slide_wrap">
@@ -487,7 +481,7 @@ H2{
 <div class="modal-bg" onClick="javascript:popClose();"></div>
   <div class="modal-wrap">
     <div>
-    	<img alt="" src=""> </div>
+    	<img alt="" src="" style="width: 600px; height:500px;"> </div>
   	<div style="position: absolute; right: 0">
    		<button class="modal-close" onClick="javascript:popClose();">X</button>
    		<div class="review-wrap">
@@ -603,7 +597,7 @@ H2{
     	nextSlide();
     	loopInterval = setInterval(() => {
         	nextSlide();
-        	}, 4000);
+        	}, 1000);
 
     });
 	
@@ -613,7 +607,7 @@ H2{
     	preSlide();
     	loopInterval = setInterval(() => {
         	nextSlide();
-        	}, 4000);
+        	}, 1000);
     });
 
     /** Pagination Button Event */

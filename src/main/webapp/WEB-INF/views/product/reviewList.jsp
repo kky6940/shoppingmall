@@ -15,7 +15,7 @@ a{
 }
 h2{
   text-align:center;
-  margin:0;
+  margin-bottom:20px;
 }
 h5{
 	margin-left: 5px;
@@ -90,12 +90,12 @@ h5{
 				    <th class="adminoutth">상품명</th>
 				    <th class="adminoutth">아이디</th>
 				    <th class="adminoutth">리뷰제목</th>
-				    <th class="adminoutth" style="width: 150px;">비고</th>
+				    
 				</tr>
  				<c:forEach items="${list }" var="aa">
  				 <tr class="cart_list_detail"> 
  				    <td class="adminouttd">						    
- 				    	<c:set var="imageArray" value="${fn:split(aa.image, ', ')}" />
+ 				    	<c:set var="imageArray" value="${fn:split(aa.image, ',')}" />
 						<c:forEach items="${imageArray}" var="imageName" varStatus="loop">
 		   					<c:if test="${loop.index == 0}">
 		       					<img alt="" src="./image/${imageName}" width="100px" height="100px">

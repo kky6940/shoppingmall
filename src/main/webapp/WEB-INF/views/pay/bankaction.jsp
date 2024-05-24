@@ -15,8 +15,9 @@
     left: 50%;
     transform: translate(-50%, -50%);
     font-size: 24px;
-    position: absolute;
+    position: relative;
     padding: 10px 10px;
+    margin-top: 150px;
 }
 </style>
 </head>

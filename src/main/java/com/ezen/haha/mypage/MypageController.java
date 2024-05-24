@@ -182,7 +182,7 @@ public class MypageController {
 		ArrayList<MembershipDTO> list = ss.adminrefundview(id);
 		mo.addAttribute("list", list);
 
-		return "adminpayoutview";
+		return "adminrefundview";
 	}
 	
 	// 마이페이지 나의 상품 리뷰 보기

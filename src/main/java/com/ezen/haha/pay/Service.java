@@ -10,7 +10,7 @@ public interface Service {
 
 	ArrayList<PayDTO> payout(int partner_order_id1, String partner_user_id);
 
-	void payinsert(String tid1, int partner_order_id1, String partner_user_id, String payment_method_type, String item_name, int quantity1, int totprice, String approved_at, String snum, String address, String name, String tel, String email, String drequest, int paystate, String payment, String useCoupon, int savePoint);
+	void payinsert(String tid1, int partner_order_id1, String partner_user_id, String payment_method_type, String item_name, int quantity1, int totprice, String approved_at, String snum, String address, String name, String tel, String email, String drequest, int paystate, String payment, String useCoupon, int savePoint, int usePoint);
 
 	void productsuupdate(int snum, int quantity1);
 
@@ -48,7 +48,17 @@ public interface Service {
 
 	void bankinsert(String id, String name, String address, String tel, String email, String payment, String snum,
 			String sname, int paynum, int totprice, String payEndTime, String paystate, String insertCoupon,
-			int savePoint);
+			int savePoint, int usePoint);
+
+	int pointsearch(String id);
+
+	void nowpointUpdate(int nowpoint, String id, String orderid);
+
+	int selectnowpoint(String id);
+
+	int selectorderid(String id);
+
+	void banknowpointUpdate(int nowpoint, String id, int orderid);
 
 	
 

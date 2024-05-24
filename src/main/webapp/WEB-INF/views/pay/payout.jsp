@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -61,7 +62,7 @@ th{
 		<td>${aa.orderid }</td>
 		<td>${aa.sname }</td>
 		<td>${aa.paynum }</td>
-		<td><f:formatNumber pattern="#,###" value="${aa.totprice }"></f:formatNumber></td>
+		<td><f:formatNumber value="${aa.totprice }" pattern="#,###"></f:formatNumber></td>
 		<td>${aa.payendtime }</td>
 		<td>${aa.paystate }</td>
 		<td style="width: 180px; text-align: center;">

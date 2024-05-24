@@ -38,6 +38,7 @@
 th,td {
   width: 25%;
   height: 50px;
+  
 }
 
 th.tc, td.tc {
@@ -75,6 +76,9 @@ form {
 }
 .search_area button:hover {
    background: #000000;
+}
+a:link, a:visited {
+	color: #333;
 }
 </style>
 <meta charset="UTF-8">

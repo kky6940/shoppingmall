@@ -14,23 +14,26 @@ body.visible{
 	visibility: visible;
 }
 #tempertext{
-	margin-top: 50px;
+	margin-top: 20px;
 	text-align: center;
 	font-size: 20px;
 }
 #recommendlist{
-	margin-top: 50px;
+	margin-top: 30px;
 	text-align: center;
 	
 }
 #tempertextrefuse {
-	margin-top: 50px;
+	margin-top: 20px;
 	text-align: center;
 	font-size: 20px;
 }
 hr{
 	height: 2px;
 	background: #000000;
+}
+h2{
+	margin: 0;
 }
 /* 0도 이상이면 빨간색, 0도 아래면 파란색 표기 */
 .positive {
@@ -49,7 +52,7 @@ h2{
 }
 .product_list{
 	position: relative;
-    margin-top: 50px;
+    margin-top: 30px;
     max-width: 1920px;
     min-width: 1280px;
     padding-left: 80px;
@@ -364,10 +367,13 @@ function displayWeather(weatherData) {
                 html += '</a></li>';
                 html += '<li class="name"><a href="detailview?snum=${aa.snum}">' + aa.sname + '</a></li>';
                 html += '<li class="price"><a href="detailview?snum=${aa.snum}">' + formatPrice(aa.price) + '</a></li>';
-                html += '<li class="intro"><a href="detailview?snum=${aa.snum}">' + aa.intro + '</a></li>';
-                html += '<li class="review"><a href="detailview?snum=${aa.snum}">.리뷰갯수</a></li>';
+                if (aa.count != 0) {
+                    html += '<li class="intro"><a href="detailview?snum=' + aa.snum + '">' + 
+                            '<img alt="" src="./image/reviewStar.png" style="width: 17px;">' +
+                            Math.round(aa.productrank * 10) / 10. + '</a></li>';
+                    html += '<li class="review"><a href="detailview?snum=' + aa.snum + '">리뷰 수 : ' + aa.count + '</a></li>';
+                }
                 html += '</ul>';
-                
             }
             html += '</div></div>'
             

@@ -19,6 +19,7 @@
   margin-top: 5%;
   margin-left: auto;
   margin-right: auto;
+  
 }
 
 h2 {
@@ -86,6 +87,7 @@ h2 {
   border-radius: 10px;
   margin-top: 20px;
   color: #222831;
+  
 }
 
 .myqna dl {
@@ -109,6 +111,9 @@ h2 {
 
 td {
   text-align: left;
+}
+.container2{
+	margin-bottom: 50px;
 }
 </style>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>

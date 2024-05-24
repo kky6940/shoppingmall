@@ -340,11 +340,15 @@ input[type="number"] {
 			    </div>
 			    <div class="reviewContent">
 			        <p style="font-weight: bold; font-size: 20px">${bb.btitle}</p>
-			        <p>${bb.bcontent}</p>
-			    </div>
+			    <c:if test="${bb.bpicture != '0'}">
 			    <div class="reviewImage">
 			        <img alt="" src="./image/${bb.bpicture}" width="140px" height="140px">
 			    </div>
+			    </c:if>
+			    
+			        <p>${bb.bcontent}</p>
+			    </div>
+				
 			</div>
 		</c:forEach>
 

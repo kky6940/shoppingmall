@@ -13,7 +13,7 @@
 	position: fixed;
 	left:300px;
 	top: 0;
-	height: 100vh;
+	height: 70vh;
 	border-right: 2px solid #eeeeee;
 }
 .admintable{

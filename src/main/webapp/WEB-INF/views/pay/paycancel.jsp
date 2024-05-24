@@ -93,7 +93,7 @@ function kakaopaycancel(payment) {
             contentType: 'application/json',
             data: JSON.stringify(formData),
             success: function (response) {
-                alert(response);
+                alert("환불처리가 완료되었습니다.");
                 window.location.href = 'main';
             },
             error: function (xhr, status, error) {
@@ -108,7 +108,7 @@ function kakaopaycancel(payment) {
    	            url: 'bankCancel',
    	            data: {"orderid":orderid},
    	            success: function (response) {
-   	                alert(response);
+   	                alert("환불처리가 완료되었습니다.");
    	                window.location.href = 'main';
    	            },
    	            error: function (xhr, status, error) {

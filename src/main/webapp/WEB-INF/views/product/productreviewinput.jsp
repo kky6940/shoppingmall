@@ -280,7 +280,7 @@ $(document).ready(function() {
     <form action="productreviewsave" method="post" enctype="multipart/form-data" id="form">
         <div class="inputform">
             <label for="btitle">제목</label>
-            <input type="text" class="form-control" name="btitle" id="btitle"  placeholder="제목을 입력해 주세요">
+            <input type="text" class="form-control" name="btitle" id="btitle" maxlength="40" placeholder="제목을 입력해 주세요">
             <input type="hidden" name="snum" value="${aa.snum}">
             <input type="hidden" name="sname" value="${aa.sname}">
             <input type="hidden" name="image" value="${aa.image}">

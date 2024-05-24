@@ -14,14 +14,14 @@
       <put-attribute name="title" value=""/>
       <put-attribute name="top" value="/WEB-INF/views/top_admin.jsp"/>
       <put-attribute name="body" value=""/>
-      <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/views/footer2.jsp"/>
    </definition>
    
    <definition name="guestLayout" template="/WEB-INF/views/layout.jsp">
       <put-attribute name="title" value=""/>
       <put-attribute name="top" value="/WEB-INF/views/top_guest.jsp"/>
       <put-attribute name="body" value=""/>
-      <put-attribute name="footer" value="/WEB-INF/views/footer.jsp"/>
+      <put-attribute name="footer" value="/WEB-INF/views/footer2.jsp"/>
    </definition>
    
    <definition name="bankaction" extends="baseLayout">
@@ -120,6 +120,13 @@
       <put-attribute name="body" value="/WEB-INF/views/pay/adminpayoutview.jsp"/>
    </definition>
    
+   <definition name="adminrefundview" extends="adminLayout">
+      <put-attribute name="title" value="환불목록출력"/>
+      <put-attribute name="body" value="/WEB-INF/views/pay/adminrefundview.jsp"/>
+   </definition>
+   
+   
+   
    <definition name="paycancel" extends="guestLayout">
       <put-attribute name="title" value="결제환불화면"/>
       <put-attribute name="body" value="/WEB-INF/views/pay/paycancel.jsp"/>
@@ -136,7 +143,7 @@
       <put-attribute name="body" value="/WEB-INF/views/membership/logininput.jsp"/>
    </definition>
    
-   <definition name="mypagemain" extends="baseLayout">
+   <definition name="mypagemain" extends="guestLayout">
       <put-attribute name="title" value="마이페이지메인"/>
       <put-attribute name="body" value="/WEB-INF/views/mypage/mypagemain.jsp"/>
    </definition>

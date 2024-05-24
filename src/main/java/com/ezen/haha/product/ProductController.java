@@ -65,8 +65,6 @@ public class ProductController {
 	// 파이썬 파일 실행 경로
     String pythonScriptPath = "C:\\이젠디지탈12\\spring\\shoppingmall-master\\src\\main\\webapp\\resources\\python\\product_visual.py";
 	
-	private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
-	
 	// 상품 입력 화면으로
 	@RequestMapping(value = "/productinput")
 	public String productinput(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -674,6 +672,7 @@ public class ProductController {
 	// 상품 리뷰 입력 후 DB에 저장
 	@RequestMapping(value = "/productreviewsave", method = RequestMethod.POST)
 	public String productreviewsave(MultipartHttpServletRequest mul) throws IllegalStateException, IOException {
+		Service ss = sqlSession.getMapper(Service.class);
 		HttpSession hs = mul.getSession();
 		String id = (String) hs.getAttribute("id"); 
 		String btitle = mul.getParameter("btitle");
@@ -683,13 +682,17 @@ public class ProductController {
 		String bcontent = mul.getParameter("bcontent");
 		int productrank = Integer.parseInt(mul.getParameter("productrank"));
 		
+		
+		if (mul.getFile("bpicture") != null && !mul.getFile("bpicture").isEmpty()) {
 		MultipartFile mf = mul.getFile("bpicture");
 		String fname = mf.getOriginalFilename();
 		mf.transferTo(new File(imagepath+"\\"+fname));
-		
-		Service ss = sqlSession.getMapper(Service.class);
 		ss.productreviewsave(snum,sname,id,btitle,bcontent,fname,productrank,image);
-		
+		}
+		else {
+			ss.productreviewsave(snum,sname,id,btitle,bcontent,"0",productrank,image);
+		}
+			
 		return "redirect:/myproductreview";
 	}
 	
@@ -709,12 +712,15 @@ public class ProductController {
 			File imageFile = new File(imagepath+deleteFile);
 			imageFile.delete();
 			
+			if (mul.getFile("bpicture") != null && !mul.getFile("bpicture").isEmpty()) {
 			MultipartFile mf = mul.getFile("bpicture");
 			String fname = mf.getOriginalFilename();
 			mf.transferTo(new File(imagepath+"\\"+fname));
-			
-			ss.productreviewupdate(bnum,btitle,bcontent,fname,productrank);
-			
+			ss.productreviewupdate(bnum,btitle,bcontent,fname,productrank);			
+			}
+			else {
+				ss.productreviewupdate(bnum,btitle,bcontent,"0",productrank);
+			}
 			return "redirect:/myproductreview";
 		}
 		
@@ -753,36 +759,7 @@ public class ProductController {
 	public String bestproductout(HttpServletRequest request, Model mo, PageDTO dto) {
 		String nowPage=request.getParameter("nowPage");
 	    String cntPerPage=request.getParameter("cntPerPage");
-		Service ss = sqlSession.getMapper(Service.class);
-		
-		int besttotalSearch=ss.besttotalSearch();
-	    
-        if(nowPage==null && cntPerPage == null) {
-           nowPage="1";
-           cntPerPage="10";
-        }
-        else if(nowPage==null) {
-           nowPage="1";
-        }
-        else if(cntPerPage==null) {
-           cntPerPage="10";
-        }      
-       
-	    dto = new PageDTO(besttotalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
-		
-		mo.addAttribute("paging",dto);
-		mo.addAttribute("list", ss.bestsearchout(dto.getStart(),dto.getEnd()));
-		
-		return "bestproductout";
-	}
-	
-	// 베스트 상품 화면 동작(검색 및 페이징)
-	@RequestMapping(value = "/best_product_list")
-	public String best_product_list(HttpServletRequest request, Model mo, PageDTO dto) {
-	    String nowPage=request.getParameter("nowPage");
-	    String cntPerPage=request.getParameter("cntPerPage");
-	    String best =  request.getParameter("best");
-	    
+	    String sort =  request.getParameter("sort");
 	    Service ss = sqlSession.getMapper(Service.class);
 	    int besttotalSearch=ss.besttotalSearch();  
     
@@ -799,21 +776,21 @@ public class ProductController {
 		 }      
 		dto = new PageDTO(besttotalSearch,Integer.parseInt(nowPage),Integer.parseInt(cntPerPage));
 		
-		if(best == null || best.equals("latest")) {
+		if(sort == null || sort.equals("latest")) {
 			 mo.addAttribute("list", ss.bestsearchout(dto.getStart(),dto.getEnd()));
-			 mo.addAttribute("best", "latest");
+			 mo.addAttribute("sort", "latest");
 		}
-		else if(best.equals("highest")){
+		else if(sort.equals("highest")){
 			 mo.addAttribute("list", ss.bestsearchoutlowest(dto.getStart(),dto.getEnd()));
-			 mo.addAttribute("best", "highest");
+			 mo.addAttribute("sort", "highest");
 		}
-		else if(best.equals("lowest")){
+		else if(sort.equals("lowest")){
 			 mo.addAttribute("list", ss.bestsearchouthighest(dto.getStart(),dto.getEnd()));
-			 mo.addAttribute("best", "lowest");
+			 mo.addAttribute("sort", "lowest");
 		}
 	
 	    mo.addAttribute("paging",dto);
-	   
+	    
 	    return "bestproductout";
 	}
 	

@@ -15,7 +15,7 @@
 	position: fixed;
 	left:300px;
 	top: 0;
-	height: 100vh;
+	height: 100%;
 	border-right: 2px solid #eeeeee;
 }
 .admintable{
@@ -279,9 +279,7 @@ p{
 		<tr>
 			<td class="admintd"><a href="myproductreview">상품 리뷰</a></td>
 		</tr>
-		<tr>
-			<td class="admintd">이벤트 응모내역</td>
-		</tr>
+		
 		
 		
 		<tr>

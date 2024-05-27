@@ -121,6 +121,10 @@ h2{
 .selected {
     font-weight: bold;
 }
+
+#footer {
+	transform: translateY(100%);
+}
 </style>
 
 

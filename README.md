@@ -7,11 +7,12 @@
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/7751414f-92d5-446c-97dc-745a1f392075)
 
 # 기술 스택   
-![image](https://github.com/kky6940/shoppingmall/assets/163812092/dfa0045d-9f30-4926-9b4e-af9b134f8346)
+![image](https://github.com/kky6940/shoppingmall/assets/163812092/c227bc7c-afae-4872-9e54-ced09ff6e8db)
 
 # ER 다이어그램
-![image](https://github.com/kky6940/shoppingmall/assets/163812092/53ca4b04-08e2-4df5-b333-62d9f8f1637b)
+![image](https://github.com/kky6940/shoppingmall/assets/163812092/b72f2fc7-da15-4c9d-9058-21884a1f1a5f)
 
 # 개발 일정
-![image](https://github.com/kky6940/shoppingmall/assets/163812092/fc451208-d91e-4aaa-9798-5d2388a6cffa)
+![image](https://github.com/kky6940/shoppingmall/assets/163812092/a0633aac-95bf-442a-9b8d-3f96bbc9a515)
+
 </div>

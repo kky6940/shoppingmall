@@ -1,6 +1,6 @@
 <div align = "center">
 
-#  Snack Closet - 남성 패션 쇼핑몰 프로젝트
+#  남성 패션 쇼핑몰 프로젝트 - Snack Closet
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/ea70079a-8151-4314-a2bf-bfb1442477d4)
 <br /><br /><br /><br />
 

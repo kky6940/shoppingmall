@@ -6,11 +6,11 @@
 
 # 팀 소개
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/7751414f-92d5-446c-97dc-745a1f392075)
-<br>
+<br />
 
 # 기술 스택   
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/c227bc7c-afae-4872-9e54-ced09ff6e8db)
-<br/>
+<br />
 
 # ER 다이어그램
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/b72f2fc7-da15-4c9d-9058-21884a1f1a5f)

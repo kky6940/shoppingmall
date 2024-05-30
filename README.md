@@ -4,8 +4,7 @@
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/ea70079a-8151-4314-a2bf-bfb1442477d4)
    
 # 팀 소개
-![Uploading image.png…]()
-
+![image](https://github.com/kky6940/shoppingmall/assets/163812092/7751414f-92d5-446c-97dc-745a1f392075)
 
 # 기술 스택   
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/dfa0045d-9f30-4926-9b4e-af9b134f8346)

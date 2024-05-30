@@ -10,7 +10,7 @@
 
 # 기술 스택   
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/c227bc7c-afae-4872-9e54-ced09ff6e8db)
-<br />
+<br /><br /><br /><br /><br /><br />
 
 # ER 다이어그램
 ![image](https://github.com/kky6940/shoppingmall/assets/163812092/b72f2fc7-da15-4c9d-9058-21884a1f1a5f)

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="f" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -54,7 +55,7 @@ h2{
 		<td>${aa.sname }</td>
 		<td>${aa.paynum }</td>
 		<td>
-			${aa.totprice }
+			<f:formatNumber value="${aa.totprice }" pattern="#,###"></f:formatNumber> 
 			<input type="hidden" name="totprice" value="${aa.totprice }" id="totprice">
 		</td>
 		<td>

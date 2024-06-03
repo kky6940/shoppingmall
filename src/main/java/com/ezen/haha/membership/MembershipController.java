@@ -336,6 +336,10 @@ public class MembershipController {
 		if(id.equals("admin"))
 		{
 			String userid = request.getParameter("id");
+			if(userid==null)
+			{
+				userid = "admin";
+			}
 			Service ss = sqlSession.getMapper(Service.class);
 			ArrayList<MembershipDTO> list = ss.membershipsearch(userid); // 쿼리문 재활용
 			mo.addAttribute("list", list);
